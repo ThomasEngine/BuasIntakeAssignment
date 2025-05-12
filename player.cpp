@@ -112,7 +112,6 @@ namespace Tmpl8
 	}
 	void Player::Update(float deltaTime)
 	{
-		acceleration = { 0, VERTICAL_ACCALERATION }; // reset the acceleration
 		calculateKinematic(deltaTime); // x movement
 		SetDest(px, py, 32 * 2, 32 * 2); // setting the destination of the player
 		rect = { static_cast<int>(px) + 9, static_cast<int>(py), (32 * 2) - 20, (32 * 2) - 10 }; // setting the hitbox
@@ -121,6 +120,10 @@ namespace Tmpl8
 
 	void Player::calculateKinematic(float deltaTime)
 	{
+		// reset the acceleration
+		acceleration = { 0, VERTICAL_ACCALERATION }; 
+
+		// left movment
 		if (l)
 		{
 			if (getCurAnimation() != walkingl)
@@ -129,6 +132,8 @@ namespace Tmpl8
 			}
 			acceleration.x = -HORIZONTAL_ACCALERATION;
 		}
+
+		// right movement
 		if (r)
 		{
 			if (getCurAnimation() != walkingr)
@@ -137,6 +142,8 @@ namespace Tmpl8
 			}
 			acceleration.x = HORIZONTAL_ACCALERATION;
 		}
+
+		// falling animation
 		if (fall)
 		{
 			if (getCurAnimation() != fallingr)
@@ -144,9 +151,10 @@ namespace Tmpl8
 				setCurAnimation(fallingr);
 			}
 		}
+
+		// idle animations when not falling or moving
 		if (!fall)
 		{
-			// These if statements is that when it is done falling it does not stay the falling animation
 			if (x_direction == 0) // if direction is left
 			{
 				if (getCurAnimation() != idoll && getCurAnimation() != walkingl)
@@ -164,10 +172,13 @@ namespace Tmpl8
 			acceleration.y = 0;
 			velocity.y = 0;
 		}
+		
+		// Jumping u = up
 		if (u)
 		{
 			Jump();
 		}
+		
 		// kinematic calculations
 		acceleration.x -= velocity.x * HORIZONTAL_FRICTION;
 		velocity += acceleration;
@@ -183,5 +194,14 @@ namespace Tmpl8
 		{
 			velocity.y = -VERTICAL_JUMP_SPEED; // jump speed
 		}
+	}
+	bool Player::getBool(std::string name) const
+	{
+		if (name == "left") return l;
+		else if (name == "right") return r;
+		else if (name == "up") return u;
+		else if (name == "down") return d;
+		else if (name == "fall") return fall;
+		return false;
 	}
 }

@@ -70,8 +70,9 @@ namespace Tmpl8
 			{
 				if (tile.GetSolid())
 				{
-				player->SetPos(player->GetDX(), tile.GetDY() - TILESIZE - 20);
-				player->SetFall(false);
+				//player->SetPos(player->GetDX(), tile.GetDY() - TILESIZE - 20);
+					player->SetYPos(tile.GetDY() - TILESIZE - 20);
+					player->SetFall(false);
 				}
 				return;
 			}
