@@ -68,7 +68,11 @@ namespace Tmpl8
 		{
 			if (CheckCollision(*player, tile))
 			{
-				if (tile.GetSolid()) player->SetFall(false);
+				if (tile.GetSolid())
+				{
+				player->SetPos(player->GetDX(), tile.GetDY() - TILESIZE - 20);
+				player->SetFall(false);
+				}
 				return;
 			}
 			else
@@ -80,10 +84,10 @@ namespace Tmpl8
 
 	bool Game::CheckCollision(const Player& a, const Object& b)
 	{
-		/*return (a.GetDX() < (b.GetDX() + b.GetDW())) &&
-			((a.GetDX() + a.GetDW()) > b.GetDX()) &&
-			(a.GetDY() < (b.GetDY() + b.GetDH())) &&
-			((a.GetDY() + a.GetDH()) > b.GetDY());*/
+		//return (a.GetDX() < (b.GetDX() + b.GetDW())) &&
+		//	((a.GetDX() + a.GetDW()) > b.GetDX()) &&
+		//	(a.GetDY() < (b.GetDY() + b.GetDH())) &&
+		//	((a.GetDY() + a.GetDH()) > b.GetDY());
 		return SDL_HasIntersection(&a.getRect(), &b.GetDest());
 	}
 
@@ -93,7 +97,7 @@ namespace Tmpl8
 		Draw(Background);
 		m_TileMap->DrawTileMap(m_renderer, Mapx, Mapy, ScreenWidth, ScreenHeight);
 		Draw(*player);
-		player->drawRect();
+		player->DrawRect(player->getRect(), m_renderer);
 	}
 
 	void Game::showFPS(float deltaTime)

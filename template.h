@@ -11,14 +11,16 @@
 #include <cstdlib>
 #include <cstdio>
 
+// Screen Constants
 constexpr int ScreenWidth = 1280;
 constexpr int ScreenHeight = 720;
-
 constexpr int TILESIZE = 32;
 
-constexpr int GRAV = 10;
-constexpr float HORIZONTAL_ACCALERATION = 1.1f;
-constexpr float HORIZONTAL_FRICTION = 0.16f;
+// Kinematic Constants
+constexpr float VERTICAL_ACCALERATION = 0.5f; // gravity
+constexpr float VERTICAL_JUMP_SPEED = 10.f; // Determine how high the player can jump
+constexpr float HORIZONTAL_ACCALERATION = 1.1f; // how quick the player speeds up
+constexpr float HORIZONTAL_FRICTION = 0.18; // friction
 
 
 //Fps settings

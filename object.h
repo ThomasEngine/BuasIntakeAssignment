@@ -25,6 +25,8 @@ namespace Tmpl8
 		int GetDW() const { return dest.w; }
 		int GetDH() const { return dest.h; }
 
+		void DrawRect(SDL_Rect rect, SDL_Renderer* ren) const;
+
 	private:
 		SDL_Rect dest;
 		SDL_Rect src;

@@ -48,7 +48,6 @@ namespace Tmpl8
 					// Set the destination rectangle based on the tile's position in the grid
 					tile.SetDest(j * TILESIZE, i * TILESIZE, TILESIZE, TILESIZE);
 					tile.SetSolid(true); // Set the tile as solid
-
 					// Add the tile to the map
 					m_map.push_back(tile);
 				}
@@ -68,6 +67,7 @@ namespace Tmpl8
 				SDL_Rect dest = tile.GetDest();
 				SDL_Rect src = tile.GetSource();
 				SDL_RenderCopy(renderer, tile.GetTex(), &src, &dest);
+				tile.DrawRect(tile.GetDest(), m_renderer);
 			}
 		}
 	}

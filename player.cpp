@@ -4,8 +4,6 @@ namespace Tmpl8
 {
 
 	Player::Player(float xpos, float ypos, SDL_Renderer* ren)
-		: Entity()
-		
 	{
 		// Player position
 		px = xpos;
@@ -14,7 +12,7 @@ namespace Tmpl8
 		// Kinematic vectors
 		pos = { px, py };
 		velocity = { 0, 0 };
-		acceleration = { 0, 0 };
+		acceleration = { 0, VERTICAL_ACCALERATION }; // 0 is the beginning of the x accaleration, which at the start of the game is 0
 
 		// Movement left, right, up, down, falling
 		l = false;
@@ -23,6 +21,12 @@ namespace Tmpl8
 		d = false;
 		fall = false;
 
+		// Direction of the player
+		x_direction = 1;
+		y_direction = 0;
+		
+		//hitbox rect
+		rect = { static_cast<int>(px) + 9, static_cast<int>(py), (32 * 2) - 20, (32 * 2) - 10 };
 
 		m_renderer = ren; // renderer from game
 
@@ -54,16 +58,19 @@ namespace Tmpl8
        {  
        case SDLK_LEFT:  
        case SDLK_a:  
+		   x_direction = 0;
            l = true;  
            r = false;
            break;  
        case SDLK_RIGHT:  
        case SDLK_d:  
+		   x_direction = 1;
            r = true;  
            l = false; 
            break;  
-       case SDLK_UP:  
-       case SDLK_w:  
+       case SDLK_UP:
+	   case SDLK_SPACE:
+       case SDLK_w: 
            u = true;  
            d = false;  
            break;  
@@ -91,6 +98,7 @@ namespace Tmpl8
 			setCurAnimation(idolr);
 			break;
 		case SDLK_UP:
+		case SDLK_SPACE:
 		case SDLK_w:
 			u = false;
 			break;
@@ -104,9 +112,10 @@ namespace Tmpl8
 	}
 	void Player::Update(float deltaTime)
 	{
-		acceleration = { 0, 0 }; // reset the acceleration
+		acceleration = { 0, VERTICAL_ACCALERATION }; // reset the acceleration
 		calculateKinematic(deltaTime); // x movement
 		SetDest(px, py, 32 * 2, 32 * 2); // setting the destination of the player
+		rect = { static_cast<int>(px) + 9, static_cast<int>(py), (32 * 2) - 20, (32 * 2) - 10 }; // setting the hitbox
 		updateAnimation();
 	}
 
@@ -118,7 +127,7 @@ namespace Tmpl8
 			{
 				setCurAnimation(walkingl);
 			}
-			acceleration.x = -1 * HORIZONTAL_ACCALERATION;
+			acceleration.x = -HORIZONTAL_ACCALERATION;
 		}
 		if (r)
 		{
@@ -126,7 +135,38 @@ namespace Tmpl8
 			{
 				setCurAnimation(walkingr);
 			}
-			acceleration.x = 1 * HORIZONTAL_ACCALERATION;
+			acceleration.x = HORIZONTAL_ACCALERATION;
+		}
+		if (fall)
+		{
+			if (getCurAnimation() != fallingr)
+			{
+				setCurAnimation(fallingr);
+			}
+		}
+		if (!fall)
+		{
+			// These if statements is that when it is done falling it does not stay the falling animation
+			if (x_direction == 0) // if direction is left
+			{
+				if (getCurAnimation() != idoll && getCurAnimation() != walkingl)
+				{
+					setCurAnimation(idoll);
+				}
+			}
+			if (x_direction == 1) // if direction is right
+			{
+				if (getCurAnimation() != idolr && getCurAnimation() != walkingr)
+				{
+					setCurAnimation(idolr);
+				}
+			}
+			acceleration.y = 0;
+			velocity.y = 0;
+		}
+		if (u)
+		{
+			Jump();
 		}
 		// kinematic calculations
 		acceleration.x -= velocity.x * HORIZONTAL_FRICTION;
@@ -137,10 +177,11 @@ namespace Tmpl8
 		px = pos.x;
 		py = pos.y;
 	}
-	void Player::drawRect() // draws hitbox to the player. For debuging
+	void Player::Jump()
 	{
-		rect = { static_cast<int>(px) + 9, static_cast<int>(py), (32 * 2)-20, (32 * 2)-10};
-		SDL_SetRenderDrawColor(m_renderer, 255, 0, 0, 255); // Red
-		SDL_RenderDrawRect(m_renderer, &rect);
+		if (!fall)
+		{
+			velocity.y = -VERTICAL_JUMP_SPEED; // jump speed
+		}
 	}
 }

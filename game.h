@@ -31,6 +31,7 @@ public:
 	void MouseUp( int button ) { /* implement if you want to detect mouse button presses */ }
 	void MouseDown( int button ) { /* implement if you want to detect mouse button presses */ }
 	void MouseMove( int x, int y ) { /* implement if you want to detect mouse movement */ }
+	// Send keys to the player class
 	void KeyUp(int key) { player->KeyUp(key); }
 	void KeyDown(int key) { player->KeyDown(key); }
 private:

@@ -40,4 +40,9 @@ namespace Tmpl8 {
 
 		SDL_FreeSurface(surf);
 	}
+	void Object::DrawRect(SDL_Rect rect, SDL_Renderer* ren) const
+	{
+		SDL_SetRenderDrawColor(ren, 255, 0, 0, 255); // Red color
+		SDL_RenderDrawRect(ren, &rect);
+	}
 }
