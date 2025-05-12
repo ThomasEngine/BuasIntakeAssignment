@@ -21,6 +21,12 @@ namespace Tmpl8
 		d = false;
 		fall = false;
 
+		// Collision bools
+		col_top = false;
+		col_down = false;
+		col_left = false;
+		col_right = false;
+
 		// Direction of the player
 		x_direction = 1;
 		y_direction = 0;
@@ -112,11 +118,16 @@ namespace Tmpl8
 	}
 	void Player::Update(float deltaTime)
 	{
-		calculateKinematic(deltaTime); // x movement
+		calculateKinematic(deltaTime);
+	}
+
+	void Player::Render()
+	{
 		SetDest(px, py, 32 * 2, 32 * 2); // setting the destination of the player
 		rect = { static_cast<int>(px) + 9, static_cast<int>(py), (32 * 2) - 20, (32 * 2) - 10 }; // setting the hitbox
 		updateAnimation();
 	}
+
 
 	void Player::calculateKinematic(float deltaTime)
 	{
@@ -169,7 +180,7 @@ namespace Tmpl8
 					setCurAnimation(idolr);
 				}
 			}
-			acceleration.y = 0;
+			//acceleration.y = 0;
 			velocity.y = 0;
 		}
 		
@@ -182,26 +193,116 @@ namespace Tmpl8
 		// kinematic calculations
 		acceleration.x -= velocity.x * HORIZONTAL_FRICTION;
 		velocity += acceleration;
-		pos += velocity + acceleration * 0.5;
+	}
 
-		// setting now player position
+
+
+	void Player::Move(const World* world)
+	{
+		// Reset all collision bools
+		col_top = false;
+		col_down = false;
+		col_left = false;
+		col_right = false;
+
+		pos.x += velocity.x + acceleration.x * 0.5;
+
+		std::vector<Object*> hitListx = GetCollisions(world);
+
+		for (auto& tile : hitListx)
+		{
+			if (velocity.x > 0)
+			{
+				pos.x = tile->GetDX() - tile->GetDW();
+				col_right = true;
+			}
+			else if (velocity.x < 0)
+			{
+				pos.x = tile->GetDX() + tile->GetDW();
+				col_left = true;
+			}
+		}
+		pos.y += velocity.y + acceleration.x * 0.5;
+		
+		std::vector<Object*> hitListy = GetCollisions(world);
+
+		for (auto& tile : hitListy)
+		{
+			if (velocity.y > 0)
+			{
+				pos.y = tile->GetDY() - tile->GetDH() - tile->GetDW() - 20;
+				col_down = true;
+			}
+			else if (velocity.y < 0)
+			{
+				pos.y = tile->GetDY() + tile->GetDH() + 20;
+				col_top = true;
+			}
+		}
 		px = pos.x;
 		py = pos.y;
 	}
+
+    std::vector<Object*> Player::GetCollisions(const World* world)  
+    {  
+       std::vector<Object*> collisions;  
+       const auto& map = world->GetMap(); // Get the tile map from the world  
+       for (const auto& tile : map)  
+       {  
+           if (SDL_HasIntersection(&this->rect, &tile.GetDest()))  
+           {  
+               if (tile.GetSolid())  
+               {  
+                   collisions.push_back(const_cast<Object*>(&tile));  
+               }  
+           }  
+       }  
+       return collisions;  
+    }
+
+
+
 	void Player::Jump()
 	{
-		if (!fall)
+		if (velocity.y == 0 && fall == 0)
 		{
 			velocity.y = -VERTICAL_JUMP_SPEED; // jump speed
 		}
 	}
-	bool Player::getBool(std::string name) const
+
+	void Player::StopJump()
 	{
-		if (name == "left") return l;
-		else if (name == "right") return r;
-		else if (name == "up") return u;
-		else if (name == "down") return d;
-		else if (name == "fall") return fall;
-		return false;
+		if (velocity.y >= -7)
+		{
+			float newVelocityY = velocity.y / 2;
+			velocity.y = -newVelocityY;
+		}
+		else
+		{
+			velocity.y *= -1;
+		}
+	}
+
+	void Player::StopMoveX()
+	{
+		velocity.x = 0;
+	}
+
+	bool Player::GoingUp()
+	{
+		if (velocity.y > 0)
+		{
+			velocity.y = 0;
+			return false;
+		}
+		else return true;
+	}
+	bool Player::GoingLeft()
+	{
+		if (velocity.x < 0)
+		{
+			return true;
+		}
+		else return false;
 	}
 }

@@ -1,6 +1,8 @@
 #pragma once
 #include "template.h"
 #include "entity.h"
+#include "world.h"
+#include <vector>
 
 namespace Tmpl8
 {
@@ -14,14 +16,23 @@ namespace Tmpl8
 		void KeyUp(int key);
 
 		void Update(float deltaTime);
+		void Render();
 		void calculateKinematic(float deltaTime);
+		void Move(const World* world);
+		std::vector<Object*> GetCollisions(const World* world);
+		
+
 		void Jump();
+		void StopJump();
+		void StopMoveX();
 		void SetPos(float x, float y) { px = x; py = y; pos.x = x; pos.y = y; rect = {static_cast<int>(x) + 9, static_cast<int>(y), (32 * 2) - 20, (32 * 2) - 10 };
 		}
 		void SetYPos(float y) { py = y; pos.y = y; rect.y = static_cast<int>(y); }
 
 		SDL_Rect getRect() const { return rect; }
-		bool getBool(std::string name) const;
+		bool GoingUp();
+		bool GoingLeft();
+
 
 		void SetFall(bool f) { fall = f; }
 		void SetVelocityX(int vx) { velocity.x = vx; }
@@ -33,6 +44,7 @@ namespace Tmpl8
 		int x_direction; // direction of the player 0 = left 1 = right
 		int y_direction; // direction of the player 0 = down 1 = up
 		bool l, r, u, d, fall; // left right up down
+		bool col_top, col_down, col_left, col_right;
 		SDL_Rect rect;
 		vec2 pos;
 		vec2 velocity;
