@@ -8,12 +8,15 @@ class Entity : public Object
 {  
 public:  
 	void SetHealth(int h) { health = h; }  
-	void SetMaxHealth(int mh) { maxHealth = mh; }  
+	void SetMaxHealth(int mh) { maxHealth = mh; } 
+	void SetSpeed(float s) { eSpeed = s; }
+	float GetSpeed() const { return eSpeed; }
 	int GetHealth() const { return health; }  
 	int GetMaxHealth() const { return maxHealth; }  
 
 	int createCycle(int row, int w, int h, int amount, int speed);  
 	void setCurAnimation(int c) { begin = 0, curAnimation = c; }  
+	int getCurAnimation() { return curAnimation; }
 	void updateAnimation();  
 
 private:  
@@ -30,5 +33,6 @@ private:
 	std::vector<cycle> animations; // Use std::vector explicitly  
 	int curAnimation;  
 	int begin;  
+	float eSpeed;
 };  
 }

@@ -2,8 +2,10 @@
 #include "object.h"
 #include "entity.h"
 #include <vector>
+#include "world.h"
+#include "player.h"
 
-constexpr int TILESIZE = 32;
+
 
 namespace Tmpl8 {
 
@@ -23,24 +25,22 @@ public:
 	void DrawAll();
 	void Draw(Object o);
 
-	void loadMap(std::string filename);
-	void drawMap();
-
-
+	void UpdateCollision(Player* player, const World* world);
+	bool CheckCollision(const Player& a, const Object& b);
 
 	void MouseUp( int button ) { /* implement if you want to detect mouse button presses */ }
 	void MouseDown( int button ) { /* implement if you want to detect mouse button presses */ }
 	void MouseMove( int x, int y ) { /* implement if you want to detect mouse movement */ }
-	void KeyUp( int key ) { /* implement if you want to handle keys */ }
-	void KeyDown( int key ) { /* implement if you want to handle keys */ }
+	void KeyUp(int key) { player->KeyUp(key); }
+	void KeyDown(int key) { player->KeyDown(key); }
 private:
 	Surface* m_screen;
 	SDL_Renderer* m_renderer;
 	SDL_Window* m_window;
-	Entity player;
 	Object Background;
-	int idol, walking;
-	std::vector<Object> m_map;
+	World* m_TileMap;
+	Player* player;
+	int Mapx, Mapy;
 };
 
 }; // namespace Tmpl8

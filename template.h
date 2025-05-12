@@ -11,8 +11,15 @@
 #include <cstdlib>
 #include <cstdio>
 
-constexpr int ScreenWidth = 800;
-constexpr int ScreenHeight = 512;
+constexpr int ScreenWidth = 1280;
+constexpr int ScreenHeight = 720;
+
+constexpr int TILESIZE = 32;
+
+constexpr int GRAV = 10;
+constexpr float HORIZONTAL_ACCALERATION = 1.1f;
+constexpr float HORIZONTAL_FRICTION = 0.16f;
+
 
 //Fps settings
 const int TargetFPS = 60;

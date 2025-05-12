@@ -8,5 +8,11 @@
     <file name="FreeImage.dll"/>
 	<file name="glew32.dll"/>
 	<file name="SDL2.dll"/>
+	<file name="SDL2_image.dll"/>
+	<file name="libpng16-16.dll"/>
+	<file name="libjpeg-9.dll"/>
+	<file name="libtiff-5.dll"/>
+	<file name="libwebp-4.dll"/>
+	<file name="zlib.dll"/>
 	<file name="ucrtbased.dll"/>
 </assembly>

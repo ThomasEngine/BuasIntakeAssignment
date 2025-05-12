@@ -20,6 +20,7 @@
 #include "template.h"
 #include <corecrt_math.h>
 #include <SDL.h>
+#include <SDL_image.h>
 #include "surface.h"
 #include <cstdio>
 #include <iostream>
@@ -306,6 +307,11 @@ int main( int argc, char **argv )
 #endif
 	printf( "application started.\n" );
 	SDL_Init( SDL_INIT_VIDEO );
+	if (IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG) == 0) // Initialize SDL_image with PNG and JPG support
+	{
+		std::cerr << "Failed to initialize SDL_image: " << IMG_GetError() << std::endl;
+	}
+	
 #ifdef ADVANCEDGL
 #ifdef FULLSCREEN
 	window = SDL_CreateWindow(TemplateVersion, 100, 100, ScreenWidth, ScreenHeight, SDL_WINDOW_FULLSCREEN|SDL_WINDOW_OPENGL );
@@ -388,10 +394,10 @@ int main( int argc, char **argv )
 					exitapp = 1;
 					// find other keys here: http://sdl.beuc.net/sdl.wiki/SDLKey
 				}
-				game->KeyDown( event.key.keysym.scancode );
+				game->KeyDown( event.key.keysym.sym );
 				break;
 			case SDL_KEYUP:
-				game->KeyUp( event.key.keysym.scancode );
+				game->KeyUp( event.key.keysym.sym );
 				break;
 			case SDL_MOUSEMOTION:
 				game->MouseMove( event.motion.xrel, event.motion.yrel );
@@ -408,6 +414,7 @@ int main( int argc, char **argv )
 		}
 	}
 	game->Shutdown();
+	IMG_Quit();
 	SDL_Quit();
 	return 0;
 }

@@ -12,7 +12,7 @@ namespace Tmpl8
 		tmp.speed = speed;
 		tmp.tick = 0;
 		animations.push_back(tmp);
-		return animations.size();
+		return animations.size() - 1;
 	}
 	void Entity::updateAnimation()
 	{

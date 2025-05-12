@@ -11,6 +11,9 @@
     <ClCompile Include="object.cpp" />
     <ClCompile Include="entity.h" />
     <ClCompile Include="entity.cpp" />
+    <ClCompile Include="world.cpp" />
+    <ClCompile Include="levels.cpp" />
+    <ClCompile Include="player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h" />
@@ -21,6 +24,9 @@
       <Filter>template code</Filter>
     </ClInclude>
     <ClInclude Include="object.h" />
+    <ClInclude Include="levels.h" />
+    <ClInclude Include="world.h" />
+    <ClInclude Include="player.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="template code">

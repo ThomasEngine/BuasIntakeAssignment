@@ -15,10 +15,15 @@ namespace Tmpl8
 		SDL_Texture* GetTex() const { return tex; }
 
 		void SetDest(int x, int y, int w, int h);
+		void SetDest(int x, int y);
 		void SetSource(int x, int y, int w, int h);
 		void SetImage(std::string filename, SDL_Renderer* ren, int color);
 		void SetSolid(bool s) { is_Solid = s; }
-		bool GetSolid() { return is_Solid; }
+		bool GetSolid() const { return is_Solid; }
+		int GetDX() const { return dest.x; }
+		int GetDY() const { return dest.y; }
+		int GetDW() const { return dest.w; }
+		int GetDH() const { return dest.h; }
 
 	private:
 		SDL_Rect dest;
