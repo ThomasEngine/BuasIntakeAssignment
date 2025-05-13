@@ -15,10 +15,10 @@ namespace Tmpl8
 		void KeyDown(int key);
 		void KeyUp(int key);
 
-		void Update(float deltaTime);
-		void Render();
+		void Update(float deltaTime, const World* world);
+		void MoveX(float amount, const World* world);
+		void MoveY(float amount, const World* world);
 		void calculateKinematic(float deltaTime);
-		void Move(const World* world);
 		std::vector<Object*> GetCollisions(const World* world);
 		
 
@@ -28,6 +28,7 @@ namespace Tmpl8
 		void SetPos(float x, float y) { px = x; py = y; pos.x = x; pos.y = y; rect = {static_cast<int>(x) + 9, static_cast<int>(y), (32 * 2) - 20, (32 * 2) - 10 };
 		}
 		void SetYPos(float y) { py = y; pos.y = y; rect.y = static_cast<int>(y); }
+		void SetXPos(float x) { px = x; pos.x = x; rect.x = static_cast<int>(x) + 9; }
 
 		SDL_Rect getRect() const { return rect; }
 		bool GoingUp();
@@ -40,6 +41,8 @@ namespace Tmpl8
 	private:
 		SDL_Renderer* m_renderer;
 		float px, py;
+		float xRemainder; // x remainder for the player
+		float yRemainder; // y remainder for the player
 		int idolr, idoll, walkingr, walkingl, jumpl, jumpr, fallingl, fallingr, hit; // all the different animations
 		int x_direction; // direction of the player 0 = left 1 = right
 		int y_direction; // direction of the player 0 = down 1 = up

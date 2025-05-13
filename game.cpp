@@ -39,15 +39,13 @@ namespace Tmpl8
 	void Game::Update(float deltaTime)
 	{
 		//UpdateCollision(player, m_TileMap);
-		player->Update(deltaTime);
-		player->Move(m_TileMap);
+		player->Update(deltaTime, m_TileMap);
 	}
 	void Game::Render(float deltaTime)
 	{
-		player->Render();
 		DrawAll();
 		SDL_RenderPresent(m_renderer);
-		//showFPS(deltaTime);
+		showFPS(deltaTime);
 	}
 
 	void Game::Draw(Object o)
@@ -72,22 +70,9 @@ namespace Tmpl8
 			{
 				if (tile.GetSolid())
 				{
-					if (!player->GoingUp())
-					{
-						player->SetYPos(tile.GetDY() - tile.GetDH() - 20);
-						player->SetFall(false);
-					}
-					else if (player->GoingUp())
-					{
-						player->StopJump();
-						player->SetFall(true);
-					}
-					else if (player->GoingLeft())
-					{
-						player->StopMoveX();
-						player->SetFall(true);
-					}
-					
+					//player->SetPos(player->GetDX(), tile.GetDY() - TILESIZE - 20);
+					player->SetYPos(tile.GetDY() - TILESIZE - 20);
+					player->SetFall(false);
 				}
 				return;
 			}

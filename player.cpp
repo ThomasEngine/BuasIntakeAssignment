@@ -20,7 +20,7 @@ namespace Tmpl8
 		u = false;
 		d = false;
 		fall = false;
-
+		
 		// Collision bools
 		col_top = false;
 		col_down = false;
@@ -31,6 +31,10 @@ namespace Tmpl8
 		x_direction = 1;
 		y_direction = 0;
 		
+		// X and Y remainders
+		float xRemainder = 0;
+		float yRemainder = 0;
+
 		//hitbox rect
 		rect = { static_cast<int>(px) + 9, static_cast<int>(py), (32 * 2) - 20, (32 * 2) - 10 };
 
@@ -116,23 +120,85 @@ namespace Tmpl8
 			break;
 		}
 	}
-	void Player::Update(float deltaTime)
+	void Player::Update(float deltaTime, const World* world)
 	{
 		calculateKinematic(deltaTime);
-	}
 
-	void Player::Render()
-	{
-		SetDest(px, py, 32 * 2, 32 * 2); // setting the destination of the player
-		rect = { static_cast<int>(px) + 9, static_cast<int>(py), (32 * 2) - 20, (32 * 2) - 10 }; // setting the hitbox
+		// Move along X and Y separately for proper collision handling
+		MoveX(velocity.x + acceleration.x * 0.5f, world);
+		MoveY(velocity.y + acceleration.y * 0.5f, world);
+
+		// Update rect and destination for rendering
+		SetDest(pos.x, pos.y, 32 * 2, 32 * 2);
+		rect = { static_cast<int>(pos.x) + 9, static_cast<int>(pos.y), (32 * 2) - 20, (32 * 2) - 10 };
 		updateAnimation();
 	}
+
+	void Player::MoveX(float amount, const World* world)
+	{
+		xRemainder += amount;
+		int move = static_cast<int>(round(xRemainder));
+		if (move != 0)
+		{
+			xRemainder -= move;
+			int sign = (move > 0) ? 1 : -1;
+			while (move != 0)
+			{
+				// Update rect for collision check
+				rect.x = (pos.x + sign) + 9;
+				std::vector<Object*> collisions = GetCollisions(world);
+				if (collisions.empty())
+				{
+					pos.x += sign;
+					rect.x = static_cast<int>(pos.x) + 9;
+					move -= sign;
+				}
+				else
+				{
+					// Stop at collision
+					velocity.x = 0;
+					break;
+				}
+			}
+		}
+	}
+
+	void Player::MoveY(float amount, const World* world)
+	{
+		yRemainder += amount;
+		int move = static_cast<int>(round(yRemainder));
+		if (move != 0)
+		{
+			yRemainder -= move;
+			int sign = (move > 0) ? 1 : -1;
+			while (move != 0)
+			{
+				// Update rect for collision check
+				rect.y = pos.y + sign;
+				std::vector<Object*> collisions = GetCollisions(world);
+				if (collisions.empty())
+				{
+					pos.y += sign;
+					move -= sign;
+					fall = true;
+				}
+				else
+				{
+					// Stop at collision
+					velocity.y = 0;
+					fall = false;
+					break;
+				}
+			}
+		}
+	}
+
 
 
 	void Player::calculateKinematic(float deltaTime)
 	{
 		// reset the acceleration
-		acceleration = { 0, VERTICAL_ACCALERATION }; 
+		acceleration = { 0, VERTICAL_ACCALERATION };
 
 		// left movment
 		if (l)
@@ -183,65 +249,32 @@ namespace Tmpl8
 			//acceleration.y = 0;
 			velocity.y = 0;
 		}
-		
+
 		// Jumping u = up
 		if (u)
 		{
 			Jump();
 		}
-		
+
 		// kinematic calculations
 		acceleration.x -= velocity.x * HORIZONTAL_FRICTION;
 		velocity += acceleration;
-	}
 
-
-
-	void Player::Move(const World* world)
-	{
-		// Reset all collision bools
-		col_top = false;
-		col_down = false;
-		col_left = false;
-		col_right = false;
-
-		pos.x += velocity.x + acceleration.x * 0.5;
-
-		std::vector<Object*> hitListx = GetCollisions(world);
-
-		for (auto& tile : hitListx)
-		{
-			if (velocity.x > 0)
-			{
-				pos.x = tile->GetDX() - tile->GetDW();
-				col_right = true;
-			}
-			else if (velocity.x < 0)
-			{
-				pos.x = tile->GetDX() + tile->GetDW();
-				col_left = true;
-			}
-		}
-		pos.y += velocity.y + acceleration.x * 0.5;
-		
-		std::vector<Object*> hitListy = GetCollisions(world);
-
-		for (auto& tile : hitListy)
-		{
-			if (velocity.y > 0)
-			{
-				pos.y = tile->GetDY() - tile->GetDH() - tile->GetDW() - 20;
-				col_down = true;
-			}
-			else if (velocity.y < 0)
-			{
-				pos.y = tile->GetDY() + tile->GetDH() + 20;
-				col_top = true;
-			}
-		}
+		// setting now player position
 		px = pos.x;
 		py = pos.y;
 	}
+
+
+	void Player::Jump()
+	{
+		if (!fall)
+		{
+			velocity.y = -VERTICAL_JUMP_SPEED; // jump speed
+		}
+	}
+
+
 
     std::vector<Object*> Player::GetCollisions(const World* world)  
     {  
@@ -262,13 +295,13 @@ namespace Tmpl8
 
 
 
-	void Player::Jump()
-	{
-		if (velocity.y == 0 && fall == 0)
-		{
-			velocity.y = -VERTICAL_JUMP_SPEED; // jump speed
-		}
-	}
+	//void Player::Jump()
+	//{
+	//	if (velocity.y == 0 && fall == 0)
+	//	{
+	//		velocity.y = -VERTICAL_JUMP_SPEED; // jump speed
+	//	}
+	//}
 
 	void Player::StopJump()
 	{
