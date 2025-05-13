@@ -11,15 +11,19 @@ namespace Tmpl8
 {
 	void Game::Init()
 	{
-		player = new Player(200, 200, m_renderer);
+		m_TileMap = new World(m_renderer, TILESIZE);
+		m_TileMap->LoadTilemapFromFile("assets/tilemap/level1.txt");
+		m_TileMap->BuildTileMap();
+
+		player = new Player(16*32, 200, m_renderer);
 
 		Background.SetImage("assets/background/Background_2.png", m_renderer, 0);
 		Background.SetSource(0, 0, 1280, 720);
 		Background.SetDest(0, 0, 1280, 720);
 
-		m_TileMap = new World(m_renderer, TILEMAP_ROWS, TILEMAP_COLS, TILESIZE);
-		m_TileMap->BuildTileMap();
-		Mapx = Mapy = 0;
+
+		Mapx = 0;
+		Mapy = 0;
 	}
 	void Game::Shutdown()
 	{
@@ -38,8 +42,10 @@ namespace Tmpl8
 	}
 	void Game::Update(float deltaTime)
 	{
-		//UpdateCollision(player, m_TileMap);
 		player->Update(deltaTime, m_TileMap);
+
+		int playerY = player->GetDY();
+		Mapy = playerY - (ScreenHeight / 2);
 	}
 	void Game::Render(float deltaTime)
 	{
@@ -60,45 +66,15 @@ namespace Tmpl8
 		SDL_RenderCopyEx(m_renderer, o.GetTex(), &src, &dest, 0, NULL, SDL_FLIP_NONE);
 	}
 
-	void Game::UpdateCollision(Player* player, const World* world)
-	{
-		const auto& map = world->GetMap(); // Get the tile map from the world
-
-		for (auto& tile : map)
-		{
-			if (CheckCollision(*player, tile))
-			{
-				if (tile.GetSolid())
-				{
-					//player->SetPos(player->GetDX(), tile.GetDY() - TILESIZE - 20);
-					player->SetYPos(tile.GetDY() - TILESIZE - 20);
-					player->SetFall(false);
-				}
-				return;
-			}
-			else
-			{
-				player->SetFall(true);
-			}
-		}
-	}
-
-	bool Game::CheckCollision(const Player& a, const Object& b)
-	{
-		//return (a.GetDX() < (b.GetDX() + b.GetDW())) &&
-		//	((a.GetDX() + a.GetDW()) > b.GetDX()) &&
-		//	(a.GetDY() < (b.GetDY() + b.GetDH())) &&
-		//	((a.GetDY() + a.GetDH()) > b.GetDY());
-		return SDL_HasIntersection(&a.getRect(), &b.GetDest());
-	}
-
 	void Game::DrawAll()
 	{
 		// Draw all objects here
 		Draw(Background);
 		m_TileMap->DrawTileMap(m_renderer, Mapx, Mapy, ScreenWidth, ScreenHeight);
 		Draw(*player);
+
 		player->DrawRect(player->getRect(), m_renderer);
+		player->DrawRect(player ->getFallRect(), m_renderer );
 	}
 
 	void Game::showFPS(float deltaTime)

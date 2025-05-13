@@ -18,37 +18,34 @@ namespace Tmpl8
 		void Update(float deltaTime, const World* world);
 		void MoveX(float amount, const World* world);
 		void MoveY(float amount, const World* world);
+		float GetChangeY() { return change_y; }
 		void calculateKinematic(float deltaTime);
-		std::vector<Object*> GetCollisions(const World* world);
+
+		std::vector<Object*> GetCollisions(SDL_Rect* rect, const World* world);
+		bool CheckCollision(SDL_Rect* rect, const World* world);
+		bool IsOnGround(const World* world);
 		
 
-		void Jump();
-		void StopJump();
-		void StopMoveX();
-		void SetPos(float x, float y) { px = x; py = y; pos.x = x; pos.y = y; rect = {static_cast<int>(x) + 9, static_cast<int>(y), (32 * 2) - 20, (32 * 2) - 10 };
-		}
 		void SetYPos(float y) { py = y; pos.y = y; rect.y = static_cast<int>(y); }
 		void SetXPos(float x) { px = x; pos.x = x; rect.x = static_cast<int>(x) + 9; }
 
 		SDL_Rect getRect() const { return rect; }
-		bool GoingUp();
-		bool GoingLeft();
+		SDL_Rect getFallRect() const { return fall_detect; }
 
-
-		void SetFall(bool f) { fall = f; }
-		void SetVelocityX(int vx) { velocity.x = vx; }
+		void Jump();
 
 	private:
 		SDL_Renderer* m_renderer;
 		float px, py;
 		float xRemainder; // x remainder for the player
 		float yRemainder; // y remainder for the player
-		int idolr, idoll, walkingr, walkingl, jumpl, jumpr, fallingl, fallingr, hit; // all the different animations
+		float change_y; // change in y
+		int idolr, idoll, walkingr, walkingl, jumpl, jumpr, fallingl, fallingr, hit, double_jumpl, doublejumpr, hangingl, hangingr; // all the different animations
 		int x_direction; // direction of the player 0 = left 1 = right
 		int y_direction; // direction of the player 0 = down 1 = up
 		bool l, r, u, d, fall; // left right up down
-		bool col_top, col_down, col_left, col_right;
 		SDL_Rect rect;
+		SDL_Rect fall_detect;
 		vec2 pos;
 		vec2 velocity;
 		vec2 acceleration;

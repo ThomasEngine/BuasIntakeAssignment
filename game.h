@@ -17,16 +17,12 @@ public:
 	void Init();
 	void Shutdown();
 
-
 	void Tick( float deltaTime );
 	void Update(float deltaTime);
 	void Render(float deltaTime);
 	void showFPS(float deltaTime);
 	void DrawAll();
 	void Draw(Object o);
-
-	void UpdateCollision(Player* player, const World* world);
-	bool CheckCollision(const Player& a, const Object& b);
 
 	void MouseUp( int button ) { /* implement if you want to detect mouse button presses */ }
 	void MouseDown( int button ) { /* implement if you want to detect mouse button presses */ }
