@@ -21,6 +21,8 @@ namespace Tmpl8
 		float GetChangeY() { return change_y; }
 		void calculateKinematic(float deltaTime);
 
+		void resetPlayer();
+
 		std::vector<Object*> GetCollisions(SDL_Rect* rect, const World* world);
 		bool CheckCollision(SDL_Rect* rect, const World* world);
 		bool IsOnGround(const World* world);
@@ -44,6 +46,9 @@ namespace Tmpl8
 		int x_direction; // direction of the player 0 = left 1 = right
 		int y_direction; // direction of the player 0 = down 1 = up
 		bool l, r, u, d, fall; // left right up down
+		bool doubleJumpAllowed;
+		int jumpCount = 0;
+		int maxJumps = 2;
 		SDL_Rect rect;
 		SDL_Rect fall_detect;
 		vec2 pos;

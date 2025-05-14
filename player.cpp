@@ -94,6 +94,14 @@ namespace Tmpl8
 			d = true;
 			u = false;
 			break;
+		case SDLK_0:
+			resetPlayer();
+			break;
+		case SDLK_9:
+			std::cout << px << ", " << py << std::endl;
+			px = 157;
+			py = 2090;
+			pos = { px, py };
 		default:
 			break;
 		}
@@ -117,6 +125,7 @@ namespace Tmpl8
 		case SDLK_SPACE:
 		case SDLK_w:
 			u = false;
+			doubleJumpAllowed = true; // Allow jump again
 			break;
 		case SDLK_DOWN:
 		case SDLK_s:
@@ -138,6 +147,9 @@ namespace Tmpl8
 
 		change_y = py - tempY;
 
+		if (IsOnGround(world)) {
+			jumpCount = 0;
+		}
 
 		// Update rect and destination for rendering
 		SetDest(pos.x, pos.y, 32 * 2, 32 * 2);
@@ -253,7 +265,7 @@ namespace Tmpl8
 				{
 					setCurAnimation(jumpl);
 				}
-			}
+			}	
 			if (x_direction == 1) // if direction is right
 			{
 				if (getCurAnimation() != jumpr)
@@ -305,6 +317,7 @@ namespace Tmpl8
 		if (u)
 		{
 			Jump();
+			doubleJumpAllowed = false;
 		}
 
 		// kinematic calculations
@@ -321,11 +334,44 @@ namespace Tmpl8
 		py = pos.y;
 	}
 
-	void Player::Jump() // If player is allowed to jump. Jump.
+	void Player::resetPlayer()
 	{
-		if (!fall)
+		// Reset player position
+		px = 64;
+		py = 95 * 31;
+		// Reset kinematic vectors
+		pos = { px, py };
+		velocity = { 0, 0 };
+		acceleration = { 0, VERTICAL_ACCALERATION };
+		l = false;
+		r = false;
+		u = false;
+		d = false;
+		fall = false;
+		SetHealth(100);
+		SetMaxHealth(100);
+	}
+
+	void Player::Jump()
+	{
+		if (fall && jumpCount == 0)
 		{
-			velocity.y = -VERTICAL_JUMP_SPEED; // jump speed
+			jumpCount++; // only allow 1 jump
+		}
+		
+		if (jumpCount < maxJumps && doubleJumpAllowed)
+		{
+			velocity.y = -VERTICAL_JUMP_SPEED;
+			jumpCount++;
+			std::cout << jumpCount << std::endl;
+			// Optional: set double jump animation
+			if (jumpCount == 2)
+			{
+				if (x_direction == 0)
+					setCurAnimation(double_jumpl);
+				else
+					setCurAnimation(doublejumpr);
+			}
 		}
 	}
 

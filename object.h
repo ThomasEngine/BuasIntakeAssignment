@@ -18,6 +18,7 @@ namespace Tmpl8
 		void SetDest(int x, int y);
 		void SetSource(int x, int y, int w, int h);
 		void SetImage(std::string filename, SDL_Renderer* ren, int color);
+		void SetTexture(SDL_Texture* texture) { tex = texture; }
 		void SetSolid(bool s) { is_Solid = s; }
 		bool GetSolid() const { return is_Solid; }
 		int GetDX() const { return dest.x; }

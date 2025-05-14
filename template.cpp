@@ -400,14 +400,48 @@ int main( int argc, char **argv )
 				game->KeyUp( event.key.keysym.sym );
 				break;
 			case SDL_MOUSEMOTION:
-				game->MouseMove( event.motion.xrel, event.motion.yrel );
+			{
+				// Query the current game state
+				auto state = game->GetState(); // You may need to add a GetState() method to Game
+				int mouseX = event.motion.x;
+				int mouseY = event.motion.y;
+				bool startGame = false, exit = false, restart = false;
+				GameState newState = state;
+				game->GetMenu()->HandleEvent(mouseX, mouseY, false, newState, startGame, exit, restart);
+				// No state change on hover
 				break;
+			}
 			case SDL_MOUSEBUTTONUP:
-				game->MouseUp( event.button.button );
-				break;
 			case SDL_MOUSEBUTTONDOWN:
-				game->MouseDown( event.button.button );
+			{
+				// Query the current game state
+				auto state = game->GetState(); // You may need to add a GetState() method to Game
+
+				if (state == GameState::MainMenu || state == GameState::Levels || state == GameState::Paused || state == GameState::Settings)
+				{
+					int mouseX, mouseY;
+					SDL_GetMouseState(&mouseX, &mouseY);
+					bool startGame = false, exit = false, restart = false;
+					GameState newState = state;
+
+					game->GetMenu()->HandleEvent(mouseX, mouseY, true, newState, startGame, exit, restart);
+
+					if (startGame)
+						game->SetState(GameState::Playing);
+					else if (exit)
+						game->SetState(GameState::MainMenu);
+					else if (restart)
+					{
+						game->SetState(GameState::Playing);
+						game->ResetPlayer();
+					}
+					else
+						game->SetState(newState);
+					break;
+
+				}
 				break;
+			} 
 			default:
 				break;
 			}

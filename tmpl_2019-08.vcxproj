@@ -225,6 +225,7 @@
     <ClCompile Include="entity.cpp" />
     <ClCompile Include="entity.h" />
     <ClCompile Include="game.cpp" />
+    <ClCompile Include="gameMenu.cpp" />
     <ClCompile Include="levels.cpp" />
     <ClCompile Include="object.cpp" />
     <ClCompile Include="player.cpp" />
@@ -234,6 +235,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h" />
+    <ClInclude Include="gameMenu.h" />
     <ClInclude Include="levels.h" />
     <ClInclude Include="object.h" />
     <ClInclude Include="player.h" />

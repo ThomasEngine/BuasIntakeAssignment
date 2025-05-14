@@ -15,20 +15,24 @@ namespace Tmpl8
 		m_TileMap->LoadTilemapFromFile("assets/tilemap/level1.txt");
 		m_TileMap->BuildTileMap();
 
-		player = new Player(16*32, 200, m_renderer);
+		player = new Player(64, 95 * 32, m_renderer);
+		player->resetPlayer();
 
 		Background.SetImage("assets/background/Background_2.png", m_renderer, 0);
 		Background.SetSource(0, 0, 1280, 720);
 		Background.SetDest(0, 0, 1280, 720);
 
+		m_menu = new GameMenu(m_renderer);
+		m_state = GameState::MainMenu;
+
 
 		cameraX = 0.f;
-		//cameraY = player->GetDY() - ScreenHeight / 2;
 	}
 	void Game::Shutdown()
 	{
 		delete player;
 		delete m_TileMap;
+		delete m_menu;
 		SDL_DestroyTexture(Background.GetTex());
 		SDL_DestroyRenderer(m_renderer);
 		SDL_DestroyWindow(m_window);
@@ -37,13 +41,28 @@ namespace Tmpl8
 	{
 		// clear the graphics window
 		SDL_RenderClear(m_renderer);
-		Update(deltaTime);
-		Render(deltaTime);
+
+		switch (m_state)
+		{
+		case Tmpl8::GameState::MainMenu: // Game is paused
+		case Tmpl8::GameState::Paused:
+		case Tmpl8::GameState::Levels:
+		case Tmpl8::GameState::Settings:
+			m_menu->Render();
+			break;
+		case Tmpl8::GameState::Playing: // Game is playing
+			Update(deltaTime);
+			Render(deltaTime);
+			break;
+		}
+
+
 	}
 	void Game::Update(float deltaTime)
 	{
 		player->Update(deltaTime, m_TileMap);
 		UpdateCameraY();
+
 	}
 	void Game::UpdateCameraY()
 	{
@@ -63,10 +82,10 @@ namespace Tmpl8
 	{
 		DrawAll();
 		SDL_RenderPresent(m_renderer);
-		showFPS(deltaTime);
+		//showFPS(deltaTime);
 	}
 
-	void Game::DrawBackground(Object o)
+	void Game::DrawStatic(Object o)
 	{
 		if (!o.GetTex())
 		{
@@ -94,7 +113,7 @@ namespace Tmpl8
 	void Game::DrawAll()
 	{
 		// Draw all objects here
-		DrawBackground(Background);
+		DrawStatic(Background);
 		m_TileMap->DrawTileMap(m_renderer, cameraX, cameraY, ScreenWidth, ScreenHeight, player->GetChangeY());
 		Draw(*player);
 
