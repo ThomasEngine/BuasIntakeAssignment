@@ -23,7 +23,7 @@ namespace Tmpl8
 		Background.SetDest(0, 0, 1280, 720);
 
 		m_menu = new GameMenu(m_renderer);
-		m_state = GameState::MainMenu;
+		m_state = GameState::Paused;
 
 
 		cameraX = 0.f;
@@ -44,10 +44,7 @@ namespace Tmpl8
 
 		switch (m_state)
 		{
-		case Tmpl8::GameState::MainMenu: // Game is paused
-		case Tmpl8::GameState::Paused:
-		case Tmpl8::GameState::Levels:
-		case Tmpl8::GameState::Settings:
+		case Tmpl8::GameState::Paused: // Game is paused
 			m_menu->Render();
 			break;
 		case Tmpl8::GameState::Playing: // Game is playing

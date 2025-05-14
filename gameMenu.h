@@ -1,10 +1,11 @@
 #pragma once
 
 #include <vector>
+#include <string>
 #include <SDL.h>
 #include <SDL_image.h>
+#include "sound.h"
 #include "object.h"
-#include <string>
 
 
 namespace Tmpl8
@@ -12,6 +13,7 @@ namespace Tmpl8
     struct MenuButton : public Object
     {
         std::string label;
+        bool isHovered;
         MenuButton(const std::string& label) : label(label) {}
     };
 
@@ -20,15 +22,13 @@ namespace Tmpl8
         Main, 
         Levels, 
         Pause, 
-        Settings 
+        Settings,
+        Quit
     };
     enum class GameState
     {
-        MainMenu,
         Playing,
-        Paused,
-        Levels,
-        Settings
+        Paused
     };
 
     class GameMenu
@@ -38,17 +38,28 @@ namespace Tmpl8
 		~GameMenu() { SDL_DestroyTexture(m_spriteSheet); }
         void SetMenu(MenuType type);
         void Render();
-        void HandleEvent(int MouseX, int MouseY, bool MousePressed, GameState& outGameStateType, bool& outShouldStartGame, bool& outShouldExit, bool& outShouldRestart);
+        void HandleEvent(int MouseX, int MouseY, bool MousePressed, GameState& outGameStateType, bool& outShouldStartGame, bool& outShouldExit, bool& outShouldRestart, Audio* audio, MenuType& outMenuType);
 
     private:
         void BuildMenu(MenuType type);
-        void DrawButton(MenuButton& button, bool hovered);
+        void DrawButton(MenuButton& button);
+        void DrawSlider();
 
         SDL_Texture* m_spriteSheet = nullptr;
         Object Background;
         SDL_Renderer* m_renderer;
         MenuType m_currentMenu;
         std::vector<MenuButton> m_buttons;
-        int m_hoveredButton = -1;
+
+        Object volumeSliderBar;
+		Object volumeSliderHandle;
+        int sliderMinX = 300;
+        int sliderMaxX = 700;
+        int sliderY = 500;
+        int m_sliderHandleOffset;
+		int volume = 100; // Volume percentage
+		bool sliderDragging = false;
+
+		bool hover_active;
     };
 }

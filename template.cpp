@@ -26,6 +26,8 @@
 #include <iostream>
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <SDL_mixer.h>
+#include "sound.h"
 
 #ifdef ADVANCEDGL
 #define GLEW_BUILD
@@ -177,6 +179,7 @@ static bool firstframe = true;
 
 Surface* surface = 0;
 Game* game = 0;
+Audio* audio = 0;
 SDL_Window* window = 0;
 
 #ifdef _MSC_VER
@@ -307,10 +310,10 @@ int main( int argc, char **argv )
 #endif
 	printf( "application started.\n" );
 	SDL_Init( SDL_INIT_VIDEO );
-	if (IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG) == 0) // Initialize SDL_image with PNG and JPG support
-	{
-		std::cerr << "Failed to initialize SDL_image: " << IMG_GetError() << std::endl;
-	}
+	if (Mix_Init(MIX_INIT_MP3) == 0)
+		SDL_Log("Failed to initialize SDL_mixer: %s\n", Mix_GetError());
+	if (IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG) == 0)
+		SDL_Log("Failed to initialize SDL_image: %s\n", IMG_GetError());
 	
 #ifdef ADVANCEDGL
 #ifdef FULLSCREEN
@@ -331,9 +334,11 @@ int main( int argc, char **argv )
 	surface->Clear( 0 );
 	SDL_Renderer* renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
 	SDL_Texture* frameBuffer = SDL_CreateTexture( renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, ScreenWidth, ScreenHeight );
+	
 #endif
 	int exitapp = 0;
 	game = new Game();
+	audio = new Audio();
 	game->SetTarget( surface, renderer, window );
 	timer t;
 	t.reset();
@@ -407,7 +412,8 @@ int main( int argc, char **argv )
 				int mouseY = event.motion.y;
 				bool startGame = false, exit = false, restart = false;
 				GameState newState = state;
-				game->GetMenu()->HandleEvent(mouseX, mouseY, false, newState, startGame, exit, restart);
+				MenuType newMenuType;
+				game->GetMenu()->HandleEvent(mouseX, mouseY, false, newState, startGame, exit, restart, audio, newMenuType);
 				// No state change on hover
 				break;
 			}
@@ -417,26 +423,35 @@ int main( int argc, char **argv )
 				// Query the current game state
 				auto state = game->GetState(); // You may need to add a GetState() method to Game
 
-				if (state == GameState::MainMenu || state == GameState::Levels || state == GameState::Paused || state == GameState::Settings)
+				if (state == GameState::Paused)
 				{
 					int mouseX, mouseY;
 					SDL_GetMouseState(&mouseX, &mouseY);
 					bool startGame = false, exit = false, restart = false;
 					GameState newState = state;
+					MenuType newMenuType;
 
-					game->GetMenu()->HandleEvent(mouseX, mouseY, true, newState, startGame, exit, restart);
+					game->GetMenu()->HandleEvent(mouseX, mouseY, true, newState, startGame, exit, restart, audio, newMenuType);
 
 					if (startGame)
 						game->SetState(GameState::Playing);
 					else if (exit)
-						game->SetState(GameState::MainMenu);
+					{
+						if (state != GameState::Paused)
+							game->SetState(GameState::Paused);
+						else
+							exitapp = 1;
+					}
 					else if (restart)
 					{
 						game->SetState(GameState::Playing);
 						game->ResetPlayer();
 					}
 					else
+					{
 						game->SetState(newState);
+						game->GetMenu()->SetMenu(newMenuType);
+					}
 					break;
 
 				}
@@ -450,5 +465,6 @@ int main( int argc, char **argv )
 	game->Shutdown();
 	IMG_Quit();
 	SDL_Quit();
+	Mix_Quit();
 	return 0;
 }

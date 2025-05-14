@@ -45,7 +45,7 @@ namespace Tmpl8 {
 		World* m_TileMap;
 		Player* player;
 		GameMenu* m_menu;
-		GameState m_state = GameState::MainMenu;
+		GameState m_state = GameState::Paused;
 		float cameraX, cameraY;
 	};
 

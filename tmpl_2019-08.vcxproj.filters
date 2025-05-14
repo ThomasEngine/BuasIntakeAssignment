@@ -15,6 +15,7 @@
     <ClCompile Include="levels.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="gameMenu.cpp" />
+    <ClCompile Include="sound.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h" />
@@ -29,6 +30,7 @@
     <ClInclude Include="world.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="gameMenu.h" />
+    <ClInclude Include="sound.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="template code">
