@@ -4,7 +4,6 @@
 #include <iostream> //std::cout
 #include <sstream>
 #include <fstream>
-#include "levels.h"
 #include "template.h"
 
 namespace Tmpl8
@@ -57,6 +56,7 @@ namespace Tmpl8
 	void Game::Update(float deltaTime)
 	{
 		player->Update(deltaTime, m_TileMap);
+		m_TileMap->UpdateCoinAnimation();
 		UpdateCameraY();
 		UpdateTimer(deltaTime);
 
@@ -128,7 +128,7 @@ namespace Tmpl8
 	{
 		// Draw all objects here
 		DrawStatic(Background);
-		m_TileMap->DrawTileMap(m_renderer, cameraX, cameraY, ScreenWidth, ScreenHeight, player->GetChangeY());
+		m_TileMap->DrawTileMap(m_renderer, cameraX, cameraY, ScreenWidth, ScreenHeight);
 		Draw(*player);
 
 		//player->DrawRect(player->getRect(), m_renderer);
@@ -146,4 +146,4 @@ namespace Tmpl8
 		std::cout << fps << std::endl;
 
 	}
-};
+}

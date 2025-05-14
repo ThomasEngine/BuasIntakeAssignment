@@ -394,11 +394,32 @@ int main( int argc, char **argv )
 				exitapp = 1;
 				break;
 			case SDL_KEYDOWN:
-				if (event.key.keysym.sym == SDLK_ESCAPE) 
+				if (event.key.keysym.sym == SDLK_BACKSPACE) 
 				{
 					exitapp = 1;
 					// find other keys here: http://sdl.beuc.net/sdl.wiki/SDLKey
 				}
+				else if (event.key.keysym.sym == SDLK_ESCAPE)
+				{
+					if (game->GetState() == GameState::Playing)
+					{
+						game->SetState(GameState::Paused);
+						game->GetMenu()->SetMenu(MenuType::GamePaused);
+
+					}
+
+				}
+				else if (event.key.keysym.sym == SDLK_RETURN)
+				{
+					if (game->GetState() == GameState::Paused)
+						game->SetState(GameState::Playing);
+				}
+				else if (event.key.keysym.sym == SDLK_r)
+				{
+					game->ResetPlayer();
+					game->SetState(GameState::Playing);
+				}
+				else
 				game->KeyDown( event.key.keysym.sym );
 				break;
 			case SDL_KEYUP:
@@ -407,7 +428,7 @@ int main( int argc, char **argv )
 			case SDL_MOUSEMOTION:
 			{
 				// Query the current game state
-				auto state = game->GetState(); // You may need to add a GetState() method to Game
+				auto state = game->GetState(); 
 				int mouseX = event.motion.x;
 				int mouseY = event.motion.y;
 				bool startGame = false, exit = false, restart = false;
@@ -420,8 +441,8 @@ int main( int argc, char **argv )
 			case SDL_MOUSEBUTTONUP:
 			case SDL_MOUSEBUTTONDOWN:
 			{
-				// Query the current game state
-				auto state = game->GetState(); // You may need to add a GetState() method to Game
+				// Get the current game state
+				auto state = game->GetState(); 
 
 				if (state == GameState::Paused)
 				{
@@ -434,7 +455,11 @@ int main( int argc, char **argv )
 					game->GetMenu()->HandleEvent(mouseX, mouseY, true, newState, startGame, exit, restart, audio, newMenuType);
 
 					if (startGame)
+					{
 						game->SetState(GameState::Playing);
+
+					}
+
 					else if (exit)
 					{
 						if (state != GameState::Paused)

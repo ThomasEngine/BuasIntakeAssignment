@@ -15,9 +15,10 @@ namespace Tmpl8
 		void KeyDown(int key);
 		void KeyUp(int key);
 
-		void Update(float deltaTime, const World* world);
+		void Update(float deltaTime, World* world);
 		void MoveX(float amount, const World* world);
 		void MoveY(float amount, const World* world);
+		void CheckCoins(World* world);
 		float GetChangeY() { return change_y; }
 		void calculateKinematic(float deltaTime);
 
@@ -49,6 +50,7 @@ namespace Tmpl8
 		bool doubleJumpAllowed;
 		int jumpCount = 0;
 		int maxJumps = 2;
+		int collectedCoins = 0;
 		SDL_Rect rect;
 		SDL_Rect fall_detect;
 		vec2 pos;

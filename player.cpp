@@ -136,7 +136,7 @@ namespace Tmpl8
 		}
 	}
 
-	void Player::Update(float deltaTime, const World* world)
+	void Player::Update(float deltaTime, World* world)
 	{
 		calculateKinematic(deltaTime);
 
@@ -145,6 +145,8 @@ namespace Tmpl8
 		MoveX(velocity.x + acceleration.x * 0.5f, world);
 		MoveY(velocity.y + acceleration.y * 0.5f, world);
 
+		CheckCoins(world); // Check for coin collision
+		
 		change_y = py - tempY;
 
 		if (IsOnGround(world)) {
@@ -230,6 +232,26 @@ namespace Tmpl8
 			}
 		}
 	}
+
+    void Player::CheckCoins(World* world)  
+    {  
+       SDL_Rect playerRect = getRect();  
+       auto& coins = world->GetCoins(); // Get the coins from the world  
+       for (auto coin = coins.begin(); coin != coins.end();)  
+       {  
+           if (SDL_HasIntersection(&playerRect, &coin->GetDest()))  
+           {  
+               // Coin collected
+			   collectedCoins++; // Add coin to total coins
+               coin = coins.erase(coin); // Remove the coin from the vector  
+			   std::cout << "Collected coins: " << collectedCoins << std::endl; // Print the number of collected coins
+           }  
+           else  
+           {  
+               ++coin; // Move to the next coin  
+           }  
+       }  
+    }
 
 	void Player::calculateKinematic(float deltaTime)
 	{

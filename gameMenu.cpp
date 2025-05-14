@@ -86,6 +86,27 @@ namespace Tmpl8
 			m_buttons.back().SetTexture(m_spriteSheet);
 			m_buttons.back().SetSource(1216, 625, 200, 50);
 			break;
+		case MenuType::GamePaused:
+            m_buttons.emplace_back("Resume");
+            m_buttons.back().SetDest(ScreenWidth / 2 - 514 / 2, 84 + 52, 514, 128);
+            m_buttons.back().SetTexture(m_spriteSheet);
+            m_buttons.back().SetSource(0, 0, 514, 128);
+
+            m_buttons.emplace_back("Settings");
+            m_buttons.back().SetDest(ScreenWidth / 2 - 514 / 2, 296, 514, 128);
+            m_buttons.back().SetTexture(m_spriteSheet);
+            m_buttons.back().SetSource(0, 128, 514, 128);
+
+            m_buttons.emplace_back("Restart");
+            m_buttons.back().SetDest(ScreenWidth / 2 - 514 / 2, 508 - 52, 514, 128);
+            m_buttons.back().SetTexture(m_spriteSheet);
+            m_buttons.back().SetSource(0, 256, 514, 128);
+
+            m_buttons.emplace_back("Exit");
+            m_buttons.back().SetDest(ScreenWidth / 2 - 514 / 2, 508 - 52, 514, 128);
+            m_buttons.back().SetTexture(m_spriteSheet);
+            m_buttons.back().SetSource(0, 256, 514, 128);
+
         }
     }
 
@@ -95,9 +116,13 @@ namespace Tmpl8
         SDL_RenderClear(m_renderer);
         
         // draw background
-        SDL_Rect dest = Background.GetDest();
-        SDL_Rect src = Background.GetSource();
-        SDL_RenderCopyEx(m_renderer, Background.GetTex(), &src, &dest, 0, NULL, SDL_FLIP_NONE);
+        if (m_currentState != GameState::Paused)
+        {
+            SDL_Rect dest = Background.GetDest();
+            SDL_Rect src = Background.GetSource();
+			SDL_RenderCopy(m_renderer, Background.GetTex(), &src, &dest);
+        }
+
 
         for (size_t i = 0; i < m_buttons.size(); ++i)
         {
@@ -155,13 +180,16 @@ namespace Tmpl8
                     // Main menu 
                     if (m_currentMenu == MenuType::Main)
                     {
+                        m_currentState = GameState::Paused;
                         if (m_buttons[i].label == "Levels")
                         {
+							m_currentState = GameState::Playing;
                             outGameStateType = GameState::Playing;
                             outShouldStartGame = true;
                         }
                         else if (m_buttons[i].label == "Settings")
                         {
+                            m_currentState = GameState::Paused;
                             outGameStateType = GameState::Paused;
                             outMenuType = MenuType::Settings;
                         }
@@ -190,8 +218,24 @@ namespace Tmpl8
                             outMenuType = MenuType::Main;
                         }
                     }
+					// Pause menu
+					else if (m_currentMenu == MenuType::Pause)
+					{
+                        m_currentState = GameState::Paused;
+						if (m_buttons[i].label == "Resume")
+						{
+                            m_currentState = GameState::Playing;
+							outShouldStartGame = true;
+						}
+						else if (m_buttons[i].label == "Restart")
+						{
+							outShouldRestart = true;
+							outGameStateType = GameState::Playing;
+						}
+						else if (m_buttons[i].label == "Exit")
+							outShouldExit = true;
+					}
                 }
-
             }
 			else m_buttons[i].isHovered = false;
         }

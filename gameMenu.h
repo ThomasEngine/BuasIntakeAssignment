@@ -19,7 +19,8 @@ namespace Tmpl8
 
     enum class MenuType
     { 
-        Main, 
+        Main,
+        GamePaused,
         Levels, 
         Pause, 
         Settings,
@@ -37,6 +38,7 @@ namespace Tmpl8
         GameMenu(SDL_Renderer* renderer);
 		~GameMenu() { SDL_DestroyTexture(m_spriteSheet); }
         void SetMenu(MenuType type);
+		void SetGameState(GameState state) { m_currentState = state; }
         void Render();
         void HandleEvent(int MouseX, int MouseY, bool MousePressed, GameState& outGameStateType, bool& outShouldStartGame, bool& outShouldExit, bool& outShouldRestart, Audio* audio, MenuType& outMenuType);
 
@@ -49,6 +51,7 @@ namespace Tmpl8
         Object Background;
         SDL_Renderer* m_renderer;
         MenuType m_currentMenu;
+		GameState m_currentState;
         std::vector<MenuButton> m_buttons;
 
         Object volumeSliderBar;

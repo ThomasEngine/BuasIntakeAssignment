@@ -7,16 +7,31 @@
 namespace Tmpl8
 {
     World::World(SDL_Renderer* renderer, int tileSize)
-		: m_renderer{ renderer }, m_tileSize{ tileSize }, m_rows{ 100 }, m_cols{ 40 }
+		: m_renderer{ renderer }, m_tileSize{ tileSize }, m_tileTexture{nullptr}
     {
+        // Load the tile texture
+		SDL_Surface* surf = IMG_Load("assets/tilemap/Assets2.png");
+        if (!surf)
+        {
+			SDL_Log("Failed to load tile texture: %s\n", IMG_GetError());
+        }
+		m_tileTexture = SDL_CreateTextureFromSurface(renderer, surf);
+		SDL_FreeSurface(surf);
+
+		// Load the coin texture
+		surf = IMG_Load("assets/coin.png");
+        if (!surf)
+        {
+            SDL_Log("Failed to load coin texture: %s\n", IMG_GetError());
+        }
+		m_coinTexture = SDL_CreateTextureFromSurface(renderer, surf);
+		SDL_FreeSurface(surf);
     }
 
     World::~World()
     {
-        for (auto& tile : m_map)
-        {
-            SDL_DestroyTexture(tile.GetTex());
-        }
+		SDL_DestroyTexture(m_tileTexture);
+		SDL_DestroyTexture(m_coinTexture);
         m_map.clear();
     }
 
@@ -57,17 +72,29 @@ namespace Tmpl8
     void World::BuildTileMap()
     {
         m_map.clear();
+        m_coins.clear();
 
         Object tile;
-        tile.SetImage("assets/tilemap/Assets2.png", m_renderer, 1);
+		tile.SetTexture(m_tileTexture);
 
         for (int i = 0; i < m_rows; i++)
         {
             for (int j = 0; j < m_cols; j++)
             {
                 int tileType = m_tilemap[i][j];
+
                 if (tileType != 0)
                 {
+                    if (tileType == 99)
+                    {
+                        // Create and store the coin
+                        Entity coin;
+                        coin.SetTexture(m_coinTexture);
+                        coin.SetDest(j * m_tileSize, i * m_tileSize, m_tileSize, m_tileSize);
+                        coin.setCurAnimation(coin.createCycle(0, 16, 16, 16, 4));
+                        m_coins.push_back(coin);
+						continue; // Skip to the next tile
+                    }
                     switch (tileType)
                     {
 					case 1:
@@ -110,9 +137,9 @@ namespace Tmpl8
         }
     }
 
-    void World::DrawTileMap(SDL_Renderer* renderer, int cameraX, int cameraY, int screenWidth, int screenHeight, float player_y_change)
+    void World::DrawTileMap(SDL_Renderer* renderer, int cameraX, int cameraY, int screenWidth, int screenHeight)
     {
-        for (auto& tile : m_map)
+        for (Object& tile : m_map)
         {
             // Only render tiles in view (optional optimization)
             if (tile.GetDX() >= cameraX - m_tileSize &&
@@ -130,6 +157,26 @@ namespace Tmpl8
                 // For debugging, draw tile bounds
                 //tile.DrawRect(dest, m_renderer);
             }
+        }
+        for (Entity& coin : m_coins)
+        {
+            if (coin.GetDX() >= cameraX - m_tileSize &&
+                coin.GetDY() >= cameraY - m_tileSize &&
+                coin.GetDX() <= cameraX + screenWidth &&
+                coin.GetDY() <= cameraY + screenHeight)
+            {
+                SDL_Rect dest = coin.GetDest();
+                SDL_Rect src = coin.GetSource();
+                dest.y -= cameraY;
+                SDL_RenderCopy(renderer, coin.GetTex(), &src, &dest);
+            }
+        }
+    }
+    void World::UpdateCoinAnimation()
+    {
+        for (Entity& coin : m_coins)
+        {
+            coin.updateAnimation();
         }
     }
 }
