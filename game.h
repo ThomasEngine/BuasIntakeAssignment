@@ -32,6 +32,7 @@ namespace Tmpl8 {
 		GameMenu* GetMenu() { return m_menu; }
 		GameState GetState() const { return static_cast<GameState>(m_state); }
 		void SetState(GameState state) { m_state = state; }
+		void UpdateTimer(float deltaTime);
 
 
 		// Send keys to the player class
@@ -47,6 +48,9 @@ namespace Tmpl8 {
 		GameMenu* m_menu;
 		GameState m_state = GameState::Paused;
 		float cameraX, cameraY;
+		float playerTimer = 0.0f;
+		bool timerActive = false;
+		bool playerFinished = false;
 	};
 
 } // namespace Tmpl8

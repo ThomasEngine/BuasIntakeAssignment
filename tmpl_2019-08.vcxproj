@@ -226,7 +226,6 @@
     <ClCompile Include="entity.h" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="gameMenu.cpp" />
-    <ClCompile Include="levels.cpp" />
     <ClCompile Include="object.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="sound.cpp" />
@@ -237,7 +236,6 @@
   <ItemGroup>
     <ClInclude Include="game.h" />
     <ClInclude Include="gameMenu.h" />
-    <ClInclude Include="levels.h" />
     <ClInclude Include="object.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="sound.h" />
@@ -247,9 +245,6 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="_readme.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="level.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

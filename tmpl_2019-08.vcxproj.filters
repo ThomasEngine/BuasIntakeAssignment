@@ -12,7 +12,6 @@
     <ClCompile Include="entity.h" />
     <ClCompile Include="entity.cpp" />
     <ClCompile Include="world.cpp" />
-    <ClCompile Include="levels.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="gameMenu.cpp" />
     <ClCompile Include="sound.cpp" />
@@ -26,7 +25,6 @@
       <Filter>template code</Filter>
     </ClInclude>
     <ClInclude Include="object.h" />
-    <ClInclude Include="levels.h" />
     <ClInclude Include="world.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="gameMenu.h" />
@@ -41,8 +39,5 @@
     <Text Include="_readme.txt">
       <Filter>template code</Filter>
     </Text>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="level.txt" />
   </ItemGroup>
 </Project>

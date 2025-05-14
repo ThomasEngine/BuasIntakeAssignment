@@ -26,6 +26,7 @@ namespace Tmpl8
 		m_state = GameState::Paused;
 
 
+
 		cameraX = 0.f;
 	}
 	void Game::Shutdown()
@@ -52,13 +53,12 @@ namespace Tmpl8
 			Render(deltaTime);
 			break;
 		}
-
-
 	}
 	void Game::Update(float deltaTime)
 	{
 		player->Update(deltaTime, m_TileMap);
 		UpdateCameraY();
+		UpdateTimer(deltaTime);
 
 	}
 	void Game::UpdateCameraY()
@@ -92,6 +92,23 @@ namespace Tmpl8
 		SDL_Rect dest = o.GetDest();
 		SDL_Rect src = o.GetSource();
 		SDL_RenderCopyEx(m_renderer, o.GetTex(), &src, &dest, 0, NULL, SDL_FLIP_NONE);
+	}
+
+	void Game::UpdateTimer(float deltaTime)
+	{
+		if (m_state == GameState::Playing && !timerActive)
+		{
+			playerTimer = 0.0f;
+			timerActive = true;
+			playerFinished = false;
+		}
+		if (m_state == GameState::Playing && timerActive && !playerFinished)
+			playerTimer += deltaTime / 1000.f;
+		if (player->GetDY() <= 0)
+		{
+			playerFinished = true;
+			timerActive = false;
+		}
 	}
 
 	void Game::Draw(Object o)
