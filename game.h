@@ -19,10 +19,12 @@ public:
 
 	void Tick( float deltaTime );
 	void Update(float deltaTime);
+	void UpdateCameraY();
 	void Render(float deltaTime);
 	void showFPS(float deltaTime);
 	void DrawAll();
 	void Draw(Object o);
+	void DrawBackground(Object o);
 
 	void MouseUp( int button ) { /* implement if you want to detect mouse button presses */ }
 	void MouseDown( int button ) { /* implement if you want to detect mouse button presses */ }
@@ -37,7 +39,8 @@ private:
 	Object Background;
 	World* m_TileMap;
 	Player* player;
-	int Mapx, Mapy;
+	float cameraX, cameraY;
+
 };
 
 }; // namespace Tmpl8

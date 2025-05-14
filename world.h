@@ -15,7 +15,7 @@ namespace Tmpl8
 
         void LoadTilemapFromFile(const std::string& filename);
         void BuildTileMap();
-        void DrawTileMap(SDL_Renderer* renderer, int cameraX, int cameraY, int screenWidth, int screenHeight /* player*/);
+        void DrawTileMap(SDL_Renderer* renderer, int cameraX, int cameraY, int screenWidth, int screenHeight, float player_y_change);
 
         const std::vector<Object>& GetMap() const { return m_map; }
         int GetRows() const { return m_rows; }

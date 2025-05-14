@@ -105,18 +105,46 @@ namespace Tmpl8
         }
     }
 
-    void World::DrawTileMap(SDL_Renderer* renderer, int cameraX, int cameraY, int screenWidth, int screenHeight /*Player* player*/)
+    void World::DrawTileMap(SDL_Renderer* renderer, int cameraX, int cameraY, int screenWidth, int screenHeight, float player_y_change)
     {
-        for (const auto& tile : m_map)
+        for (auto& tile : m_map)
         {
-            int screenX = tile.GetDX() - cameraX;
-            int screenY = tile.GetDY() - cameraY;
-            SDL_Rect dest = tile.GetDest();
-            dest.x = screenX;
-            dest.y = screenY + cameraY/* + player->GetChangeY()*/;
-            SDL_Rect src = tile.GetSource();
-            SDL_RenderCopy(renderer, tile.GetTex(), &src, &dest);
-             // tile.DrawRect(dest, m_renderer); // Uncomment if you want to draw rects
+            // Only render tiles in view (optional optimization)
+            if (tile.GetDX() >= cameraX - m_tileSize &&
+                tile.GetDY() >= cameraY - m_tileSize &&
+                tile.GetDX() <= cameraX + screenWidth &&
+                tile.GetDY() <= cameraY + screenHeight)
+            {
+                SDL_Rect dest = tile.GetDest();
+                SDL_Rect src = tile.GetSource();
+
+                dest.y -= cameraY;
+
+                SDL_RenderCopy(renderer, tile.GetTex(), &src, &dest);
+
+                // For debugging, draw tile bounds
+                tile.DrawRect(dest, m_renderer);
+            }
         }
     }
+
+
+    //void World::DrawTileMap(SDL_Renderer* renderer, int cameraX, int cameraY, int screenWidth, int screenHeight, float player_y_change)
+    //{
+    //    for (auto& tile : m_map)
+    //    {
+    //        if (tile.GetDX() >= cameraX - m_tileSize &&
+    //            tile.GetDY() >= cameraY  - m_tileSize &&
+    //            tile.GetDX() <= cameraX + screenWidth  &&
+    //            tile.GetDY() <= cameraY + screenHeight )
+    //        {
+    //            SDL_Rect dest = tile.GetDest();
+    //            SDL_Rect src = tile.GetSource();
+				//dest.y += cameraY;
+				//tile.SetDY(dest.y);
+    //            SDL_RenderCopy(renderer, tile.GetTex(), &src, &dest);
+    //            tile.DrawRect(tile.GetDest(), m_renderer);
+    //        }
+    //    }
+    //}
 }

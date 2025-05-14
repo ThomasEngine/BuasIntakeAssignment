@@ -21,7 +21,7 @@ constexpr float VERTICAL_ACCALERATION = 0.5f; // gravity
 constexpr float VERTICAL_JUMP_SPEED = 10.f; // Determine how high the player can jump
 constexpr float HORIZONTAL_ACCALERATION = 1.1f; // how quick the player speeds up
 constexpr float HORIZONTAL_FRICTION = 0.18; // friction
-
+constexpr float MAX_FALL_SPEED = 10.f; // max fall speed
 
 //Fps settings
 const int TargetFPS = 60;

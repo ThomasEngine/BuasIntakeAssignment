@@ -131,12 +131,12 @@ namespace Tmpl8
 	{
 		calculateKinematic(deltaTime);
 
-		float tempY = pos.y; // Store the current Y position before moving
+		float tempY = py; // Store the current Y position before moving
 		// Move along X and Y separately + collision detection
 		MoveX(velocity.x + acceleration.x * 0.5f, world);
 		MoveY(velocity.y + acceleration.y * 0.5f, world);
 
-		change_y = pos.y - tempY;
+		change_y = py - tempY;
 
 
 		// Update rect and destination for rendering
@@ -310,6 +310,11 @@ namespace Tmpl8
 		// kinematic calculations
 		acceleration.x -= velocity.x * HORIZONTAL_FRICTION;
 		velocity += acceleration;
+
+		// Clamp vertical velocity (fall speed)
+		if (velocity.y > MAX_FALL_SPEED)
+			velocity.y = MAX_FALL_SPEED;
+
 
 		// setting new player position
 		px = pos.x;
