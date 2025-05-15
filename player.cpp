@@ -237,7 +237,7 @@ namespace Tmpl8
     {  
        SDL_Rect playerRect = getRect();  
        auto& coins = world->GetCoins(); // Get the coins from the world  
-       for (auto coin_it = coins.begin(); coin_it != coins.end(); )  
+       for (auto coin_it = coins.begin(); coin_it != coins.end(); )  // Using an it so I can erase coin from vector
        {  
            if (SDL_HasIntersection(&playerRect, &coin_it->GetDest()))  
            {  
@@ -281,7 +281,7 @@ namespace Tmpl8
 		
 		if (velocity.y < 0) // if the player is moving up
 		{
-			//fall = false; // set fall to false
+			fall = false;
 			if (x_direction == 0) // if direction is left
 			{
 				if (getCurAnimation() != jumpl)
@@ -320,6 +320,7 @@ namespace Tmpl8
 		// idle animations when not falling or moving
 		if (!fall)
 		{
+
 			if (x_direction == 0) // if direction is left
 			{
 				if (getCurAnimation() != idoll && getCurAnimation() != walkingl)
@@ -387,14 +388,6 @@ namespace Tmpl8
 			velocity.y = -VERTICAL_JUMP_SPEED;
 			jumpCount++;
 			std::cout << jumpCount << std::endl;
-			// Optional: set double jump animation
-			if (jumpCount == 2)
-			{
-				if (x_direction == 0)
-					setCurAnimation(double_jumpl);
-				else
-					setCurAnimation(doublejumpr);
-			}
 		}
 	}
 
