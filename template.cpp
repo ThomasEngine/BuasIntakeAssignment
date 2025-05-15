@@ -339,7 +339,7 @@ int main( int argc, char **argv )
 	int exitapp = 0;
 	game = new Game();
 	audio = new Audio();
-	game->SetTarget( surface, renderer, window );
+	game->SetTarget( surface, renderer, window, audio );
 	timer t;
 	t.reset();
 	while (!exitapp) 
@@ -409,16 +409,6 @@ int main( int argc, char **argv )
 					}
 
 				}
-				else if (event.key.keysym.sym == SDLK_RETURN)
-				{
-					if (game->GetState() == GameState::Paused)
-						game->SetState(GameState::Playing);
-				}
-				else if (event.key.keysym.sym == SDLK_r)
-				{
-					game->ResetPlayer();
-					game->SetState(GameState::Playing);
-				}
 				else
 				game->KeyDown( event.key.keysym.sym );
 				break;
@@ -427,15 +417,14 @@ int main( int argc, char **argv )
 				break;
 			case SDL_MOUSEMOTION:
 			{
-				// Query the current game state
-				auto state = game->GetState(); 
+				
+				GameState state = game->GetState(); 
 				int mouseX = event.motion.x;
 				int mouseY = event.motion.y;
 				bool startGame = false, exit = false, restart = false;
 				GameState newState = state;
 				MenuType newMenuType;
 				game->GetMenu()->HandleEvent(mouseX, mouseY, false, newState, startGame, exit, restart, audio, newMenuType);
-				// No state change on hover
 				break;
 			}
 			case SDL_MOUSEBUTTONUP:

@@ -87,13 +87,13 @@ namespace Tmpl8
                 {
                     if (tileType == 99)
                     {
-                        // Create and store the coin
+
                         Entity coin;
                         coin.SetTexture(m_coinTexture);
                         coin.SetDest(j * m_tileSize, i * m_tileSize, m_tileSize, m_tileSize);
                         coin.setCurAnimation(coin.createCycle(0, 16, 16, 16, 4));
                         m_coins.push_back(coin);
-						continue; // Skip to the next tile
+						continue;
                     }
                     switch (tileType)
                     {
@@ -153,9 +153,6 @@ namespace Tmpl8
                 dest.y -= cameraY;
 
                 SDL_RenderCopy(renderer, tile.GetTex(), &src, &dest);
-
-                // For debugging, draw tile bounds
-                //tile.DrawRect(dest, m_renderer);
             }
         }
         for (Entity& coin : m_coins)

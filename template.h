@@ -17,9 +17,9 @@ constexpr int ScreenHeight = 720;
 constexpr int TILESIZE = 32;
 
 // Kinematic Constants
-constexpr float VERTICAL_ACCALERATION = 0.5f; // gravity
-constexpr float VERTICAL_JUMP_SPEED = 10.f; // Determine how high the player can jump
-constexpr float HORIZONTAL_ACCALERATION = 1.1f; // how quick the player speeds up
+constexpr float VERTICAL_ACCALERATION = 0.5 / 15.6f; // gravity
+constexpr float VERTICAL_JUMP_SPEED = 10.f / 16.6; // Determine how high the player can jump
+constexpr float HORIZONTAL_ACCALERATION = 1.1f / 16.6; // how quick the player speeds up
 constexpr float HORIZONTAL_FRICTION = 0.18; // friction
 constexpr float MAX_FALL_SPEED = 10.f; // max fall speed
 

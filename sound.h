@@ -14,10 +14,12 @@ namespace Tmpl8
 
 		void PlayClickSound();
 		void PlayHoverSound();
+		void PlayCoinSound();
 
 	private:
 		Mix_Music* song1;
 		Mix_Chunk* Click_Sound;
 		Mix_Chunk* Hover_Sound;
+		Mix_Chunk* Coin_Sound;
 	};
 }

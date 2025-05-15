@@ -15,7 +15,7 @@ namespace Tmpl8 {
 	class Game
 	{
 	public:
-		void SetTarget(Surface* surface, SDL_Renderer* renderer, SDL_Window* window) { m_screen = surface, m_renderer = renderer, m_window = window; }
+		void SetTarget(Surface* surface, SDL_Renderer* renderer, SDL_Window* window, Audio* audio) { m_screen = surface, m_renderer = renderer, m_window = window, m_audio = audio; }
 		void Init();
 		void Shutdown();
 
@@ -42,6 +42,7 @@ namespace Tmpl8 {
 		Surface* m_screen;
 		SDL_Renderer* m_renderer;
 		SDL_Window* m_window;
+		Audio* m_audio;
 		Object Background;
 		World* m_TileMap;
 		Player* player;

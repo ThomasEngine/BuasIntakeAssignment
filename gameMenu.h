@@ -14,7 +14,7 @@ namespace Tmpl8
     {
         std::string label;
         bool isHovered;
-        MenuButton(const std::string& label) : label(label) {}
+        MenuButton(const std::string& label) : label{ label }, isHovered{ false } {}
     };
 
     enum class MenuType
@@ -22,9 +22,6 @@ namespace Tmpl8
         Main,
         GamePaused,
         Levels, 
-        Pause, 
-        Settings,
-        Quit
     };
     enum class GameState
     {
@@ -45,24 +42,12 @@ namespace Tmpl8
     private:
         void BuildMenu(MenuType type);
         void DrawButton(MenuButton& button);
-        void DrawSlider();
 
-        SDL_Texture* m_spriteSheet = nullptr;
+        SDL_Texture* m_spriteSheet;
         Object Background;
         SDL_Renderer* m_renderer;
         MenuType m_currentMenu;
 		GameState m_currentState;
         std::vector<MenuButton> m_buttons;
-
-        Object volumeSliderBar;
-		Object volumeSliderHandle;
-        int sliderMinX = 300;
-        int sliderMaxX = 700;
-        int sliderY = 500;
-        int m_sliderHandleOffset;
-		int volume = 100; // Volume percentage
-		bool sliderDragging = false;
-
-		bool hover_active;
     };
 }

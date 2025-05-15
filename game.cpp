@@ -14,7 +14,7 @@ namespace Tmpl8
 		m_TileMap->LoadTilemapFromFile("assets/tilemap/level1.txt");
 		m_TileMap->BuildTileMap();
 
-		player = new Player(64, 95 * 32, m_renderer);
+		player = new Player(64, 95 * 32, m_renderer, m_audio);
 		player->resetPlayer();
 
 		Background.SetImage("assets/background/Background_2.png", m_renderer, 0);

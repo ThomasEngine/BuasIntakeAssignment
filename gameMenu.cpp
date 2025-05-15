@@ -7,16 +7,14 @@ namespace Tmpl8
         : m_renderer{ renderer }, m_currentMenu{ MenuType::Main }
     {
 		// Load sprite sheet
-        SDL_Surface* surface = IMG_Load("assets/menu(514x384).png");
+        SDL_Surface* surface = IMG_Load("assets/menu(1024x1024).png");
 		m_spriteSheet = SDL_CreateTextureFromSurface(m_renderer, surface);
 		SDL_FreeSurface(surface);
 
-
+        // Load background image
         Background.SetImage("assets/background/Background_2.png", m_renderer, 0);
         Background.SetSource(0, 0, 1280, 720);
         Background.SetDest(0, 0, 1280, 720);
-
-        hover_active = false;
 
         // Build the menu
         BuildMenu(m_currentMenu);
@@ -49,129 +47,64 @@ namespace Tmpl8
             m_buttons.back().SetTexture(m_spriteSheet);
             m_buttons.back().SetSource(0, 256, 514 , 128); 
             break;
-		case MenuType::Settings:
-			// Music slider bar
-			volumeSliderBar.SetDest(sliderMinX, sliderMaxX, sliderMaxX - sliderMinX, 10);
-			volumeSliderBar.SetTexture(m_spriteSheet);
-			volumeSliderBar.SetSource(0, 0, 600, 200);
-
-			// Music slider handle
-			volumeSliderHandle.SetDest(sliderMinX + (volume * 4), sliderMaxX - 10, 20, 20);
-			volumeSliderHandle.SetTexture(m_spriteSheet);
-			volumeSliderHandle.SetSource(0, 0, 600, 200);
-
-			m_buttons.emplace_back("Level 2");
-			m_buttons.back().SetDest(100, 200, 200, 50);
-			m_buttons.back().SetTexture(m_spriteSheet);
-			m_buttons.back().SetSource(609, 417, 200, 50);
-                
-			m_buttons.emplace_back("Back");
-			m_buttons.back().SetDest(100, 300, 200, 50);
-			m_buttons.back().SetTexture(m_spriteSheet);
-			m_buttons.back().SetSource(0, 100, 200, 50);
-			break;
-		case MenuType::Pause:
-			m_buttons.emplace_back("Resume");
-			m_buttons.back().SetDest(100, 100, 200, 50);
-			m_buttons.back().SetTexture(m_spriteSheet);
-			m_buttons.back().SetSource(0, 0, 600, 200);
-
-			m_buttons.emplace_back("Restart");
-			m_buttons.back().SetDest(100, 200, 200, 50);
-			m_buttons.back().SetTexture(m_spriteSheet);
-			m_buttons.back().SetSource(609, 417, 200, 50);
-
-			m_buttons.emplace_back("Exit");
-			m_buttons.back().SetDest(100, 300, 200, 50);
-			m_buttons.back().SetTexture(m_spriteSheet);
-			m_buttons.back().SetSource(1216, 625, 200, 50);
-			break;
 		case MenuType::GamePaused:
-            m_buttons.emplace_back("Resume");
+			m_buttons.emplace_back("Resume");
             m_buttons.back().SetDest(ScreenWidth / 2 - 514 / 2, 84 + 52, 514, 128);
             m_buttons.back().SetTexture(m_spriteSheet);
-            m_buttons.back().SetSource(0, 0, 514, 128);
+            m_buttons.back().SetSource(0, 384, 514, 128);
 
-            m_buttons.emplace_back("Settings");
+			m_buttons.emplace_back("Restart");
             m_buttons.back().SetDest(ScreenWidth / 2 - 514 / 2, 296, 514, 128);
             m_buttons.back().SetTexture(m_spriteSheet);
-            m_buttons.back().SetSource(0, 128, 514, 128);
+            m_buttons.back().SetSource(0, 512, 514, 128);
 
-            m_buttons.emplace_back("Restart");
+			m_buttons.emplace_back("Exit");
             m_buttons.back().SetDest(ScreenWidth / 2 - 514 / 2, 508 - 52, 514, 128);
             m_buttons.back().SetTexture(m_spriteSheet);
-            m_buttons.back().SetSource(0, 256, 514, 128);
-
-            m_buttons.emplace_back("Exit");
-            m_buttons.back().SetDest(ScreenWidth / 2 - 514 / 2, 508 - 52, 514, 128);
-            m_buttons.back().SetTexture(m_spriteSheet);
-            m_buttons.back().SetSource(0, 256, 514, 128);
-
+            m_buttons.back().SetSource(0, 640, 514, 128);
+			break;
         }
     }
 
     void GameMenu::Render()
     {
-        //SDL_SetRenderDrawColor(m_renderer, 66, 224, 245, 255);
         SDL_RenderClear(m_renderer);
         
         // draw background
-        if (m_currentState != GameState::Paused)
+        SDL_Rect dest = Background.GetDest();
+        SDL_Rect src = Background.GetSource();
+	    SDL_RenderCopy(m_renderer, Background.GetTex(), &src, &dest);
+
+        for (MenuButton& button : m_buttons)
         {
-            SDL_Rect dest = Background.GetDest();
-            SDL_Rect src = Background.GetSource();
-			SDL_RenderCopy(m_renderer, Background.GetTex(), &src, &dest);
+            DrawButton(button);
         }
-
-
-        for (size_t i = 0; i < m_buttons.size(); ++i)
-        {
-            DrawButton(m_buttons[i]);
-        }
-
-        if (m_currentMenu == MenuType::Settings)
-            DrawSlider();
 
         SDL_RenderPresent(m_renderer);
     }
 
     void GameMenu::DrawButton(MenuButton& button)
     {
-        // Change appearance when hovored
+        // Drawing bigger if hovered else normal
         SDL_Rect dest = button.GetDest();
         if (button.isHovered)
         {
-            // Slightly enlarge
             dest.x -= 5; dest.y -= 5; dest.w += 10; dest.h += 10;
         }
         SDL_RenderCopy(m_renderer, button.GetTex(), &button.GetSource(), &dest);
     }
-
-    void GameMenu::DrawSlider()
-    {
-        // Draw slider
-		SDL_Rect sliderBarDest = volumeSliderBar.GetDest();
-		SDL_Rect sliderBarSrc = volumeSliderBar.GetSource();
-		SDL_RenderCopy(m_renderer, volumeSliderBar.GetTex(), &sliderBarSrc, &sliderBarDest);
-
-        // Draw knob
-		SDL_Rect sliderHandleDest = volumeSliderHandle.GetDest();
-		SDL_Rect sliderHandleSrc = volumeSliderHandle.GetSource();
-		SDL_RenderCopy(m_renderer, volumeSliderHandle.GetTex(), &sliderHandleSrc, &sliderHandleDest);
-    }
-
     void GameMenu::HandleEvent(int MouseX, int MouseY, bool MousePressed, GameState& outGameStateType, bool& outShouldStartGame, bool& outShouldExit, bool& outShouldRestart, Audio* audio, MenuType& outMenuType)
     {  
-        for (size_t i = 0; i < m_buttons.size(); ++i)
+        for (MenuButton& button : m_buttons)
         {
-            SDL_Rect rect = m_buttons[i].GetDest();
+            SDL_Rect rect = button.GetDest();
             if (MouseX >= rect.x && MouseX <= rect.x + rect.w &&
                 MouseY >= rect.y && MouseY <= rect.y + rect.h)
             {
-                if (!m_buttons[i].isHovered)
+                if (!button.isHovered)
                 {
 					audio->PlayHoverSound(); // Play hover sfx
-					m_buttons[i].isHovered = true;
+					button.isHovered = true;
                 }
                 if (MousePressed)
                 {
@@ -181,82 +114,39 @@ namespace Tmpl8
                     if (m_currentMenu == MenuType::Main)
                     {
                         m_currentState = GameState::Paused;
-                        if (m_buttons[i].label == "Levels")
+                        if (button.label == "Levels")
                         {
 							m_currentState = GameState::Playing;
                             outGameStateType = GameState::Playing;
                             outShouldStartGame = true;
                         }
-                        else if (m_buttons[i].label == "Settings")
+                        else if (button.label == "Settings")
                         {
-                            m_currentState = GameState::Paused;
                             outGameStateType = GameState::Paused;
-                            outMenuType = MenuType::Settings;
                         }
-                        else if (m_buttons[i].label == "Exit")
+                        else if (button.label == "Exit")
                             outShouldExit = true;
                     }
-                    // Levels menu 
-                    else if (m_currentMenu == MenuType::Levels)
-                    {
-                        if (m_buttons[i].label == "Level 1" || m_buttons[i].label == "Level 2")
-                            outShouldStartGame = true;
-                        else if (m_buttons[i].label == "Back")
-                        {
-                            outGameStateType = GameState::Paused;
-                            outMenuType = MenuType::Main;
-                        }
-                    }
-                    else if (m_currentMenu == MenuType::Quit)
-                        outShouldExit = true;
-                    // Settings menu
-                    else if (m_currentMenu == MenuType::Settings)
-                    {
-                        if (m_buttons[i].label == "Back")
-                        {
-                            outGameStateType = GameState::Paused;
-                            outMenuType = MenuType::Main;
-                        }
-                    }
 					// Pause menu
-					else if (m_currentMenu == MenuType::Pause)
+					else if (m_currentMenu == MenuType::GamePaused)
 					{
                         m_currentState = GameState::Paused;
-						if (m_buttons[i].label == "Resume")
+						if (button.label == "Resume")
 						{
                             m_currentState = GameState::Playing;
 							outShouldStartGame = true;
 						}
-						else if (m_buttons[i].label == "Restart")
+						else if (button.label == "Restart")
 						{
 							outShouldRestart = true;
 							outGameStateType = GameState::Playing;
 						}
-						else if (m_buttons[i].label == "Exit")
+						else if (button.label == "Exit")
 							outShouldExit = true;
 					}
                 }
             }
-			else m_buttons[i].isHovered = false;
+			else button.isHovered = false;
         }
-        SDL_Rect knobRect = volumeSliderHandle.GetDest();
-        if (MousePressed)
-        {
-            if (MouseX >= knobRect.x && MouseX <= knobRect.x + knobRect.w &&
-                MouseY >= knobRect.y && MouseY <= knobRect.y + knobRect.h)
-            {
-                sliderDragging = true;
-                m_sliderHandleOffset = MouseX - knobRect.x;
-            }
-        }
-        if (sliderDragging)
-        {
-            int newHandleX = MouseX - m_sliderHandleOffset;
-            if (newHandleX >= sliderMaxX) newHandleX = sliderMaxX;
-            if (newHandleX <= sliderMinX) newHandleX = sliderMinX; // making sure slider does not go beyond the slider
-            volume = (newHandleX - sliderMinX) / 4;
-            volumeSliderHandle.SetDest(newHandleX + 10, sliderY - 10);
-        }
-        if (!MousePressed) sliderDragging = false;
     }
 }

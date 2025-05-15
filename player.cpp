@@ -3,7 +3,7 @@
 namespace Tmpl8
 {
 
-	Player::Player(float xpos, float ypos, SDL_Renderer* ren)
+	Player::Player(float xpos, float ypos, SDL_Renderer* ren, Audio* audio)
 	{
 		// Player position
 		px = xpos;
@@ -23,7 +23,6 @@ namespace Tmpl8
 
 		// Direction of the player
 		x_direction = 1;
-		y_direction = 0;
 
 		// X and Y remainders
 		float xRemainder = 0;
@@ -37,6 +36,7 @@ namespace Tmpl8
 		fall_detect = { static_cast<int>(px) + 9, static_cast<int>(py), (32 * 2) - 25, (32 * 2) - 50 };
 
 		m_renderer = ren; // renderer from game
+		m_audio = audio; // Audio from game
 
 
 		// Setting up all the sprite animations of the player
@@ -142,8 +142,8 @@ namespace Tmpl8
 
 		float tempY = py; // Store the current Y position before moving
 		// Move along X and Y separately + collision detection
-		MoveX(velocity.x + acceleration.x * 0.5f, world);
-		MoveY(velocity.y + acceleration.y * 0.5f, world);
+		MoveX(velocity.x * deltaTime + acceleration.x * 0.5f, world);
+		MoveY(velocity.y * deltaTime + acceleration.y * 0.5f, world);
 
 		CheckCoins(world); // Check for coin collision
 		
@@ -233,22 +233,23 @@ namespace Tmpl8
 		}
 	}
 
-    void Player::CheckCoins(World* world)  
+    void Player::CheckCoins(World* world)
     {  
        SDL_Rect playerRect = getRect();  
        auto& coins = world->GetCoins(); // Get the coins from the world  
-       for (auto coin = coins.begin(); coin != coins.end();)  
+       for (auto coin_it = coins.begin(); coin_it != coins.end(); )  
        {  
-           if (SDL_HasIntersection(&playerRect, &coin->GetDest()))  
+           if (SDL_HasIntersection(&playerRect, &coin_it->GetDest()))  
            {  
                // Coin collected
-			   collectedCoins++; // Add coin to total coins
-               coin = coins.erase(coin); // Remove the coin from the vector  
-			   std::cout << "Collected coins: " << collectedCoins << std::endl; // Print the number of collected coins
+               collectedCoins++; // Add coin to total coins
+               coin_it = coins.erase(coin_it); // Remove the coin from the vector  
+			   m_audio->PlayCoinSound();
+               std::cout << "Collected coins: " << collectedCoins << std::endl; // Print the number of collected coins
            }  
            else  
            {  
-               ++coin; // Move to the next coin  
+               ++coin_it; // next coin
            }  
        }  
     }

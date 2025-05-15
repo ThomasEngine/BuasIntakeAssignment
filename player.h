@@ -2,6 +2,7 @@
 #include "template.h"
 #include "entity.h"
 #include "world.h"
+#include "sound.h"
 #include <vector>
 
 namespace Tmpl8
@@ -9,7 +10,7 @@ namespace Tmpl8
 	class Player : public Entity
 	{
 	public:
-		Player(float xpos, float ypos, SDL_Renderer* ren);
+		Player(float xpos, float ypos, SDL_Renderer* ren, Audio* audio);
 		~Player() { SDL_DestroyTexture(GetTex()); }
 
 		void KeyDown(int key);
@@ -39,13 +40,13 @@ namespace Tmpl8
 
 	private:
 		SDL_Renderer* m_renderer;
+		Audio* m_audio;
 		float px, py;
 		float xRemainder; // x remainder for the player
 		float yRemainder; // y remainder for the player
 		float change_y; // change in y
 		int idolr, idoll, walkingr, walkingl, jumpl, jumpr, fallingl, fallingr, hit, double_jumpl, doublejumpr, hangingl, hangingr; // all the different animations
 		int x_direction; // direction of the player 0 = left 1 = right
-		int y_direction; // direction of the player 0 = down 1 = up
 		bool l, r, u, d, fall; // left right up down
 		bool doubleJumpAllowed;
 		int jumpCount = 0;
