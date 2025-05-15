@@ -127,9 +127,8 @@ namespace Tmpl8
 	{
 		calculateKinematic(deltaTime);
 
-		// Move along X and Y separately for perfect collision detection was the plan.
+		// Move along X and Y separately for pixel perfect collision detection
 		// I got a similair implementation from: https://maddythorson.medium.com/celeste-and-towerfall-physics-d24bd2ae0fc5
-		// There is a glitch that when you move on x-axis and hold down that key you stay against the wall even though there is nothing under the player.
 		MoveX(velocity.x * deltaTime + acceleration.x * 0.5f, world);
 		MoveY(velocity.y * deltaTime + acceleration.y * 0.5f, world);
 
@@ -142,8 +141,9 @@ namespace Tmpl8
 
 		// Update rect and destination for rendering
 		SetDest(pos.x, pos.y, 32 * 2, 32 * 2);
-		m_Rect = { static_cast<int>(pos.x) + 9, static_cast<int>(pos.y), (32 * 2) - 20, (32 * 2) - 10 };
+		m_Rect = { static_cast<int>(pos.x) + 9, static_cast<int>(pos.y), (32 * 2) - 20, (32 * 2) - 10 }; // static_cast because pos.x and pos.y are floats
 
+		// Update animation cycle
 		updateAnimation();
 	}
 
@@ -158,9 +158,10 @@ namespace Tmpl8
 			while (move != 0)
 			{
 				//Update rect for collision check
-				m_Rect.x = (pos.x + sign) + 9;
+				SDL_Rect tempRect = m_Rect;
+				tempRect.x = pos.x + sign + 9; // +9 for the offset in the rect
 
-				if (!CheckCollision(&m_Rect, world))
+				if (!CheckCollision(&tempRect, world))
 				{
 					pos.x += sign;
 					m_Rect.x = static_cast<int>(pos.x) + 9;

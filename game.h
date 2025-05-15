@@ -20,19 +20,23 @@ namespace Tmpl8 {
 		void Shutdown();
 		void Restart();
 
-		void Tick(float deltaTime);
+		void Tick(float deltaTime); // Main game function
+		// Updates
 		void Update(float deltaTime);
 		void UpdateCameraY();
+		void UpdateTimer(float deltaTime);
+		/// Renders
 		void Render(float deltaTime);
 		void DrawAll();
 		void Draw(Object* o);
 		void DrawStatic(Object o);
+
 		void ResetPlayer() { m_Player->resetPlayer(); }
 
+		// Menu getters and setters
 		GameMenu* GetMenu() { return m_Menu; }
-		GameState GetState() const { return static_cast<GameState>(m_State); }
+		GameState GetState() const { return m_State; }
 		void SetState(GameState state) { m_State = state; }
-		void UpdateTimer(float deltaTime);
 
 
 		// Send keys to the player class

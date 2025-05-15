@@ -119,7 +119,7 @@ namespace Tmpl8
             if (MouseX >= rect.x && MouseX <= rect.x + rect.w &&
                 MouseY >= rect.y && MouseY <= rect.y + rect.h)
             {
-                if (!button.isHovered)
+                if (!button.isHovered) // tried && m_CurrentState == Paused but fix the full problem, will debug this later
                 {
 					audio->PlayHoverSound(); // Play hover sfx
 					button.isHovered = true;
@@ -168,11 +168,7 @@ namespace Tmpl8
                     else if (m_CurrentMenu == MenuType::Victory)
                     {
                         m_CurrentState = GameState::Paused;
-                        if (button.label == "Victory")
-                        {
-                            continue; // Bug: When pressing victory menu disapears.
-                        }
-                        if (button.label == "Restart")
+                        if (button.label == "Restart" || button.label == "Victory")
                         {
                             outShouldRestart = true;
                             outGameStateType = GameState::Playing;

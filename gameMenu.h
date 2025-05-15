@@ -1,5 +1,4 @@
 #pragma once
-
 #include <vector>
 #include <string>
 #include <SDL.h>
@@ -35,8 +34,11 @@ namespace Tmpl8
     public:
         GameMenu(SDL_Renderer* renderer);
 		~GameMenu() { SDL_DestroyTexture(m_SpriteSheet); }
+
+        // Setters
         void SetMenu(MenuType type);
 		void SetGameState(GameState state) { m_CurrentState = state; }
+
         void Render();
         void HandleEvent(int MouseX, int MouseY, bool MousePressed, GameState& outGameStateType, bool& backToMenu, bool& outShouldStartGame, bool& outShouldExit, bool& outShouldRestart, Audio* audio, MenuType& outMenuType);
 
@@ -48,7 +50,7 @@ namespace Tmpl8
         Object m_Background;
         SDL_Renderer* m_Renderer;
         MenuType m_CurrentMenu;
-		GameState m_CurrentState;
+		GameState m_CurrentState = GameState::Paused;
         std::vector<MenuButton> m_Buttons;
     };
 }

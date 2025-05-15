@@ -4,9 +4,9 @@ namespace Tmpl8
 {
 	Audio::Audio()
 	{
-		Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024);
+		Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024); // (Initializing audio)
 
-
+		// Loading Music and sfx
 		m_BackgroundMusic = Mix_LoadMUS("assets/Music/Music1.mp3");
 		if (m_BackgroundMusic == nullptr)
 			SDL_Log("Failed to load music: %s\n", Mix_GetError());
@@ -24,8 +24,11 @@ namespace Tmpl8
 		if (m_CoinSound == nullptr)
 			SDL_Log("Failed to load coin sound: %s\n", Mix_GetError());
 
+		// Setings volume
 		Mix_Volume(-1, 30);
 		Mix_VolumeMusic(30);
+		
+		// Player background music
 		Mix_PlayMusic(m_BackgroundMusic, -1);
 
 	}

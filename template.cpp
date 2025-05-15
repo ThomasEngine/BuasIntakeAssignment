@@ -28,6 +28,7 @@
 #include <windows.h>
 #include <SDL_mixer.h>
 #include "sound.h"
+#include "gameMenu.h"
 
 #ifdef ADVANCEDGL
 #define GLEW_BUILD
@@ -407,7 +408,6 @@ int main( int argc, char **argv )
 						game->GetMenu()->SetMenu(MenuType::GamePaused);
 
 					}
-
 				}
 				else
 				game->KeyDown( event.key.keysym.sym );
@@ -421,7 +421,7 @@ int main( int argc, char **argv )
 				GameState state = game->GetState(); 
 				int mouseX = event.motion.x;
 				int mouseY = event.motion.y;
-				bool startGame = false, exit = false, restart = false, backToMenu = false;
+				bool startGame = false, exit = false, restart = false, backToMenu = false; // Handle menu events are reference variables
 				GameState newState = state;
 				MenuType newMenuType;
 				game->GetMenu()->HandleEvent(mouseX, mouseY, false, newState, backToMenu, startGame, exit, restart, audio, newMenuType);
@@ -437,7 +437,7 @@ int main( int argc, char **argv )
 				{
 					int mouseX, mouseY;
 					SDL_GetMouseState(&mouseX, &mouseY);
-					bool startGame = false, exit = false, restart = false, backToMenu = false;
+					bool startGame = false, exit = false, restart = false, backToMenu = false; // Handle menu events are reference variables
 					GameState newState = state;
 					MenuType newMenuType;
 
@@ -446,7 +446,6 @@ int main( int argc, char **argv )
 					if (startGame)
 					{
 						game->SetState(GameState::Playing);
-
 					}
 
 					else if (exit)
