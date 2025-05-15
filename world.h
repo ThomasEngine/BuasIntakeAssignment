@@ -29,6 +29,9 @@ namespace Tmpl8
         SDL_Renderer* m_renderer;
         SDL_Texture* m_tileTexture;
         SDL_Texture* m_coinTexture;
+        SDL_Texture* m_finishFlagTexture;
+
+        Object m_flag;
 
         std::vector<std::vector<int>> m_tilemap;
         std::vector<Entity> m_coins;

@@ -18,6 +18,7 @@ namespace Tmpl8 {
 		void SetTarget(Surface* surface, SDL_Renderer* renderer, SDL_Window* window, Audio* audio) { m_screen = surface, m_renderer = renderer, m_window = window, m_audio = audio; }
 		void Init();
 		void Shutdown();
+		void Restart();
 
 		void Tick(float deltaTime);
 		void Update(float deltaTime);

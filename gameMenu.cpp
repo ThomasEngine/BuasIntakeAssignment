@@ -58,11 +58,22 @@ namespace Tmpl8
             m_buttons.back().SetTexture(m_spriteSheet);
             m_buttons.back().SetSource(0, 512, 514, 128);
 
-			m_buttons.emplace_back("Exit");
+            m_buttons.emplace_back("Exit");
             m_buttons.back().SetDest(ScreenWidth / 2 - 514 / 2, 508 - 52, 514, 128);
             m_buttons.back().SetTexture(m_spriteSheet);
-            m_buttons.back().SetSource(0, 640, 514, 128);
+            m_buttons.back().SetSource(0, 256, 514, 128);
 			break;
+        case MenuType::Victory:
+
+            m_buttons.emplace_back("Restart");
+            m_buttons.back().SetDest(ScreenWidth / 2 - 514 / 2, 296, 514, 128);
+            m_buttons.back().SetTexture(m_spriteSheet);
+            m_buttons.back().SetSource(0, 512, 514, 128);
+
+            m_buttons.emplace_back("Exit");
+            m_buttons.back().SetDest(ScreenWidth / 2 - 514 / 2, 508 - 52, 514, 128);
+            m_buttons.back().SetTexture(m_spriteSheet);
+            m_buttons.back().SetSource(0, 256, 514, 128);
         }
     }
 
@@ -93,7 +104,7 @@ namespace Tmpl8
         }
         SDL_RenderCopy(m_renderer, button.GetTex(), &button.GetSource(), &dest);
     }
-    void GameMenu::HandleEvent(int MouseX, int MouseY, bool MousePressed, GameState& outGameStateType, bool& outShouldStartGame, bool& outShouldExit, bool& outShouldRestart, Audio* audio, MenuType& outMenuType)
+    void GameMenu::HandleEvent(int MouseX, int MouseY, bool MousePressed, GameState& outGameStateType, bool& backToMenu, bool& outShouldStartGame, bool& outShouldExit, bool& outShouldRestart, Audio* audio, MenuType& outMenuType)
     {  
         for (MenuButton& button : m_buttons)
         {
@@ -131,19 +142,35 @@ namespace Tmpl8
 					else if (m_currentMenu == MenuType::GamePaused)
 					{
                         m_currentState = GameState::Paused;
-						if (button.label == "Resume")
-						{
+                        if (button.label == "Resume")
+                        {
                             m_currentState = GameState::Playing;
-							outShouldStartGame = true;
-						}
-						else if (button.label == "Restart")
-						{
-							outShouldRestart = true;
-							outGameStateType = GameState::Playing;
-						}
-						else if (button.label == "Exit")
-							outShouldExit = true;
+                            outShouldStartGame = true;
+                        }
+                        else if (button.label == "Restart")
+                        {
+                            outShouldRestart = true;
+                            outGameStateType = GameState::Playing;
+                        }
+                        else if (button.label == "Exit")
+                        {  
+                            outShouldExit = true;
+                        }
 					}
+                    // Victory Menu
+                    else if (m_currentMenu == MenuType::Victory)
+                    {
+                        m_currentState = GameState::Paused;
+                        if (button.label == "Restart")
+                        {
+                            outShouldRestart = true;
+                            outGameStateType = GameState::Playing;
+                        }
+                        else if (button.label == "Exit")
+                        {
+                            outShouldExit = true;
+                        }
+                    }
                 }
             }
 			else button.isHovered = false;

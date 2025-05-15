@@ -37,6 +37,21 @@ namespace Tmpl8
 		SDL_DestroyRenderer(m_renderer);
 		SDL_DestroyWindow(m_window);
 	}
+
+	void Game::Restart()
+	{
+		player->resetPlayer();
+		playerTimer = 0.f;
+
+		delete m_TileMap;
+
+		playerFinished = false;
+
+		m_TileMap = new World(m_renderer, TILESIZE);
+		m_TileMap->LoadTilemapFromFile("assets/tilemap/level1.txt");
+		m_TileMap->BuildTileMap();
+	}
+
 	void Game::Tick(float deltaTime)
 	{
 		// clear the graphics window
@@ -44,10 +59,10 @@ namespace Tmpl8
 
 		switch (m_state)
 		{
-		case Tmpl8::GameState::Paused: // Game is paused
+		case GameState::Paused: // Game is paused
 			m_menu->Render();
 			break;
-		case Tmpl8::GameState::Playing: // Game is playing
+		case GameState::Playing: // Game is playing
 			Update(deltaTime);
 			Render(deltaTime);
 			break;
@@ -59,20 +74,19 @@ namespace Tmpl8
 		m_TileMap->UpdateCoinAnimation();
 		UpdateCameraY();
 		UpdateTimer(deltaTime);
-
 	}
 	void Game::UpdateCameraY()
 	{
 		// Center camera on player
 		float targetCameraY = player->GetDY() - ScreenHeight / 2;
 
-		// Clamp to map bounds
+		// Dont go further then the map
 		float maxCameraY = m_TileMap->GetRows() * TILESIZE - ScreenHeight;
 		if (targetCameraY < 0) targetCameraY = 0;
 		if (targetCameraY > maxCameraY) targetCameraY = maxCameraY;
 
-		// Smooth scrolling (lerp)
-		float cameraSpeed = 0.1f; // Adjust for smoothness
+		// Smooth scrolling
+		float cameraSpeed = 0.1f; // Smoothness
 		cameraY += (targetCameraY - cameraY) * cameraSpeed;
 	}
 	void Game::Render(float deltaTime)
@@ -100,15 +114,20 @@ namespace Tmpl8
 		{
 			playerTimer = 0.0f;
 			timerActive = true;
-			playerFinished = false;
 		}
 		if (m_state == GameState::Playing && timerActive && !playerFinished)
 			playerTimer += deltaTime / 1000.f;
-		if (player->GetDY() <= 0)
+		int px = player->GetDX();
+		int py = player->GetDY();
+		if (px >1120 && py <= 1578 ) // check if player is finished
 		{
 			playerFinished = true;
-			timerActive = false;
+			timerActive = false;			
+			m_menu->SetGameState(GameState::Paused);
+			m_state = GameState::Paused;
+			m_menu->SetMenu(MenuType::Victory);
 		}
+		//std::cout << playerTimer << std::endl;
 	}
 
 	void Game::Draw(Object o)
@@ -119,7 +138,7 @@ namespace Tmpl8
 			return;
 		}
 		SDL_Rect dest = o.GetDest();
-		dest.y -= static_cast<int>(cameraY); // Offset by camera
+		dest.y -= cameraY; // Offset by camera
 		SDL_Rect src = o.GetSource();
 		SDL_RenderCopyEx(m_renderer, o.GetTex(), &src, &dest, 0, NULL, SDL_FLIP_NONE);
 	}
@@ -130,20 +149,17 @@ namespace Tmpl8
 		DrawStatic(Background);
 		m_TileMap->DrawTileMap(m_renderer, cameraX, cameraY, ScreenWidth, ScreenHeight);
 		Draw(*player);
-
-		//player->DrawRect(player->getRect(), m_renderer);
 	}
 
-	void Game::showFPS(float deltaTime)
-	{
-		// Calculate FPS
-		float fps = 1000 / deltaTime;
+    void Game::showFPS(float deltaTime)
+    {
+       // Calculate FPS
+       float fps = 1000 / deltaTime;
 
-		// Convert FPS to string
-		std::string fpsText = "FPS: " + std::to_string(static_cast<int>(fps));
+       // Convert FPS to string
+       std::string fpsText = "FPS: " + std::to_string(static_cast<int>(fps));
 
-		// Display FPS on the screen
-		std::cout << fps << std::endl;
-
-	}
+       // Display FPS on the screen
+       std::cout << fps << std::endl;
+    }
 }

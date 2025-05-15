@@ -54,6 +54,7 @@ namespace Tmpl8
 		fallingl = createCycle(9, 32, 32, 1, 0);
 		fallingr = createCycle(8, 32, 32, 1, 0);
 
+		// Extry animations if for when I continue developing
 		double_jumpl = createCycle(12, 32, 32, 6, 4);
 		doublejumpr = createCycle(4, 32, 32, 6, 4);
 

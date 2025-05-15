@@ -26,13 +26,25 @@ namespace Tmpl8
         }
 		m_coinTexture = SDL_CreateTextureFromSurface(renderer, surf);
 		SDL_FreeSurface(surf);
+
+        // Load finish flag
+        surf = IMG_Load("assets/finish.png");
+        if (!surf)
+        {
+            SDL_Log("Failed to load coin texture: %s\n", IMG_GetError());
+        }
+        m_finishFlagTexture = SDL_CreateTextureFromSurface(renderer, surf);
+        SDL_FreeSurface(surf);
+
     }
 
     World::~World()
     {
 		SDL_DestroyTexture(m_tileTexture);
 		SDL_DestroyTexture(m_coinTexture);
+        SDL_DestroyTexture(m_finishFlagTexture);
         m_map.clear();
+        m_coins.clear();
     }
 
     void World::LoadTilemapFromFile(const std::string& filename)
@@ -94,6 +106,13 @@ namespace Tmpl8
                         coin.setCurAnimation(coin.createCycle(0, 16, 16, 16, 4));
                         m_coins.push_back(coin);
 						continue;
+                    }
+                    if (tileType == 88)
+                    {
+                        m_flag.SetTexture(m_finishFlagTexture);
+                        m_flag.SetSource(0, 0, 64, 64);
+                        m_flag.SetDest(j * m_tileSize, i * m_tileSize, m_tileSize * 2, m_tileSize * 2);
+                        continue;
                     }
                     switch (tileType)
                     {
@@ -168,6 +187,17 @@ namespace Tmpl8
                 SDL_RenderCopy(renderer, coin.GetTex(), &src, &dest);
             }
         }
+        if (m_flag.GetDX() >= cameraX - m_tileSize &&
+            m_flag.GetDY() >= cameraY - m_tileSize &&
+            m_flag.GetDX() <= cameraX + screenWidth &&
+            m_flag.GetDY() <= cameraY + screenHeight)
+        {
+            SDL_Rect dest = m_flag.GetDest();
+            SDL_Rect src = m_flag.GetSource();
+            dest.y -= cameraY;
+            SDL_RenderCopy(renderer, m_flag.GetTex(), &src, &dest);
+        }
+        
     }
     void World::UpdateCoinAnimation()
     {

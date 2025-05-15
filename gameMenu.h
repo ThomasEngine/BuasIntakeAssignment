@@ -21,7 +21,8 @@ namespace Tmpl8
     { 
         Main,
         GamePaused,
-        Levels, 
+        Victory,
+
     };
     enum class GameState
     {
@@ -37,7 +38,7 @@ namespace Tmpl8
         void SetMenu(MenuType type);
 		void SetGameState(GameState state) { m_currentState = state; }
         void Render();
-        void HandleEvent(int MouseX, int MouseY, bool MousePressed, GameState& outGameStateType, bool& outShouldStartGame, bool& outShouldExit, bool& outShouldRestart, Audio* audio, MenuType& outMenuType);
+        void HandleEvent(int MouseX, int MouseY, bool MousePressed, GameState& outGameStateType, bool& backToMenu, bool& outShouldStartGame, bool& outShouldExit, bool& outShouldRestart, Audio* audio, MenuType& outMenuType);
 
     private:
         void BuildMenu(MenuType type);

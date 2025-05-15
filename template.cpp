@@ -421,10 +421,10 @@ int main( int argc, char **argv )
 				GameState state = game->GetState(); 
 				int mouseX = event.motion.x;
 				int mouseY = event.motion.y;
-				bool startGame = false, exit = false, restart = false;
+				bool startGame = false, exit = false, restart = false, backToMenu = false;
 				GameState newState = state;
 				MenuType newMenuType;
-				game->GetMenu()->HandleEvent(mouseX, mouseY, false, newState, startGame, exit, restart, audio, newMenuType);
+				game->GetMenu()->HandleEvent(mouseX, mouseY, false, newState, backToMenu, startGame, exit, restart, audio, newMenuType);
 				break;
 			}
 			case SDL_MOUSEBUTTONUP:
@@ -437,11 +437,11 @@ int main( int argc, char **argv )
 				{
 					int mouseX, mouseY;
 					SDL_GetMouseState(&mouseX, &mouseY);
-					bool startGame = false, exit = false, restart = false;
+					bool startGame = false, exit = false, restart = false, backToMenu = false;
 					GameState newState = state;
 					MenuType newMenuType;
 
-					game->GetMenu()->HandleEvent(mouseX, mouseY, true, newState, startGame, exit, restart, audio, newMenuType);
+					game->GetMenu()->HandleEvent(mouseX, mouseY, true, newState, backToMenu, startGame, exit, restart, audio, newMenuType);
 
 					if (startGame)
 					{
@@ -458,9 +458,11 @@ int main( int argc, char **argv )
 					}
 					else if (restart)
 					{
+
 						game->SetState(GameState::Playing);
-						game->ResetPlayer();
+						game->Restart();
 					}
+
 					else
 					{
 						game->SetState(newState);
