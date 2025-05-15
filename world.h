@@ -21,21 +21,21 @@ namespace Tmpl8
 
         void UpdateCoinAnimation();
 
-        const std::vector<Object>& GetMap() const { return m_map; }
+        const std::vector<Object>& GetMap() const { return m_Map; }
 		std::vector<Entity>& GetCoins() { return m_coins; } 
-        int GetRows() const { return m_rows; }
+        int GetRows() const { return m_Rows; }
     private:
-        std::vector<Object> m_map;
+        std::vector<Object> m_Map;
         SDL_Renderer* m_Renderer;
-        SDL_Texture* m_tileTexture;
-        SDL_Texture* m_coinTexture;
-        SDL_Texture* m_finishFlagTexture;
+        SDL_Texture* m_TileTexture;
+        SDL_Texture* m_CoinTexture;
+        SDL_Texture* m_FinishFlagTexture;
 
-        Object m_flag;
+        Object m_Flag;
 
         std::vector<std::vector<int>> m_tilemap;
         std::vector<Entity> m_coins;
         
-        int m_rows, m_cols, m_tileSize;
+        int m_Rows, m_Cols, m_TileSize;
     };
 }

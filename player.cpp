@@ -32,9 +32,6 @@ namespace Tmpl8
 		//hitbox rect
 		m_Rect = { static_cast<int>(m_Px) + 9, static_cast<int>(m_Py), (32 * 2) - 20, (32 * 2) - 10 };
 
-		// Hitbox to detect player from falling
-		fall_detect = { static_cast<int>(m_Px) + 9, static_cast<int>(m_Py), (32 * 2) - 25, (32 * 2) - 50 };
-
 		m_Renderer = ren; // renderer from game
 		m_Audio = audio; // Audio from game
 
@@ -92,14 +89,6 @@ namespace Tmpl8
 			m_Down = true;
 			m_Up = false;
 			break;
-		case SDLK_0:
-			resetPlayer();
-			break;
-		case SDLK_9:
-			std::cout << m_Px << ", " << m_Py << std::endl;
-			m_Px = 157;
-			m_Py = 2090;
-			pos = { m_Px, m_Py };
 		default:
 			break;
 		}
@@ -138,23 +127,22 @@ namespace Tmpl8
 	{
 		calculateKinematic(deltaTime);
 
-		float tempY = m_Py; // Store the current Y position before moving
-		// Move along X and Y separately + collision detection
+		// Move along X and Y separately for perfect collision detection was the plan.
+		// I got a similair implementation from: https://maddythorson.medium.com/celeste-and-towerfall-physics-d24bd2ae0fc5
+		// There is a glitch that when you move on x-axis and hold down that key you stay against the wall even though there is nothing under the player.
 		MoveX(velocity.x * deltaTime + acceleration.x * 0.5f, world);
 		MoveY(velocity.y * deltaTime + acceleration.y * 0.5f, world);
 
 		CheckCoins(world); // Check for coin collision
 		
-		m_YChange = m_Py - tempY;
 
-		if (IsOnGround(world)) {
+		if (IsOnGround(world)) { // Reset jump count
 			m_JumpCount = 0;
 		}
 
 		// Update rect and destination for rendering
 		SetDest(pos.x, pos.y, 32 * 2, 32 * 2);
 		m_Rect = { static_cast<int>(pos.x) + 9, static_cast<int>(pos.y), (32 * 2) - 20, (32 * 2) - 10 };
-		fall_detect = { static_cast<int>(pos.x) + 12, static_cast<int>(pos.y) + 40 , (32 * 2) - 26, (32 * 2) - 50 };
 
 		updateAnimation();
 	}
@@ -171,13 +159,11 @@ namespace Tmpl8
 			{
 				//Update rect for collision check
 				m_Rect.x = (pos.x + sign) + 9;
-				fall_detect.x = m_Rect.x + 12;
 
 				if (!CheckCollision(&m_Rect, world))
 				{
 					pos.x += sign;
 					m_Rect.x = static_cast<int>(pos.x) + 9;
-					fall_detect.x = m_Rect.x + 12;
 					move -= sign;
 				}
 				else
@@ -202,12 +188,10 @@ namespace Tmpl8
 			{
 				// Update rect for collision check
 				m_Rect.y = pos.y + sign;
-				fall_detect.y = m_Rect.y;
 				if (!CheckCollision(&m_Rect, world))
 				{
 					pos.y += sign;
 					m_Rect.y = static_cast<int>(pos.y);
-					fall_detect.y = m_Rect.y;
 					move -= sign;
 					m_Fall = true;
 				}
@@ -242,8 +226,7 @@ namespace Tmpl8
                // Coin collected
                m_CollectedCoins++; // Add coin to total coins
                coin_it = coins.erase(coin_it); // Remove the coin from the vector  
-			   m_Audio->PlayCoinSound();
-               std::cout << "Collected coins: " << m_CollectedCoins << std::endl; // Print the number of collected coins
+			   m_Audio->PlayCoinSound(); // play coin sfx
            }  
            else  
            {  
@@ -257,7 +240,7 @@ namespace Tmpl8
 		// reset the acceleration
 		acceleration = { 0, VERTICAL_ACCALERATION };
 
-		// left movment
+		// left movment && animation
 		if (m_Left)
 		{
 			if (getCurAnimation() != m_WalkingL)
@@ -267,7 +250,7 @@ namespace Tmpl8
 			acceleration.x = -HORIZONTAL_ACCALERATION;
 		}
 
-		// right movement
+		// right movement && animation
 		if (m_Right)
 		{
 			if (getCurAnimation() != m_WalkingR)
@@ -276,7 +259,7 @@ namespace Tmpl8
 			}
 			acceleration.x = HORIZONTAL_ACCALERATION;
 		}
-		
+		// jump animation
 		if (velocity.y < 0) // if the player is moving up
 		{
 			m_Fall = false;
@@ -335,7 +318,7 @@ namespace Tmpl8
 			}
 		}
 
-		// Jumping u = up
+		// Jumping
 		if (m_Up)
 		{
 			Jump();
@@ -351,7 +334,7 @@ namespace Tmpl8
 			velocity.y = MAX_FALL_SPEED;
 
 
-		// setting new player position
+		// Update player position
 		m_Px = pos.x;
 		m_Py = pos.y;
 	}
@@ -365,6 +348,7 @@ namespace Tmpl8
 		pos = { m_Px, m_Py };
 		velocity = { 0, 0 };
 		acceleration = { 0, VERTICAL_ACCALERATION };
+		// Reset direction
 		m_Left = false;
 		m_Right = false;
 		m_Up = false;
@@ -376,37 +360,20 @@ namespace Tmpl8
 	{
 		if (m_Fall && m_JumpCount == 0)
 		{
-			m_JumpCount++; // only allow 1 jump
+			m_JumpCount++; // only allow 1 extra jump
 		}
-		
+		// double jump
 		if (m_JumpCount < m_MaxJumps && m_DoubleJumpAllowed)
 		{
 			velocity.y = -VERTICAL_JUMP_SPEED;
 			m_JumpCount++;
-			std::cout << m_JumpCount << std::endl;
 		}
 	}
 
-	std::vector<Object*> Player::GetCollisions(SDL_Rect* rect, const World* world)
-	{
-		std::vector<Object*> collisions;
-		const auto& map = world->GetMap(); // Get the tile map from the world  
-		for (const auto& tile : map)
-		{
-			if (SDL_HasIntersection(rect, &tile.GetDest()))
-			{
-				if (tile.GetSolid())
-				{
-					collisions.push_back(const_cast<Object*>(&tile));
-				}
-			}
-		}
-		return collisions;
-	}
 	bool Player::CheckCollision(SDL_Rect* rect, const World* world)
 	{
-		const auto& map = world->GetMap(); // Get the tile map from the world
-		for (const auto& tile : map)
+		const std::vector<Object>& map = world->GetMap(); // Get the tile map from the world
+		for (const Object& tile : map)
 		{
 			if (SDL_HasIntersection(rect, &tile.GetDest()))
 			{
@@ -419,14 +386,14 @@ namespace Tmpl8
 		return false;
 	}
 
-	bool Player::IsOnGround(const World* world)
+	bool Player::IsOnGround(const World* world) // Check if player is on the ground
 	{
 		// Create a small rectangle just below the player's feet
 		SDL_Rect groundCheck = m_Rect;
 		groundCheck.w -= 6;
 		groundCheck.x += 3;
-		groundCheck.y += m_Rect.h; // Move to just below the player
-		groundCheck.h = 1;       // Only 1 pixel tall
+		groundCheck.y += m_Rect.h; 
+		groundCheck.h = 1;       
 
 		return CheckCollision(&groundCheck, world);
 	}

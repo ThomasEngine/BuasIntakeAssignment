@@ -20,12 +20,10 @@ namespace Tmpl8
 		void MoveX(float amount, const World* world);
 		void MoveY(float amount, const World* world);
 		void CheckCoins(World* world);
-		float GetChangeY() { return m_YChange; }
 		void calculateKinematic(float deltaTime);
 
 		void resetPlayer();
 
-		std::vector<Object*> GetCollisions(SDL_Rect* rect, const World* world);
 		bool CheckCollision(SDL_Rect* rect, const World* world);
 		bool IsOnGround(const World* world);
 		
@@ -34,7 +32,6 @@ namespace Tmpl8
 		void SetXPos(float x) { m_Px = x; pos.x = x; m_Rect.x = static_cast<int>(x) + 9; }
 
 		SDL_Rect getRect() const { return m_Rect; }
-		SDL_Rect getFallRect() const { return fall_detect; }
 
 		void Jump();
 
@@ -42,18 +39,16 @@ namespace Tmpl8
 		SDL_Renderer* m_Renderer;
 		Audio* m_Audio;
 		float m_Px, m_Py;
-		float m_XRemainder; // x remainder for the player
-		float m_YRemainder; // y remainder for the player
-		float m_YChange; // change in y
+		float m_XRemainder;
+		float m_YRemainder;
 		int m_IdolR, m_IdolL, m_WalkingR, m_WalkingL, m_JumpL, m_JumpR, m_FallingL, m_FallingR, m_Hit, m_DoubleJumpL, m_DoubleJumpR, m_HangingL, m_HangingR; // all the different animations
 		int m_XDirection; // direction of the player 0 = left 1 = right
-		bool m_Left, m_Right, m_Up, m_Down, m_Fall; // left right up down
+		bool m_Left, m_Right, m_Up, m_Down, m_Fall; // Player move directions
 		bool m_DoubleJumpAllowed;
 		int m_JumpCount = 0;
 		int m_MaxJumps = 2;
 		int m_CollectedCoins = 0;
 		SDL_Rect m_Rect;
-		SDL_Rect fall_detect;
 		vec2 pos;
 		vec2 velocity;
 		vec2 acceleration;

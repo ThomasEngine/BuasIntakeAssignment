@@ -11,19 +11,19 @@ namespace Tmpl8
 		tmp.amount = amount;
 		tmp.speed = speed;
 		tmp.tick = 0;
-		animations.push_back(tmp);
-		return animations.size() - 1;
+		m_Animations.push_back(tmp);
+		return m_Animations.size() - 1;
 	}
-	void Entity::updateAnimation()
+	void Entity::updateAnimation() // got this setup from a tutorial, I understand how it works but would not be able to recreate it from scratch
 	{
-		SetSource(animations[m_CurAnimation].w * animations[m_CurAnimation].tick, 
-			animations[m_CurAnimation].h * animations[m_CurAnimation].row, 
-			animations[m_CurAnimation].w, 
-			animations[m_CurAnimation].h);
+		SetSource(m_Animations[m_CurAnimation].w * m_Animations[m_CurAnimation].tick, 
+			m_Animations[m_CurAnimation].h * m_Animations[m_CurAnimation].row, 
+			m_Animations[m_CurAnimation].w, 
+			m_Animations[m_CurAnimation].h);
 
-		if (m_Begin > animations[m_CurAnimation].speed) { animations[m_CurAnimation].tick++; m_Begin = 0; }
+		if (m_Begin > m_Animations[m_CurAnimation].speed) { m_Animations[m_CurAnimation].tick++; m_Begin = 0; }
 		m_Begin++;
-		if (animations[m_CurAnimation].tick >= animations[m_CurAnimation].amount) { animations[m_CurAnimation].tick = 0; }
+		if (m_Animations[m_CurAnimation].tick >= m_Animations[m_CurAnimation].amount) { m_Animations[m_CurAnimation].tick = 0; }
 			
 
 

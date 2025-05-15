@@ -7,49 +7,49 @@ namespace Tmpl8
 		Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024);
 
 
-		song1 = Mix_LoadMUS("assets/Music/Music1.mp3");
-		if (song1 == nullptr)
+		m_BackgroundMusic = Mix_LoadMUS("assets/Music/Music1.mp3");
+		if (m_BackgroundMusic == nullptr)
 			SDL_Log("Failed to load music: %s\n", Mix_GetError());
 
 
-		Click_Sound = Mix_LoadWAV("assets/Sound/ClickSound.wav");
-		if (Click_Sound == nullptr)
+		m_ClickSound = Mix_LoadWAV("assets/Sound/ClickSound.wav");
+		if (m_ClickSound == nullptr)
 			SDL_Log("Failed to load click sound: %s\n", Mix_GetError());
 
-		Hover_Sound = Mix_LoadWAV("assets/Sound/HoverSound.wav");
-		if (Hover_Sound == nullptr)
+		m_HoverSound = Mix_LoadWAV("assets/Sound/HoverSound.wav");
+		if (m_HoverSound == nullptr)
 			SDL_Log("Failed to load hover sound: %s\n", Mix_GetError());
 
-		Coin_Sound = Mix_LoadWAV("assets/Sound/CoinSFX.wav");
-		if (Coin_Sound == nullptr)
+		m_CoinSound = Mix_LoadWAV("assets/Sound/CoinSFX.wav");
+		if (m_CoinSound == nullptr)
 			SDL_Log("Failed to load coin sound: %s\n", Mix_GetError());
 
 		Mix_Volume(-1, 30);
 		Mix_VolumeMusic(30);
-		Mix_PlayMusic(song1, -1);
+		Mix_PlayMusic(m_BackgroundMusic, -1);
 
 	}
 
 	Audio::~Audio()
 	{
-		Mix_FreeMusic(song1);
-		Mix_FreeChunk(Click_Sound);
-		Mix_FreeChunk(Hover_Sound);
+		Mix_FreeMusic(m_BackgroundMusic);
+		Mix_FreeChunk(m_ClickSound);
+		Mix_FreeChunk(m_HoverSound);
 		Mix_CloseAudio();
 	}
 
 	void Audio::PlayClickSound()
 	{
-		Mix_PlayChannel(-1, Click_Sound, 0);
+		Mix_PlayChannel(-1, m_ClickSound, 0);
 	}
 
 	void Audio::PlayHoverSound()
 	{
-		Mix_PlayChannel(-1, Hover_Sound, 0);
+		Mix_PlayChannel(-1, m_HoverSound, 0);
 	}
 	void Audio::PlayCoinSound()
 	{
-		Mix_PlayChannel(-1, Coin_Sound, 0);
+		Mix_PlayChannel(-1, m_CoinSound, 0);
 	}
 }
 

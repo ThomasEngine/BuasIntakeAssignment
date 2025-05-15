@@ -93,10 +93,9 @@ namespace Tmpl8
 	{
 		DrawAll();
 		SDL_RenderPresent(m_Renderer);
-		//showFPS(deltaTime);
 	}
 
-	void Game::DrawStatic(Object o)
+	void Game::DrawStatic(Object o) // Draw function for static non moving objects.
 	{
 		if (!o.GetTex())
 		{
@@ -127,7 +126,6 @@ namespace Tmpl8
 			m_State = GameState::Paused;
 			m_Menu->SetMenu(MenuType::Victory);
 		}
-		//std::cout << playerTimer << std::endl;
 	}
 
 	void Game::Draw(Object* o)
@@ -150,16 +148,4 @@ namespace Tmpl8
 		m_TileMap->DrawTileMap(m_Renderer, m_CameraX, m_CameraY, ScreenWidth, ScreenHeight);
 		Draw(m_Player);
 	}
-
-    void Game::showFPS(float deltaTime)
-    {
-       // Calculate FPS
-       float fps = 1000 / deltaTime;
-
-       // Convert FPS to string
-       std::string fpsText = "FPS: " + std::to_string(static_cast<int>(fps));
-
-       // Display FPS on the screen
-       std::cout << fps << std::endl; // not enough time to figure how to put dynamic text on screen
-    }
 }

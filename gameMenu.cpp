@@ -28,7 +28,10 @@ namespace Tmpl8
 
     void GameMenu::BuildMenu(MenuType type)
     {
+		// Clear previous buttons
         m_Buttons.clear();
+
+        // Creating new buttons
         switch (type)
         {
         case MenuType::Main:
@@ -167,7 +170,7 @@ namespace Tmpl8
                         m_CurrentState = GameState::Paused;
                         if (button.label == "Victory")
                         {
-                            continue; // bug when pressing victory menu disapears.
+                            continue; // Bug: When pressing victory menu disapears.
                         }
                         if (button.label == "Restart")
                         {

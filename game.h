@@ -24,7 +24,6 @@ namespace Tmpl8 {
 		void Update(float deltaTime);
 		void UpdateCameraY();
 		void Render(float deltaTime);
-		void showFPS(float deltaTime);
 		void DrawAll();
 		void Draw(Object* o);
 		void DrawStatic(Object o);

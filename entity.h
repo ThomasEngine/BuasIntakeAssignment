@@ -22,7 +22,7 @@ private:
 		int speed;  
 		int tick;  
 	};  
-	std::vector<cycle> animations; // Use std::vector explicitly  
+	std::vector<cycle> m_Animations; // Use std::vector explicitly  
 	int m_CurAnimation;  
 	int m_Begin;  
 };  

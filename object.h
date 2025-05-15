@@ -27,7 +27,7 @@ namespace Tmpl8
 		int GetDH() const { return m_Dest.h; }
 		void SetDY(int y) { m_Dest.y = y; }
 
-		void DrawRect(SDL_Rect rect, SDL_Renderer* ren) const;
+		void DrawRect(SDL_Rect rect, SDL_Renderer* ren) const; // for debuging
 
 	private:
 		SDL_Rect m_Dest;

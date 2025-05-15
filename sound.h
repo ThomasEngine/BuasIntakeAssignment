@@ -17,9 +17,9 @@ namespace Tmpl8
 		void PlayCoinSound();
 
 	private:
-		Mix_Music* song1;
-		Mix_Chunk* Click_Sound;
-		Mix_Chunk* Hover_Sound;
-		Mix_Chunk* Coin_Sound;
+		Mix_Music* m_BackgroundMusic;
+		Mix_Chunk* m_ClickSound;
+		Mix_Chunk* m_HoverSound;
+		Mix_Chunk* m_CoinSound;
 	};
 }
