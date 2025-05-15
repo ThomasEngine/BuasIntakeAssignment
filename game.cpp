@@ -10,44 +10,44 @@ namespace Tmpl8
 {
 	void Game::Init()
 	{
-		m_TileMap = new World(m_renderer, TILESIZE);
+		m_TileMap = new World(m_Renderer, TILESIZE);
 		m_TileMap->LoadTilemapFromFile("assets/tilemap/level1.txt");
 		m_TileMap->BuildTileMap();
 
-		player = new Player(64, 95 * 32, m_renderer, m_audio);
-		player->resetPlayer();
+		m_Player = new Player(64, 95 * 32, m_Renderer, m_Audio);
+		m_Player->resetPlayer();
 
-		Background.SetImage("assets/background/Background_2.png", m_renderer, 0);
-		Background.SetSource(0, 0, 1280, 720);
-		Background.SetDest(0, 0, 1280, 720);
+		m_Background.SetImage("assets/background/Background_2.png", m_Renderer, 0);
+		m_Background.SetSource(0, 0, 1280, 720);
+		m_Background.SetDest(0, 0, 1280, 720);
 
-		m_menu = new GameMenu(m_renderer);
-		m_state = GameState::Paused;
+		m_Menu = new GameMenu(m_Renderer);
+		m_State = GameState::Paused;
 
 
 
-		cameraX = 0.f;
+		m_CameraX = 0.f;
 	}
 	void Game::Shutdown()
 	{
-		delete player;
+		delete m_Player;
 		delete m_TileMap;
-		delete m_menu;
-		SDL_DestroyTexture(Background.GetTex());
-		SDL_DestroyRenderer(m_renderer);
-		SDL_DestroyWindow(m_window);
+		delete m_Menu;
+		SDL_DestroyTexture(m_Background.GetTex());
+		SDL_DestroyRenderer(m_Renderer);
+		SDL_DestroyWindow(m_Window);
 	}
 
 	void Game::Restart()
 	{
-		player->resetPlayer();
-		playerTimer = 0.f;
+		m_Player->resetPlayer();
+		m_PlayerTimer = 0.f;
 
 		delete m_TileMap;
 
-		playerFinished = false;
+		m_PlayerFinished = false;
 
-		m_TileMap = new World(m_renderer, TILESIZE);
+		m_TileMap = new World(m_Renderer, TILESIZE);
 		m_TileMap->LoadTilemapFromFile("assets/tilemap/level1.txt");
 		m_TileMap->BuildTileMap();
 	}
@@ -55,12 +55,12 @@ namespace Tmpl8
 	void Game::Tick(float deltaTime)
 	{
 		// clear the graphics window
-		SDL_RenderClear(m_renderer);
+		SDL_RenderClear(m_Renderer);
 
-		switch (m_state)
+		switch (m_State)
 		{
 		case GameState::Paused: // Game is paused
-			m_menu->Render();
+			m_Menu->Render();
 			break;
 		case GameState::Playing: // Game is playing
 			Update(deltaTime);
@@ -70,7 +70,7 @@ namespace Tmpl8
 	}
 	void Game::Update(float deltaTime)
 	{
-		player->Update(deltaTime, m_TileMap);
+		m_Player->Update(deltaTime, m_TileMap);
 		m_TileMap->UpdateCoinAnimation();
 		UpdateCameraY();
 		UpdateTimer(deltaTime);
@@ -78,21 +78,21 @@ namespace Tmpl8
 	void Game::UpdateCameraY()
 	{
 		// Center camera on player
-		float targetCameraY = player->GetDY() - ScreenHeight / 2;
+		float targetCameraY = m_Player->GetDY() - ScreenHeight / 2;
 
-		// Dont go further then the map
+		// Dont let camera go further then the map
 		float maxCameraY = m_TileMap->GetRows() * TILESIZE - ScreenHeight;
 		if (targetCameraY < 0) targetCameraY = 0;
 		if (targetCameraY > maxCameraY) targetCameraY = maxCameraY;
 
 		// Smooth scrolling
 		float cameraSpeed = 0.1f; // Smoothness
-		cameraY += (targetCameraY - cameraY) * cameraSpeed;
+		m_CameraY += (targetCameraY - m_CameraY) * cameraSpeed;
 	}
 	void Game::Render(float deltaTime)
 	{
 		DrawAll();
-		SDL_RenderPresent(m_renderer);
+		SDL_RenderPresent(m_Renderer);
 		//showFPS(deltaTime);
 	}
 
@@ -105,50 +105,50 @@ namespace Tmpl8
 		}
 		SDL_Rect dest = o.GetDest();
 		SDL_Rect src = o.GetSource();
-		SDL_RenderCopyEx(m_renderer, o.GetTex(), &src, &dest, 0, NULL, SDL_FLIP_NONE);
+		SDL_RenderCopyEx(m_Renderer, o.GetTex(), &src, &dest, 0, NULL, SDL_FLIP_NONE);
 	}
 
 	void Game::UpdateTimer(float deltaTime)
 	{
-		if (m_state == GameState::Playing && !timerActive)
+		if (m_State == GameState::Playing && !m_TimerActive)
 		{
-			playerTimer = 0.0f;
-			timerActive = true;
+			m_PlayerTimer = 0.0f;
+			m_TimerActive = true;
 		}
-		if (m_state == GameState::Playing && timerActive && !playerFinished)
-			playerTimer += deltaTime / 1000.f;
-		int px = player->GetDX();
-		int py = player->GetDY();
+		if (m_State == GameState::Playing && m_TimerActive && !m_PlayerFinished)
+			m_PlayerTimer += deltaTime / 1000.f;
+		int px = m_Player->GetDX();
+		int py = m_Player->GetDY();
 		if (px >1120 && py <= 1578 ) // check if player is finished
 		{
-			playerFinished = true;
-			timerActive = false;			
-			m_menu->SetGameState(GameState::Paused);
-			m_state = GameState::Paused;
-			m_menu->SetMenu(MenuType::Victory);
+			m_PlayerFinished = true;
+			m_TimerActive = false;			
+			m_Menu->SetGameState(GameState::Paused);
+			m_State = GameState::Paused;
+			m_Menu->SetMenu(MenuType::Victory);
 		}
 		//std::cout << playerTimer << std::endl;
 	}
 
-	void Game::Draw(Object o)
+	void Game::Draw(Object* o)
 	{
-		if (!o.GetTex())
+		if (!o->GetTex())
 		{
 			SDL_Log("Texture not loaded\n");
 			return;
 		}
-		SDL_Rect dest = o.GetDest();
-		dest.y -= cameraY; // Offset by camera
-		SDL_Rect src = o.GetSource();
-		SDL_RenderCopyEx(m_renderer, o.GetTex(), &src, &dest, 0, NULL, SDL_FLIP_NONE);
+		SDL_Rect dest = o->GetDest();
+		dest.y -= m_CameraY; // Offset by camera
+		SDL_Rect src = o->GetSource();
+		SDL_RenderCopyEx(m_Renderer, o->GetTex(), &src, &dest, 0, NULL, SDL_FLIP_NONE);
 	}
 
 	void Game::DrawAll()
 	{
 		// Draw all objects here
-		DrawStatic(Background);
-		m_TileMap->DrawTileMap(m_renderer, cameraX, cameraY, ScreenWidth, ScreenHeight);
-		Draw(*player);
+		DrawStatic(m_Background);
+		m_TileMap->DrawTileMap(m_Renderer, m_CameraX, m_CameraY, ScreenWidth, ScreenHeight);
+		Draw(m_Player);
 	}
 
     void Game::showFPS(float deltaTime)
@@ -160,6 +160,6 @@ namespace Tmpl8
        std::string fpsText = "FPS: " + std::to_string(static_cast<int>(fps));
 
        // Display FPS on the screen
-       std::cout << fps << std::endl;
+       std::cout << fps << std::endl; // not enough time to figure how to put dynamic text on screen
     }
 }

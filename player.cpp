@@ -6,23 +6,23 @@ namespace Tmpl8
 	Player::Player(float xpos, float ypos, SDL_Renderer* ren, Audio* audio)
 	{
 		// Player position
-		px = xpos;
-		py = ypos;
+		m_Px = xpos;
+		m_Py = ypos;
 
 		// Kinematic vectors
-		pos = { px, py };
+		pos = { m_Px, m_Py };
 		velocity = { 0, 0 };
 		acceleration = { 0, VERTICAL_ACCALERATION }; // 0 is the beginning of the x accaleration, which at the start of the game is 0
 
 		// Movement left, right, up, down, falling
-		l = false;
-		r = false;
-		u = false;
-		d = false;
-		fall = false;
+		m_Left = false;
+		m_Right = false;
+		m_Up = false;
+		m_Down = false;
+		m_Fall = false;
 
 		// Direction of the player
-		x_direction = 1;
+		m_XDirection = 1;
 
 		// X and Y remainders
 		float xRemainder = 0;
@@ -30,42 +30,39 @@ namespace Tmpl8
 
 
 		//hitbox rect
-		rect = { static_cast<int>(px) + 9, static_cast<int>(py), (32 * 2) - 20, (32 * 2) - 10 };
+		m_Rect = { static_cast<int>(m_Px) + 9, static_cast<int>(m_Py), (32 * 2) - 20, (32 * 2) - 10 };
 
 		// Hitbox to detect player from falling
-		fall_detect = { static_cast<int>(px) + 9, static_cast<int>(py), (32 * 2) - 25, (32 * 2) - 50 };
+		fall_detect = { static_cast<int>(m_Px) + 9, static_cast<int>(m_Py), (32 * 2) - 25, (32 * 2) - 50 };
 
-		m_renderer = ren; // renderer from game
-		m_audio = audio; // Audio from game
+		m_Renderer = ren; // renderer from game
+		m_Audio = audio; // Audio from game
 
 
 		// Setting up all the sprite animations of the player
-		SetImage("assets/frog.png", m_renderer, 0);
-		SetDest(px, py, 32 * 2, 32 * 2);
-		idolr = createCycle(0, 32, 32, 11, 3);
-		idoll = createCycle(7, 32, 32, 11, 3);
+		SetImage("assets/frog.png", m_Renderer, 0);
+		SetDest(m_Px, m_Py, 32 * 2, 32 * 2);
+		m_IdolR = createCycle(0, 32, 32, 11, 3);
+		m_IdolL = createCycle(7, 32, 32, 11, 3);
 
-		walkingr = createCycle(1, 32, 32, 12, 2);
-		walkingl = createCycle(2, 32, 32, 12, 2);
+		m_WalkingR = createCycle(1, 32, 32, 12, 2);
+		m_WalkingL = createCycle(2, 32, 32, 12, 2);
 
-		jumpl = createCycle(3, 32, 32, 1, 0);
-		jumpr = createCycle(10, 32, 32, 1, 0);
+		m_JumpL = createCycle(3, 32, 32, 1, 0);
+		m_JumpR = createCycle(10, 32, 32, 1, 0);
 
-		fallingl = createCycle(9, 32, 32, 1, 0);
-		fallingr = createCycle(8, 32, 32, 1, 0);
+		m_FallingL = createCycle(9, 32, 32, 1, 0);
+		m_FallingR = createCycle(8, 32, 32, 1, 0);
 
 		// Extry animations if for when I continue developing
-		double_jumpl = createCycle(12, 32, 32, 6, 4);
-		doublejumpr = createCycle(4, 32, 32, 6, 4);
+		m_DoubleJumpL = createCycle(12, 32, 32, 6, 4);
+		m_DoubleJumpR = createCycle(4, 32, 32, 6, 4);
 
-		hangingl = createCycle(6, 32, 32, 1, 0);
-		hangingr = createCycle(11, 32, 32, 1, 0);
+		m_HangingL = createCycle(6, 32, 32, 1, 0);
+		m_HangingR = createCycle(11, 32, 32, 1, 0);
 
-		setCurAnimation(idoll); // starting animation
+		setCurAnimation(m_IdolL); // starting animation
 
-		// Settings player stats
-		SetHealth(100);
-		SetMaxHealth(100);
 	}
 
 	void Player::KeyDown(int key)  // When a key is pressed
@@ -74,35 +71,35 @@ namespace Tmpl8
 		{
 		case SDLK_LEFT:
 		case SDLK_a:
-			x_direction = 0;
-			l = true;
-			r = false;
+			m_XDirection = 0;
+			m_Left = true;
+			m_Right = false;
 			break;
 		case SDLK_RIGHT:
 		case SDLK_d:
-			x_direction = 1;
-			r = true;
-			l = false;
+			m_XDirection = 1;
+			m_Right = true;
+			m_Left = false;
 			break;
 		case SDLK_UP:
 		case SDLK_SPACE:
 		case SDLK_w:
-			u = true;
-			d = false;
+			m_Up = true;
+			m_Down = false;
 			break;
 		case SDLK_DOWN:
 		case SDLK_s:
-			d = true;
-			u = false;
+			m_Down = true;
+			m_Up = false;
 			break;
 		case SDLK_0:
 			resetPlayer();
 			break;
 		case SDLK_9:
-			std::cout << px << ", " << py << std::endl;
-			px = 157;
-			py = 2090;
-			pos = { px, py };
+			std::cout << m_Px << ", " << m_Py << std::endl;
+			m_Px = 157;
+			m_Py = 2090;
+			pos = { m_Px, m_Py };
 		default:
 			break;
 		}
@@ -114,23 +111,23 @@ namespace Tmpl8
 		{
 		case SDLK_LEFT:
 		case SDLK_a:
-			l = false;
-			setCurAnimation(idoll);
+			m_Left = false;
+			setCurAnimation(m_IdolL);
 			break;
 		case SDLK_RIGHT:
 		case SDLK_d:
-			r = false;
-			setCurAnimation(idolr);
+			m_Right = false;
+			setCurAnimation(m_IdolR);
 			break;
 		case SDLK_UP:
 		case SDLK_SPACE:
 		case SDLK_w:
-			u = false;
-			doubleJumpAllowed = true; // Allow jump again
+			m_Up = false;
+			m_DoubleJumpAllowed = true; // Allow jump again
 			break;
 		case SDLK_DOWN:
 		case SDLK_s:
-			d = false;
+			m_Down = false;
 			break;
 		default:
 			break;
@@ -141,22 +138,22 @@ namespace Tmpl8
 	{
 		calculateKinematic(deltaTime);
 
-		float tempY = py; // Store the current Y position before moving
+		float tempY = m_Py; // Store the current Y position before moving
 		// Move along X and Y separately + collision detection
 		MoveX(velocity.x * deltaTime + acceleration.x * 0.5f, world);
 		MoveY(velocity.y * deltaTime + acceleration.y * 0.5f, world);
 
 		CheckCoins(world); // Check for coin collision
 		
-		change_y = py - tempY;
+		m_YChange = m_Py - tempY;
 
 		if (IsOnGround(world)) {
-			jumpCount = 0;
+			m_JumpCount = 0;
 		}
 
 		// Update rect and destination for rendering
 		SetDest(pos.x, pos.y, 32 * 2, 32 * 2);
-		rect = { static_cast<int>(pos.x) + 9, static_cast<int>(pos.y), (32 * 2) - 20, (32 * 2) - 10 };
+		m_Rect = { static_cast<int>(pos.x) + 9, static_cast<int>(pos.y), (32 * 2) - 20, (32 * 2) - 10 };
 		fall_detect = { static_cast<int>(pos.x) + 12, static_cast<int>(pos.y) + 40 , (32 * 2) - 26, (32 * 2) - 50 };
 
 		updateAnimation();
@@ -164,23 +161,23 @@ namespace Tmpl8
 
 	void Player::MoveX(float amount, const World* world)
 	{
-		xRemainder += amount;
-		int move = static_cast<int>(round(xRemainder));
+		m_XRemainder += amount;
+		int move = static_cast<int>(round(m_XRemainder));
 		if (move != 0)
 		{
-			xRemainder -= move;
+			m_XRemainder -= move;
 			int sign = (move > 0) ? 1 : -1;
 			while (move != 0)
 			{
 				//Update rect for collision check
-				rect.x = (pos.x + sign) + 9;
-				fall_detect.x = rect.x + 12;
+				m_Rect.x = (pos.x + sign) + 9;
+				fall_detect.x = m_Rect.x + 12;
 
-				if (!CheckCollision(&rect, world))
+				if (!CheckCollision(&m_Rect, world))
 				{
 					pos.x += sign;
-					rect.x = static_cast<int>(pos.x) + 9;
-					fall_detect.x = rect.x + 12;
+					m_Rect.x = static_cast<int>(pos.x) + 9;
+					fall_detect.x = m_Rect.x + 12;
 					move -= sign;
 				}
 				else
@@ -195,24 +192,24 @@ namespace Tmpl8
 
 	void Player::MoveY(float amount, const World* world)
 	{
-		yRemainder += amount;
-		int move = static_cast<int>(round(yRemainder));
+		m_YRemainder += amount;
+		int move = static_cast<int>(round(m_YRemainder));
 		if (move != 0)
 		{
-			yRemainder -= move;
+			m_YRemainder -= move;
 			int sign = (move > 0) ? 1 : -1;
 			while (move != 0)
 			{
 				// Update rect for collision check
-				rect.y = pos.y + sign;
-				fall_detect.y = rect.y;
-				if (!CheckCollision(&rect, world))
+				m_Rect.y = pos.y + sign;
+				fall_detect.y = m_Rect.y;
+				if (!CheckCollision(&m_Rect, world))
 				{
 					pos.y += sign;
-					rect.y = static_cast<int>(pos.y);
-					fall_detect.y = rect.y;
+					m_Rect.y = static_cast<int>(pos.y);
+					fall_detect.y = m_Rect.y;
 					move -= sign;
-					fall = true;
+					m_Fall = true;
 				}
 				else
 				{
@@ -220,13 +217,13 @@ namespace Tmpl8
 					if (sign > 0)
 					{
 						velocity.y = 0;
-						fall = false;
+						m_Fall = false;
 					}
 					// If moving up (hitting ceiling), also stop upward movement
 					else if (sign < 0)
 					{
 						velocity.y = 0;
-						fall = true;
+						m_Fall = true;
 					}
 					break;
 				}
@@ -243,10 +240,10 @@ namespace Tmpl8
            if (SDL_HasIntersection(&playerRect, &coin_it->GetDest()))  
            {  
                // Coin collected
-               collectedCoins++; // Add coin to total coins
+               m_CollectedCoins++; // Add coin to total coins
                coin_it = coins.erase(coin_it); // Remove the coin from the vector  
-			   m_audio->PlayCoinSound();
-               std::cout << "Collected coins: " << collectedCoins << std::endl; // Print the number of collected coins
+			   m_Audio->PlayCoinSound();
+               std::cout << "Collected coins: " << m_CollectedCoins << std::endl; // Print the number of collected coins
            }  
            else  
            {  
@@ -261,88 +258,88 @@ namespace Tmpl8
 		acceleration = { 0, VERTICAL_ACCALERATION };
 
 		// left movment
-		if (l)
+		if (m_Left)
 		{
-			if (getCurAnimation() != walkingl)
+			if (getCurAnimation() != m_WalkingL)
 			{
-				setCurAnimation(walkingl);
+				setCurAnimation(m_WalkingL);
 			}
 			acceleration.x = -HORIZONTAL_ACCALERATION;
 		}
 
 		// right movement
-		if (r)
+		if (m_Right)
 		{
-			if (getCurAnimation() != walkingr)
+			if (getCurAnimation() != m_WalkingR)
 			{
-				setCurAnimation(walkingr);
+				setCurAnimation(m_WalkingR);
 			}
 			acceleration.x = HORIZONTAL_ACCALERATION;
 		}
 		
 		if (velocity.y < 0) // if the player is moving up
 		{
-			fall = false;
-			if (x_direction == 0) // if direction is left
+			m_Fall = false;
+			if (m_XDirection == 0) // if direction is left
 			{
-				if (getCurAnimation() != jumpl)
+				if (getCurAnimation() != m_JumpL)
 				{
-					setCurAnimation(jumpl);
+					setCurAnimation(m_JumpL);
 				}
 			}	
-			if (x_direction == 1) // if direction is right
+			if (m_XDirection == 1) // if direction is right
 			{
-				if (getCurAnimation() != jumpr)
+				if (getCurAnimation() != m_JumpR)
 				{
-					setCurAnimation(jumpr);
+					setCurAnimation(m_JumpR);
 				}
 			}
 		}
 
 		// falling animation
-		if (fall)
+		if (m_Fall)
 		{
-			if (x_direction == 0) // if direction is left
+			if (m_XDirection == 0) // if direction is left
 			{
-				if (getCurAnimation() != fallingl)
+				if (getCurAnimation() != m_FallingL)
 				{
-					setCurAnimation(fallingl);
+					setCurAnimation(m_FallingL);
 				}
 			}
-			if (x_direction == 1) // if direction is right
+			if (m_XDirection == 1) // if direction is right
 			{
-				if (getCurAnimation() != fallingr)
+				if (getCurAnimation() != m_FallingR)
 				{
-					setCurAnimation(fallingr);
+					setCurAnimation(m_FallingR);
 				}
 			}
 		}
 
 		// idle animations when not falling or moving
-		if (!fall)
+		if (!m_Fall)
 		{
 
-			if (x_direction == 0) // if direction is left
+			if (m_XDirection == 0) // if direction is left
 			{
-				if (getCurAnimation() != idoll && getCurAnimation() != walkingl)
+				if (getCurAnimation() != m_IdolL && getCurAnimation() != m_WalkingL)
 				{
-					setCurAnimation(idoll);
+					setCurAnimation(m_IdolL);
 				}
 			}
-			if (x_direction == 1) // if direction is right
+			if (m_XDirection == 1) // if direction is right
 			{
-				if (getCurAnimation() != idolr && getCurAnimation() != walkingr)
+				if (getCurAnimation() != m_IdolR && getCurAnimation() != m_WalkingR)
 				{
-					setCurAnimation(idolr);
+					setCurAnimation(m_IdolR);
 				}
 			}
 		}
 
 		// Jumping u = up
-		if (u)
+		if (m_Up)
 		{
 			Jump();
-			doubleJumpAllowed = false;
+			m_DoubleJumpAllowed = false;
 		}
 
 		// kinematic calculations
@@ -355,40 +352,38 @@ namespace Tmpl8
 
 
 		// setting new player position
-		px = pos.x;
-		py = pos.y;
+		m_Px = pos.x;
+		m_Py = pos.y;
 	}
 
 	void Player::resetPlayer()
 	{
 		// Reset player position
-		px = 64;
-		py = 95 * 31;
+		m_Px = 64;
+		m_Py = 95 * 31;
 		// Reset kinematic vectors
-		pos = { px, py };
+		pos = { m_Px, m_Py };
 		velocity = { 0, 0 };
 		acceleration = { 0, VERTICAL_ACCALERATION };
-		l = false;
-		r = false;
-		u = false;
-		d = false;
-		fall = false;
-		SetHealth(100);
-		SetMaxHealth(100);
+		m_Left = false;
+		m_Right = false;
+		m_Up = false;
+		m_Down = false;
+		m_Fall = false;
 	}
 
 	void Player::Jump()
 	{
-		if (fall && jumpCount == 0)
+		if (m_Fall && m_JumpCount == 0)
 		{
-			jumpCount++; // only allow 1 jump
+			m_JumpCount++; // only allow 1 jump
 		}
 		
-		if (jumpCount < maxJumps && doubleJumpAllowed)
+		if (m_JumpCount < m_MaxJumps && m_DoubleJumpAllowed)
 		{
 			velocity.y = -VERTICAL_JUMP_SPEED;
-			jumpCount++;
-			std::cout << jumpCount << std::endl;
+			m_JumpCount++;
+			std::cout << m_JumpCount << std::endl;
 		}
 	}
 
@@ -427,10 +422,10 @@ namespace Tmpl8
 	bool Player::IsOnGround(const World* world)
 	{
 		// Create a small rectangle just below the player's feet
-		SDL_Rect groundCheck = rect;
+		SDL_Rect groundCheck = m_Rect;
 		groundCheck.w -= 6;
 		groundCheck.x += 3;
-		groundCheck.y += rect.h; // Move to just below the player
+		groundCheck.y += m_Rect.h; // Move to just below the player
 		groundCheck.h = 1;       // Only 1 pixel tall
 
 		return CheckCollision(&groundCheck, world);

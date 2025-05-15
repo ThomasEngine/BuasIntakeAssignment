@@ -34,9 +34,9 @@ namespace Tmpl8
     {
     public:
         GameMenu(SDL_Renderer* renderer);
-		~GameMenu() { SDL_DestroyTexture(m_spriteSheet); }
+		~GameMenu() { SDL_DestroyTexture(m_SpriteSheet); }
         void SetMenu(MenuType type);
-		void SetGameState(GameState state) { m_currentState = state; }
+		void SetGameState(GameState state) { m_CurrentState = state; }
         void Render();
         void HandleEvent(int MouseX, int MouseY, bool MousePressed, GameState& outGameStateType, bool& backToMenu, bool& outShouldStartGame, bool& outShouldExit, bool& outShouldRestart, Audio* audio, MenuType& outMenuType);
 
@@ -44,11 +44,11 @@ namespace Tmpl8
         void BuildMenu(MenuType type);
         void DrawButton(MenuButton& button);
 
-        SDL_Texture* m_spriteSheet;
-        Object Background;
-        SDL_Renderer* m_renderer;
-        MenuType m_currentMenu;
-		GameState m_currentState;
-        std::vector<MenuButton> m_buttons;
+        SDL_Texture* m_SpriteSheet;
+        Object m_Background;
+        SDL_Renderer* m_Renderer;
+        MenuType m_CurrentMenu;
+		GameState m_CurrentState;
+        std::vector<MenuButton> m_Buttons;
     };
 }

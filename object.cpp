@@ -2,28 +2,28 @@
 #include <SDL_image.h>
 
 namespace Tmpl8 {
-	Object::Object() : tex(nullptr),  is_Solid(true) {}
+	Object::Object() : m_Tex(nullptr),  m_IsSolid(true) {}
 
 	void Object::SetDest(int x, int y, int w, int h)
 	{
-		dest.x = x;
-		dest.y = y;
-		dest.w = w;
-		dest.h = h;
+		m_Dest.x = x;
+		m_Dest.y = y;
+		m_Dest.w = w;
+		m_Dest.h = h;
 	}
 
 	void Object::SetDest(int x, int y)
 	{
-		dest.x = x;
-		dest.y = y;
+		m_Dest.x = x;
+		m_Dest.y = y;
 	}
 
 	void Object::SetSource(int x, int y, int w, int h)
 	{
-		src.x = x;
-		src.y = y;
-		src.w = w;
-		src.h = h;
+		m_Src.x = x;
+		m_Src.y = y;
+		m_Src.w = w;
+		m_Src.h = h;
 	}
 
 	void Object::SetImage(std::string filename, SDL_Renderer* ren, int color) // color is 0 for black and 1 for white
@@ -36,7 +36,7 @@ namespace Tmpl8 {
 			return;
 		}
 
-		tex = SDL_CreateTextureFromSurface(ren, surf);
+		m_Tex = SDL_CreateTextureFromSurface(ren, surf);
 
 		SDL_FreeSurface(surf);
 	}

@@ -4,94 +4,98 @@
 namespace Tmpl8
 {
     GameMenu::GameMenu(SDL_Renderer* renderer)
-        : m_renderer{ renderer }, m_currentMenu{ MenuType::Main }
+        : m_Renderer{ renderer }, m_CurrentMenu{ MenuType::Main }
     {
 		// Load sprite sheet
         SDL_Surface* surface = IMG_Load("assets/menu(1024x1024).png");
-		m_spriteSheet = SDL_CreateTextureFromSurface(m_renderer, surface);
+		m_SpriteSheet = SDL_CreateTextureFromSurface(m_Renderer, surface);
 		SDL_FreeSurface(surface);
 
         // Load background image
-        Background.SetImage("assets/background/Background_2.png", m_renderer, 0);
-        Background.SetSource(0, 0, 1280, 720);
-        Background.SetDest(0, 0, 1280, 720);
+        m_Background.SetImage("assets/background/Background_2.png", m_Renderer, 0);
+        m_Background.SetSource(0, 0, 1280, 720);
+        m_Background.SetDest(0, 0, 1280, 720);
 
         // Build the menu
-        BuildMenu(m_currentMenu);
+        BuildMenu(m_CurrentMenu);
     }
 
     void GameMenu::SetMenu(MenuType type)
     {
-        m_currentMenu = type;
+        m_CurrentMenu = type;
         BuildMenu(type);
     }
 
     void GameMenu::BuildMenu(MenuType type)
     {
-        m_buttons.clear();
+        m_Buttons.clear();
         switch (type)
         {
         case MenuType::Main:
-            m_buttons.emplace_back("Levels");
-            m_buttons.back().SetDest(ScreenWidth/2 - 514 / 2, 84 + 52, 514, 128);
-            m_buttons.back().SetTexture(m_spriteSheet); 
-            m_buttons.back().SetSource(0, 0, 514, 128); 
+            m_Buttons.emplace_back("Levels");
+            m_Buttons.back().SetDest(ScreenWidth/2 - 514 / 2, 84 + 52, 514, 128);
+            m_Buttons.back().SetTexture(m_SpriteSheet); 
+            m_Buttons.back().SetSource(0, 0, 514, 128); 
 
-            m_buttons.emplace_back("Settings");
-            m_buttons.back().SetDest(ScreenWidth/2 - 514 / 2, 296 , 514, 128);
-            m_buttons.back().SetTexture(m_spriteSheet);
-            m_buttons.back().SetSource(0, 128, 514, 128);
+            m_Buttons.emplace_back("Settings");
+            m_Buttons.back().SetDest(ScreenWidth/2 - 514 / 2, 296 , 514, 128);
+            m_Buttons.back().SetTexture(m_SpriteSheet);
+            m_Buttons.back().SetSource(0, 128, 514, 128);
 
-            m_buttons.emplace_back("Exit");
-            m_buttons.back().SetDest(ScreenWidth/2 - 514 / 2, 508 - 52, 514, 128);
-            m_buttons.back().SetTexture(m_spriteSheet);
-            m_buttons.back().SetSource(0, 256, 514 , 128); 
+            m_Buttons.emplace_back("Exit");
+            m_Buttons.back().SetDest(ScreenWidth/2 - 514 / 2, 508 - 52, 514, 128);
+            m_Buttons.back().SetTexture(m_SpriteSheet);
+            m_Buttons.back().SetSource(0, 256, 514 , 128); 
             break;
 		case MenuType::GamePaused:
-			m_buttons.emplace_back("Resume");
-            m_buttons.back().SetDest(ScreenWidth / 2 - 514 / 2, 84 + 52, 514, 128);
-            m_buttons.back().SetTexture(m_spriteSheet);
-            m_buttons.back().SetSource(0, 384, 514, 128);
+			m_Buttons.emplace_back("Resume");
+            m_Buttons.back().SetDest(ScreenWidth / 2 - 514 / 2, 84 + 52, 514, 128);
+            m_Buttons.back().SetTexture(m_SpriteSheet);
+            m_Buttons.back().SetSource(0, 384, 514, 128);
 
-			m_buttons.emplace_back("Restart");
-            m_buttons.back().SetDest(ScreenWidth / 2 - 514 / 2, 296, 514, 128);
-            m_buttons.back().SetTexture(m_spriteSheet);
-            m_buttons.back().SetSource(0, 512, 514, 128);
+			m_Buttons.emplace_back("Restart");
+            m_Buttons.back().SetDest(ScreenWidth / 2 - 514 / 2, 296, 514, 128);
+            m_Buttons.back().SetTexture(m_SpriteSheet);
+            m_Buttons.back().SetSource(0, 512, 514, 128);
 
-            m_buttons.emplace_back("Exit");
-            m_buttons.back().SetDest(ScreenWidth / 2 - 514 / 2, 508 - 52, 514, 128);
-            m_buttons.back().SetTexture(m_spriteSheet);
-            m_buttons.back().SetSource(0, 256, 514, 128);
+            m_Buttons.emplace_back("Exit");
+            m_Buttons.back().SetDest(ScreenWidth / 2 - 514 / 2, 508 - 52, 514, 128);
+            m_Buttons.back().SetTexture(m_SpriteSheet);
+            m_Buttons.back().SetSource(0, 256, 514, 128);
 			break;
         case MenuType::Victory:
+            m_Buttons.emplace_back("Victory");
+            m_Buttons.back().SetDest(ScreenWidth / 2 - 514 / 2, 84 + 52, 514, 128);
+            m_Buttons.back().SetTexture(m_SpriteSheet);
+            m_Buttons.back().SetSource(0, 768, 514, 128);
 
-            m_buttons.emplace_back("Restart");
-            m_buttons.back().SetDest(ScreenWidth / 2 - 514 / 2, 296, 514, 128);
-            m_buttons.back().SetTexture(m_spriteSheet);
-            m_buttons.back().SetSource(0, 512, 514, 128);
+            m_Buttons.emplace_back("Restart");
+            m_Buttons.back().SetDest(ScreenWidth / 2 - 514 / 2, 296, 514, 128);
+            m_Buttons.back().SetTexture(m_SpriteSheet);
+            m_Buttons.back().SetSource(0, 512, 514, 128);
 
-            m_buttons.emplace_back("Exit");
-            m_buttons.back().SetDest(ScreenWidth / 2 - 514 / 2, 508 - 52, 514, 128);
-            m_buttons.back().SetTexture(m_spriteSheet);
-            m_buttons.back().SetSource(0, 256, 514, 128);
+            m_Buttons.emplace_back("Exit");
+            m_Buttons.back().SetDest(ScreenWidth / 2 - 514 / 2, 508 - 52, 514, 128);
+            m_Buttons.back().SetTexture(m_SpriteSheet);
+            m_Buttons.back().SetSource(0, 256, 514, 128);
         }
     }
 
     void GameMenu::Render()
     {
-        SDL_RenderClear(m_renderer);
+        SDL_RenderClear(m_Renderer);
         
         // draw background
-        SDL_Rect dest = Background.GetDest();
-        SDL_Rect src = Background.GetSource();
-	    SDL_RenderCopy(m_renderer, Background.GetTex(), &src, &dest);
+        SDL_Rect dest = m_Background.GetDest();
+        SDL_Rect src = m_Background.GetSource();
+	    SDL_RenderCopy(m_Renderer, m_Background.GetTex(), &src, &dest);
 
-        for (MenuButton& button : m_buttons)
+        for (MenuButton& button : m_Buttons)
         {
             DrawButton(button);
         }
 
-        SDL_RenderPresent(m_renderer);
+        SDL_RenderPresent(m_Renderer);
     }
 
     void GameMenu::DrawButton(MenuButton& button)
@@ -102,11 +106,11 @@ namespace Tmpl8
         {
             dest.x -= 5; dest.y -= 5; dest.w += 10; dest.h += 10;
         }
-        SDL_RenderCopy(m_renderer, button.GetTex(), &button.GetSource(), &dest);
+        SDL_RenderCopy(m_Renderer, button.GetTex(), &button.GetSource(), &dest);
     }
     void GameMenu::HandleEvent(int MouseX, int MouseY, bool MousePressed, GameState& outGameStateType, bool& backToMenu, bool& outShouldStartGame, bool& outShouldExit, bool& outShouldRestart, Audio* audio, MenuType& outMenuType)
     {  
-        for (MenuButton& button : m_buttons)
+        for (MenuButton& button : m_Buttons)
         {
             SDL_Rect rect = button.GetDest();
             if (MouseX >= rect.x && MouseX <= rect.x + rect.w &&
@@ -122,12 +126,12 @@ namespace Tmpl8
                     audio->PlayClickSound(); // Play click sfx
 
                     // Main menu 
-                    if (m_currentMenu == MenuType::Main)
+                    if (m_CurrentMenu == MenuType::Main)
                     {
-                        m_currentState = GameState::Paused;
+                        m_CurrentState = GameState::Paused;
                         if (button.label == "Levels")
                         {
-							m_currentState = GameState::Playing;
+							m_CurrentState = GameState::Playing;
                             outGameStateType = GameState::Playing;
                             outShouldStartGame = true;
                         }
@@ -139,12 +143,12 @@ namespace Tmpl8
                             outShouldExit = true;
                     }
 					// Pause menu
-					else if (m_currentMenu == MenuType::GamePaused)
+					else if (m_CurrentMenu == MenuType::GamePaused)
 					{
-                        m_currentState = GameState::Paused;
+                        m_CurrentState = GameState::Paused;
                         if (button.label == "Resume")
                         {
-                            m_currentState = GameState::Playing;
+                            m_CurrentState = GameState::Playing;
                             outShouldStartGame = true;
                         }
                         else if (button.label == "Restart")
@@ -158,9 +162,13 @@ namespace Tmpl8
                         }
 					}
                     // Victory Menu
-                    else if (m_currentMenu == MenuType::Victory)
+                    else if (m_CurrentMenu == MenuType::Victory)
                     {
-                        m_currentState = GameState::Paused;
+                        m_CurrentState = GameState::Paused;
+                        if (button.label == "Victory")
+                        {
+                            continue; // bug when pressing victory menu disapears.
+                        }
                         if (button.label == "Restart")
                         {
                             outShouldRestart = true;

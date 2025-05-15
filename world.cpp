@@ -7,7 +7,7 @@
 namespace Tmpl8
 {
     World::World(SDL_Renderer* renderer, int tileSize)
-		: m_renderer{ renderer }, m_tileSize{ tileSize }, m_tileTexture{nullptr}
+		: m_Renderer{ renderer }, m_tileSize{ tileSize }, m_tileTexture{nullptr}
     {
         // Load the tile texture
 		SDL_Surface* surf = IMG_Load("assets/tilemap/Assets2.png");
@@ -156,45 +156,45 @@ namespace Tmpl8
         }
     }
 
-    void World::DrawTileMap(SDL_Renderer* renderer, int cameraX, int cameraY, int screenWidth, int screenHeight)
+    void World::DrawTileMap(SDL_Renderer* renderer, int m_CameraX, int m_CameraY, int screenWidth, int screenHeight)
     {
         for (Object& tile : m_map)
         {
             // Only render tiles in view (optional optimization)
-            if (tile.GetDX() >= cameraX - m_tileSize &&
-                tile.GetDY() >= cameraY - m_tileSize &&
-                tile.GetDX() <= cameraX + screenWidth &&
-                tile.GetDY() <= cameraY + screenHeight)
+            if (tile.GetDX() >= m_CameraX - m_tileSize &&
+                tile.GetDY() >= m_CameraY - m_tileSize &&
+                tile.GetDX() <= m_CameraX + screenWidth &&
+                tile.GetDY() <= m_CameraY + screenHeight)
             {
                 SDL_Rect dest = tile.GetDest();
                 SDL_Rect src = tile.GetSource();
 
-                dest.y -= cameraY;
+                dest.y -= m_CameraY;
 
                 SDL_RenderCopy(renderer, tile.GetTex(), &src, &dest);
             }
         }
         for (Entity& coin : m_coins)
         {
-            if (coin.GetDX() >= cameraX - m_tileSize &&
-                coin.GetDY() >= cameraY - m_tileSize &&
-                coin.GetDX() <= cameraX + screenWidth &&
-                coin.GetDY() <= cameraY + screenHeight)
+            if (coin.GetDX() >= m_CameraX - m_tileSize &&
+                coin.GetDY() >= m_CameraY - m_tileSize &&
+                coin.GetDX() <= m_CameraX + screenWidth &&
+                coin.GetDY() <= m_CameraY + screenHeight)
             {
                 SDL_Rect dest = coin.GetDest();
                 SDL_Rect src = coin.GetSource();
-                dest.y -= cameraY;
+                dest.y -= m_CameraY;
                 SDL_RenderCopy(renderer, coin.GetTex(), &src, &dest);
             }
         }
-        if (m_flag.GetDX() >= cameraX - m_tileSize &&
-            m_flag.GetDY() >= cameraY - m_tileSize &&
-            m_flag.GetDX() <= cameraX + screenWidth &&
-            m_flag.GetDY() <= cameraY + screenHeight)
+        if (m_flag.GetDX() >= m_CameraX - m_tileSize &&
+            m_flag.GetDY() >= m_CameraY - m_tileSize &&
+            m_flag.GetDX() <= m_CameraX + screenWidth &&
+            m_flag.GetDY() <= m_CameraY + screenHeight)
         {
             SDL_Rect dest = m_flag.GetDest();
             SDL_Rect src = m_flag.GetSource();
-            dest.y -= cameraY;
+            dest.y -= m_CameraY;
             SDL_RenderCopy(renderer, m_flag.GetTex(), &src, &dest);
         }
         

@@ -16,14 +16,14 @@ namespace Tmpl8
 	}
 	void Entity::updateAnimation()
 	{
-		SetSource(animations[curAnimation].w * animations[curAnimation].tick, 
-			animations[curAnimation].h * animations[curAnimation].row, 
-			animations[curAnimation].w, 
-			animations[curAnimation].h);
+		SetSource(animations[m_CurAnimation].w * animations[m_CurAnimation].tick, 
+			animations[m_CurAnimation].h * animations[m_CurAnimation].row, 
+			animations[m_CurAnimation].w, 
+			animations[m_CurAnimation].h);
 
-		if (begin > animations[curAnimation].speed) { animations[curAnimation].tick++; begin = 0; }
-		begin++;
-		if (animations[curAnimation].tick >= animations[curAnimation].amount) { animations[curAnimation].tick = 0; }
+		if (m_Begin > animations[m_CurAnimation].speed) { animations[m_CurAnimation].tick++; m_Begin = 0; }
+		m_Begin++;
+		if (animations[m_CurAnimation].tick >= animations[m_CurAnimation].amount) { animations[m_CurAnimation].tick = 0; }
 			
 
 

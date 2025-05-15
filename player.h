@@ -20,7 +20,7 @@ namespace Tmpl8
 		void MoveX(float amount, const World* world);
 		void MoveY(float amount, const World* world);
 		void CheckCoins(World* world);
-		float GetChangeY() { return change_y; }
+		float GetChangeY() { return m_YChange; }
 		void calculateKinematic(float deltaTime);
 
 		void resetPlayer();
@@ -30,29 +30,29 @@ namespace Tmpl8
 		bool IsOnGround(const World* world);
 		
 
-		void SetYPos(float y) { py = y; pos.y = y; rect.y = static_cast<int>(y); }
-		void SetXPos(float x) { px = x; pos.x = x; rect.x = static_cast<int>(x) + 9; }
+		void SetYPos(float y) { m_Py = y; pos.y = y; m_Rect.y = static_cast<int>(y); }
+		void SetXPos(float x) { m_Px = x; pos.x = x; m_Rect.x = static_cast<int>(x) + 9; }
 
-		SDL_Rect getRect() const { return rect; }
+		SDL_Rect getRect() const { return m_Rect; }
 		SDL_Rect getFallRect() const { return fall_detect; }
 
 		void Jump();
 
 	private:
-		SDL_Renderer* m_renderer;
-		Audio* m_audio;
-		float px, py;
-		float xRemainder; // x remainder for the player
-		float yRemainder; // y remainder for the player
-		float change_y; // change in y
-		int idolr, idoll, walkingr, walkingl, jumpl, jumpr, fallingl, fallingr, hit, double_jumpl, doublejumpr, hangingl, hangingr; // all the different animations
-		int x_direction; // direction of the player 0 = left 1 = right
-		bool l, r, u, d, fall; // left right up down
-		bool doubleJumpAllowed;
-		int jumpCount = 0;
-		int maxJumps = 2;
-		int collectedCoins = 0;
-		SDL_Rect rect;
+		SDL_Renderer* m_Renderer;
+		Audio* m_Audio;
+		float m_Px, m_Py;
+		float m_XRemainder; // x remainder for the player
+		float m_YRemainder; // y remainder for the player
+		float m_YChange; // change in y
+		int m_IdolR, m_IdolL, m_WalkingR, m_WalkingL, m_JumpL, m_JumpR, m_FallingL, m_FallingR, m_Hit, m_DoubleJumpL, m_DoubleJumpR, m_HangingL, m_HangingR; // all the different animations
+		int m_XDirection; // direction of the player 0 = left 1 = right
+		bool m_Left, m_Right, m_Up, m_Down, m_Fall; // left right up down
+		bool m_DoubleJumpAllowed;
+		int m_JumpCount = 0;
+		int m_MaxJumps = 2;
+		int m_CollectedCoins = 0;
+		SDL_Rect m_Rect;
 		SDL_Rect fall_detect;
 		vec2 pos;
 		vec2 velocity;

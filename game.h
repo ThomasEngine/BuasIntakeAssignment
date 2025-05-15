@@ -15,7 +15,7 @@ namespace Tmpl8 {
 	class Game
 	{
 	public:
-		void SetTarget(Surface* surface, SDL_Renderer* renderer, SDL_Window* window, Audio* audio) { m_screen = surface, m_renderer = renderer, m_window = window, m_audio = audio; }
+		void SetTarget(Surface* surface, SDL_Renderer* renderer, SDL_Window* window, Audio* audio) { m_Screen = surface, m_Renderer = renderer, m_Window = window, m_Audio = audio; }
 		void Init();
 		void Shutdown();
 		void Restart();
@@ -26,33 +26,33 @@ namespace Tmpl8 {
 		void Render(float deltaTime);
 		void showFPS(float deltaTime);
 		void DrawAll();
-		void Draw(Object o);
+		void Draw(Object* o);
 		void DrawStatic(Object o);
-		void ResetPlayer() { player->resetPlayer(); }
+		void ResetPlayer() { m_Player->resetPlayer(); }
 
-		GameMenu* GetMenu() { return m_menu; }
-		GameState GetState() const { return static_cast<GameState>(m_state); }
-		void SetState(GameState state) { m_state = state; }
+		GameMenu* GetMenu() { return m_Menu; }
+		GameState GetState() const { return static_cast<GameState>(m_State); }
+		void SetState(GameState state) { m_State = state; }
 		void UpdateTimer(float deltaTime);
 
 
 		// Send keys to the player class
-		void KeyUp(int key) { player->KeyUp(key); }
-		void KeyDown(int key) { player->KeyDown(key); }
+		void KeyUp(int key) { m_Player->KeyUp(key); }
+		void KeyDown(int key) { m_Player->KeyDown(key); }
 	private:
-		Surface* m_screen;
-		SDL_Renderer* m_renderer;
-		SDL_Window* m_window;
-		Audio* m_audio;
-		Object Background;
+		Surface* m_Screen;
+		SDL_Renderer* m_Renderer;
+		SDL_Window* m_Window;
+		Audio* m_Audio;
+		Object m_Background;
 		World* m_TileMap;
-		Player* player;
-		GameMenu* m_menu;
-		GameState m_state = GameState::Paused;
-		float cameraX, cameraY;
-		float playerTimer = 0.0f;
-		bool timerActive = false;
-		bool playerFinished = false;
+		Player* m_Player;
+		GameMenu* m_Menu;
+		GameState m_State = GameState::Paused;
+		float m_CameraX, m_CameraY;
+		float m_PlayerTimer = 0.0f;
+		bool m_TimerActive = false;
+		bool m_PlayerFinished = false;
 	};
 
 } // namespace Tmpl8

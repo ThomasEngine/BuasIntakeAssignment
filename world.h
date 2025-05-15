@@ -17,7 +17,7 @@ namespace Tmpl8
 
         void LoadTilemapFromFile(const std::string& filename);
         void BuildTileMap();
-        void DrawTileMap(SDL_Renderer* renderer, int cameraX, int cameraY, int screenWidth, int screenHeight);
+        void DrawTileMap(SDL_Renderer* renderer, int m_CameraX, int m_CameraY, int screenWidth, int screenHeight);
 
         void UpdateCoinAnimation();
 
@@ -26,7 +26,7 @@ namespace Tmpl8
         int GetRows() const { return m_rows; }
     private:
         std::vector<Object> m_map;
-        SDL_Renderer* m_renderer;
+        SDL_Renderer* m_Renderer;
         SDL_Texture* m_tileTexture;
         SDL_Texture* m_coinTexture;
         SDL_Texture* m_finishFlagTexture;
