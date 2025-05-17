@@ -14,5 +14,13 @@
 	<file name="libtiff-5.dll"/>
 	<file name="libwebp-4.dll"/>
 	<file name="zlib.dll"/>
+	<file name="libFLAC-8.dll"/>
+	<file name="libmikmod-2.dll"/>
+	<file name="libmodplug-1.dll"/>
+	<file name="libogg-0.dll"/>
+	<file name="libvorbis-0.dll"/>
+	<file name="libvorbisfile-3.dll"/>
+	<file name="SDL2_mixer.dll"/>
+	<file name="smpeg2.dll"/>
 	<file name="ucrtbased.dll"/>
 </assembly>

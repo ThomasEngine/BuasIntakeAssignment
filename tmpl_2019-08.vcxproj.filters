@@ -9,7 +9,6 @@
       <Filter>template code</Filter>
     </ClCompile>
     <ClCompile Include="object.cpp" />
-    <ClCompile Include="entity.h" />
     <ClCompile Include="entity.cpp" />
     <ClCompile Include="world.cpp" />
     <ClCompile Include="player.cpp" />
@@ -29,6 +28,7 @@
     <ClInclude Include="player.h" />
     <ClInclude Include="gameMenu.h" />
     <ClInclude Include="sound.h" />
+    <ClInclude Include="entity.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="template code">

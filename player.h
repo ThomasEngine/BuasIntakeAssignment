@@ -32,6 +32,7 @@ namespace Tmpl8
 		void SetXPos(float x) { m_Px = x; pos.x = x; m_Rect.x = static_cast<int>(x) + 9; }
 
 		SDL_Rect getRect() const { return m_Rect; }
+		int GetAmountCoins() const { return m_CollectedCoins; }
 
 		void Jump();
 

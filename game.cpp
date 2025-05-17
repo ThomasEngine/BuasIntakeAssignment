@@ -24,8 +24,6 @@ namespace Tmpl8
 		m_Menu = new GameMenu(m_Renderer);
 		m_State = GameState::Paused;
 
-
-
 		m_CameraX = 0.f;
 	}
 	void Game::Shutdown()
@@ -118,7 +116,7 @@ namespace Tmpl8
 			m_PlayerTimer += deltaTime / 1000.f;
 		int px = m_Player->GetDX();
 		int py = m_Player->GetDY();
-		if (px >1120 && py <= 1578 ) // check if player is finished
+		if (px >1120 && py <= 1578 && m_Player->GetAmountCoins() == 6 ) // check if player is finished
 		{
 			m_PlayerFinished = true;
 			m_TimerActive = false;			
