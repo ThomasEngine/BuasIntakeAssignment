@@ -12,8 +12,8 @@
 #include <cstdio>
 
 // Screen Constants
-constexpr int ScreenWidth = 1280;
-constexpr int ScreenHeight = 720;
+constexpr int SCREEN_WIDTH = 1280;
+constexpr int SCREEN_HEIGHT = 720;
 constexpr int TILESIZE = 32;
 
 // Kinematic Constants

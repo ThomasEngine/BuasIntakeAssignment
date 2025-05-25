@@ -151,7 +151,7 @@ int LineOutCode(float x, float y, float xMin, float xMax, float yMin, float yMax
 void Surface::Line( float x1, float y1, float x2, float y2, Pixel c )
 {
 	// clip (Cohen-Sutherland, https://en.wikipedia.org/wiki/Cohen%E2%80%93Sutherland_algorithm)
-	const float xmin = 0, ymin = 0, xmax = ScreenWidth - 1, ymax = ScreenHeight - 1;
+	const float xmin = 0, ymin = 0, xmax = SCREEN_WIDTH - 1, ymax = SCREEN_HEIGHT - 1;
 	int c0 = LineOutCode( x1, y1, xmin, xmax, ymin, ymax ), c1 = LineOutCode( x2, y2, xmin, xmax, ymin, ymax);
 	bool accept = false;
 	while (1) 

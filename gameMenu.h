@@ -28,6 +28,14 @@ namespace Tmpl8
         Playing,
         Paused
     };
+    enum ButtonLayStd // standard button layout for 3 buttons in screen
+    {
+        ButtonX = 1280 / 2 - 514 / 2, // x location for all of the buttons
+        ButtonOneY = 84 + 52, // top
+        ButtonTwoY = 720 / 2 - 128 / 2, // middle
+        ButtonThreeY = 508 - 52 // under
+    };
+    // 264
 
     class GameMenu
     {
@@ -52,5 +60,8 @@ namespace Tmpl8
         MenuType m_CurrentMenu;
 		GameState m_CurrentState = GameState::Paused;
         std::vector<MenuButton> m_Buttons;
+
+        int m_ButtonWidth;
+        int m_ButtonHeight;
     };
 }

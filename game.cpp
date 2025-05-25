@@ -19,8 +19,8 @@ namespace Tmpl8
 		m_Player->resetPlayer(m_PlayerStartPos);
 
 		m_Background.SetImage("assets/background/Background_2.png", m_Renderer, 0);
-		m_Background.SetSource(0, 0, ScreenWidth, ScreenHeight);
-		m_Background.SetDest(0, 0, ScreenWidth, ScreenHeight);
+		m_Background.SetSource(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		m_Background.SetDest(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 		m_Menu = new GameMenu(m_Renderer);
 		m_State = GameState::Paused;
@@ -79,10 +79,10 @@ namespace Tmpl8
 	void Game::UpdateCameraY()
 	{
 		// Center camera on player
-		float targetCameraY = m_Player->GetDY() - ScreenHeight / 2;
+		float targetCameraY = m_Player->GetDY() - SCREEN_HEIGHT / 2;
 
 		// Dont let camera go further then the map
-		float maxCameraY = m_TileMap->GetRows() * TILESIZE - ScreenHeight;
+		float maxCameraY = m_TileMap->GetRows() * TILESIZE - SCREEN_HEIGHT;
 		if (targetCameraY < 0) targetCameraY = 0;
 		if (targetCameraY > maxCameraY) targetCameraY = maxCameraY;
 
@@ -152,7 +152,7 @@ namespace Tmpl8
 	{
 		// Draw all objects here
 		DrawStatic(m_Background);
-		m_TileMap->DrawTileMap(m_Renderer, m_CameraX, m_CameraY, ScreenWidth, ScreenHeight);
+		m_TileMap->DrawTileMap(m_Renderer, m_CameraX, m_CameraY, SCREEN_WIDTH, SCREEN_HEIGHT);
 		Draw(m_Player);
 	}
 }

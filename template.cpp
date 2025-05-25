@@ -225,11 +225,11 @@ bool createFBtexture()
 		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
 		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP );
 		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP );
-		glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, ScreenWidth, ScreenHeight, 0, GL_BGRA, GL_UNSIGNED_BYTE, NULL );
+		glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, SCREEN_WIDTH, SCREEN_HEIGHT, 0, GL_BGRA, GL_UNSIGNED_BYTE, NULL );
 		glBindTexture(GL_TEXTURE_2D, 0);
 		if (glGetError()) return false;
 	}
-	const int sizeMemory = 4 * ScreenWidth * ScreenHeight;
+	const int sizeMemory = 4 * SCREEN_WIDTH * SCREEN_HEIGHT;
 	glGenBuffers( 2, fbPBO );
 	glBindBuffer( GL_PIXEL_UNPACK_BUFFER_ARB, fbPBO[0] );	
 	glBufferData( GL_PIXEL_UNPACK_BUFFER_ARB, sizeMemory, NULL, GL_STREAM_DRAW_ARB );
@@ -240,7 +240,7 @@ bool createFBtexture()
 	glBindBuffer( GL_PIXEL_UNPACK_BUFFER_ARB, fbPBO[0] );
 	framedata = (unsigned char*)glMapBuffer( GL_PIXEL_UNPACK_BUFFER_ARB, GL_WRITE_ONLY_ARB );
 	if (!framedata) return false;
-	memset( framedata, 0, ScreenWidth * ScreenHeight * 4 );
+	memset( framedata, 0, SCREEN_WIDTH * SCREEN_HEIGHT * 4 );
 	return (glGetError() == 0);
 }
 
@@ -255,7 +255,7 @@ bool init()
 	wglSwapIntervalEXT = (PFNWGLSWAPINTERVALFARPROC)wglGetProcAddress( "wglSwapIntervalEXT" );
 	if ((!glGenBuffers) || (!glBindBuffer) || (!glBufferData) || (!glMapBuffer) || (!glUnmapBuffer)) return false;
 	if (glGetError()) return false;
-	glViewport( 0, 0, ScreenWidth, ScreenHeight );
+	glViewport( 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT );
 	glMatrixMode( GL_PROJECTION );
 	glLoadIdentity();
  	glOrtho( 0, 1, 0, 1, -1, 1 );
@@ -269,7 +269,7 @@ bool init()
 	glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST );
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE);
 	if (wglSwapIntervalEXT) wglSwapIntervalEXT( 0 );
-	surface = new Surface( ScreenWidth, ScreenHeight, 0, ScreenWidth );
+	surface = new Surface( SCREEN_WIDTH, SCREEN_HEIGHT, 0, SCREEN_WIDTH );
 	return true;
 }
 
@@ -280,7 +280,7 @@ void swap()
 	glUnmapBuffer( GL_PIXEL_UNPACK_BUFFER_ARB );
 	glBindTexture( GL_TEXTURE_2D, framebufferTexID[index] );
 	glBindBuffer( GL_PIXEL_UNPACK_BUFFER_ARB, fbPBO[index] );
-	glTexSubImage2D( GL_TEXTURE_2D, 0, 0, 0, ScreenWidth, ScreenHeight, GL_BGRA, GL_UNSIGNED_BYTE, 0 ); 
+	glTexSubImage2D( GL_TEXTURE_2D, 0, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, GL_BGRA, GL_UNSIGNED_BYTE, 0 ); 
     nextindex = (index + 1) % 2;
 	index = (index + 1) % 2;
 	glBindBuffer( GL_PIXEL_UNPACK_BUFFER_ARB, fbPBO[nextindex] );	
@@ -318,23 +318,23 @@ int main( int argc, char **argv )
 	
 #ifdef ADVANCEDGL
 #ifdef FULLSCREEN
-	window = SDL_CreateWindow(TemplateVersion, 100, 100, ScreenWidth, ScreenHeight, SDL_WINDOW_FULLSCREEN|SDL_WINDOW_OPENGL );
+	window = SDL_CreateWindow(TemplateVersion, 100, 100, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_FULLSCREEN|SDL_WINDOW_OPENGL );
 #else
-	window = SDL_CreateWindow(TemplateVersion, 100, 100, ScreenWidth, ScreenHeight, SDL_WINDOW_SHOWN|SDL_WINDOW_OPENGL );
+	window = SDL_CreateWindow(TemplateVersion, 100, 100, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN|SDL_WINDOW_OPENGL );
 #endif
 	SDL_GLContext glContext = SDL_GL_CreateContext( window);
 	init();
 	ShowCursor( false );
 #else
 #ifdef FULLSCREEN
-	window = SDL_CreateWindow(TemplateVersion, 100, 100, ScreenWidth, ScreenHeight, SDL_WINDOW_FULLSCREEN );
+	window = SDL_CreateWindow(TemplateVersion, 100, 100, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_FULLSCREEN );
 #else
-	window = SDL_CreateWindow(TemplateVersion, 100, 100, ScreenWidth, ScreenHeight, SDL_WINDOW_SHOWN );
+	window = SDL_CreateWindow(TemplateVersion, 100, 100, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
 #endif
-	surface = new Surface( ScreenWidth, ScreenHeight );
+	surface = new Surface( SCREEN_WIDTH, SCREEN_HEIGHT );
 	surface->Clear( 0 );
 	SDL_Renderer* renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
-	SDL_Texture* frameBuffer = SDL_CreateTexture( renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, ScreenWidth, ScreenHeight );
+	SDL_Texture* frameBuffer = SDL_CreateTexture( renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, SCREEN_WIDTH, SCREEN_HEIGHT );
 	
 #endif
 	int exitapp = 0;
@@ -354,14 +354,14 @@ int main( int argc, char **argv )
 		SDL_LockTexture( frameBuffer, NULL, &target, &pitch );
 		if (pitch == (surface->GetWidth() * 4))
 		{
-			memcpy( target, surface->GetBuffer(), ScreenWidth * ScreenHeight * 4 );
+			memcpy( target, surface->GetBuffer(), SCREEN_WIDTH * SCREEN_HEIGHT * 4 );
 		}
 		else
 		{
 			unsigned char* t = (unsigned char*)target;
-			for( int i = 0; i < ScreenHeight; i++ )
+			for( int i = 0; i < SCREEN_HEIGHT; i++ )
 			{
-				memcpy( t, surface->GetBuffer() + i * ScreenWidth, ScreenWidth * 4 );
+				memcpy( t, surface->GetBuffer() + i * SCREEN_WIDTH, SCREEN_WIDTH * 4 );
 				t += pitch;
 			}
 		}
