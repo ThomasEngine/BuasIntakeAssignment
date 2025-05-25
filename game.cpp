@@ -126,6 +126,13 @@ namespace Tmpl8
 		}
 	}
 
+	bool Game::IsPlayerFinished() // The player is at the finish line and collected all the coins.
+	{
+		SDL_Rect playerRect = m_Player->GetDest();
+		SDL_Rect flagRect = m_TileMap->GetFlagRect();
+		return (SDL_HasIntersection(&playerRect, &flagRect) && m_TileMap->GetCoins().empty());
+	}
+
 	void Game::Draw(Object* o)
 	{
 		if (!o->GetTex())

@@ -14,16 +14,19 @@ namespace Tmpl8
     public:
         World(SDL_Renderer* renderer, int tileSize);
         ~World();
-
+        // Init these once per level
         void LoadTilemapFromFile(const std::string& filename);
         void BuildTileMap();
-        void DrawTileMap(SDL_Renderer* renderer, int m_CameraX, int m_CameraY, int screenWidth, int screenHeight);
 
+        // Every frame renders and updates
+        void DrawTileMap(SDL_Renderer* renderer, int m_CameraX, int m_CameraY, int screenWidth, int screenHeight);
         void UpdateCoinAnimation();
 
+        // Getters
         const std::vector<Object>& GetMap() const { return m_Map; }
 		std::vector<Entity>& GetCoins() { return m_coins; } 
         int GetRows() const { return m_Rows; }
+        SDL_Rect GetFlagRect() const { return m_Flag.GetDest(); }
     private:
         std::vector<Object> m_Map;
         SDL_Renderer* m_Renderer;
