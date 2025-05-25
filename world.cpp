@@ -96,7 +96,7 @@ namespace Tmpl8
 
                 if (tileType != 0)
                 {
-                    if (tileType == 99) // Coin
+                    if (tileType == TileTypeEnum::Coin) // Coin
                     {
 
                         Entity coin;
@@ -106,14 +106,14 @@ namespace Tmpl8
                         m_coins.push_back(coin);
 						continue;
                     }
-                    if (tileType == 88) // Finish Flag
+                    if (tileType == TileTypeEnum::FinishFlag) // Finish Flag
                     {
                         m_Flag.SetTexture(m_FinishFlagTexture);
                         m_Flag.SetSource(0, 0, 64, 64);
                         m_Flag.SetDest(j * m_TileSize, i * m_TileSize, m_TileSize * 2, m_TileSize * 2);
                         continue;
                     }
-                    if (tileType == 77) // Player start
+                    if (tileType == TileTypeEnum::Player) // Player start
                     {
                         m_PlayerStart.x = j * m_TileSize;
                         m_PlayerStart.y = i * m_TileSize;

@@ -43,5 +43,11 @@ namespace Tmpl8
         std::vector<Entity> m_coins;
         
         int m_Rows, m_Cols, m_TileSize;
+        enum TileTypeEnum
+        {
+            Coin = 99,
+            FinishFlag = 88,
+            Player = 77
+        };
     };
 }
