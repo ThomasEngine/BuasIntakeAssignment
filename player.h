@@ -22,7 +22,7 @@ namespace Tmpl8
 		void CheckCoins(World* world);
 		void calculateKinematic(float deltaTime);
 
-		void resetPlayer();
+		void resetPlayer(vec2 playerPos);
 
 		bool CheckCollision(SDL_Rect* rect, const World* world);
 		bool IsOnGround(const World* world);

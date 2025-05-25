@@ -340,13 +340,13 @@ namespace Tmpl8
 		m_Py = pos.y;
 	}
 
-	void Player::resetPlayer()
+	void Player::resetPlayer(vec2 playerPos)
 	{
 		// Reset player position
-		m_Px = 64;
-		m_Py = 95 * 31;
-		// Reset kinematic vectors
+		m_Px = playerPos.x;
+		m_Py = playerPos.y;
 		pos = { m_Px, m_Py };
+		// Reset kinematic vectors
 		velocity = { 0, 0 };
 		acceleration = { 0, VERTICAL_ACCALERATION };
 		// Reset direction

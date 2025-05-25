@@ -14,12 +14,13 @@ namespace Tmpl8
 		m_TileMap->LoadTilemapFromFile("assets/tilemap/level1.txt");
 		m_TileMap->BuildTileMap();
 
-		m_Player = new Player(64, 95 * 32, m_Renderer, m_Audio);
-		m_Player->resetPlayer();
+		m_PlayerStartPos = m_TileMap->GetPlayerStartingPos();
+		m_Player = new Player(m_PlayerStartPos.x, m_PlayerStartPos.y + TILESIZE, m_Renderer, m_Audio);
+		m_Player->resetPlayer(m_PlayerStartPos);
 
 		m_Background.SetImage("assets/background/Background_2.png", m_Renderer, 0);
-		m_Background.SetSource(0, 0, 1280, 720);
-		m_Background.SetDest(0, 0, 1280, 720);
+		m_Background.SetSource(0, 0, ScreenWidth, ScreenHeight);
+		m_Background.SetDest(0, 0, ScreenWidth, ScreenHeight);
 
 		m_Menu = new GameMenu(m_Renderer);
 		m_State = GameState::Paused;
@@ -38,16 +39,18 @@ namespace Tmpl8
 
 	void Game::Restart()
 	{
-		m_Player->resetPlayer();
-		m_PlayerTimer = 0.f;
-
+		// Remove old tilemap
 		delete m_TileMap;
 
-		m_PlayerFinished = false;
-
+		// Build new Tilemap
 		m_TileMap = new World(m_Renderer, TILESIZE);
 		m_TileMap->LoadTilemapFromFile("assets/tilemap/level1.txt");
 		m_TileMap->BuildTileMap();
+
+		m_PlayerStartPos = m_TileMap->GetPlayerStartingPos();
+		m_Player->resetPlayer(m_PlayerStartPos);
+		m_PlayerTimer = 0.f;
+		m_PlayerFinished = false;
 	}
 
 	void Game::Tick(float deltaTime)
@@ -113,13 +116,12 @@ namespace Tmpl8
 			m_TimerActive = true;
 		}
 		if (m_State == GameState::Playing && m_TimerActive && !m_PlayerFinished)
-			m_PlayerTimer += deltaTime / 1000.f;
-		int px = m_Player->GetDX();
-		int py = m_Player->GetDY();
-		if (px >1120 && py <= 1578 && m_Player->GetAmountCoins() == 6 ) // check if player is finished
+			m_PlayerTimer += deltaTime / 1000.f; // in secconds
+
+		if (IsPlayerFinished())
 		{
 			m_PlayerFinished = true;
-			m_TimerActive = false;			
+			m_TimerActive = false;
 			m_Menu->SetGameState(GameState::Paused);
 			m_State = GameState::Paused;
 			m_Menu->SetMenu(MenuType::Victory);

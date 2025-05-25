@@ -3,7 +3,6 @@
 #include <sstream>
 #include <string>
 
-
 namespace Tmpl8
 {
     World::World(SDL_Renderer* renderer, int tileSize)
@@ -114,6 +113,12 @@ namespace Tmpl8
                         m_Flag.SetDest(j * m_TileSize, i * m_TileSize, m_TileSize * 2, m_TileSize * 2);
                         continue;
                     }
+                    if (tileType == 77) // Player start
+                    {
+                        m_PlayerStart.x = j * m_TileSize;
+                        m_PlayerStart.y = i * m_TileSize;
+                        continue;
+                    }
                     switch (tileType) // All the different tiles from tileset
                     {
 					case 1:
@@ -145,6 +150,7 @@ namespace Tmpl8
 						break;
 					case 10:
 						tile.SetSource(5 * m_TileSize, m_TileSize * 3, m_TileSize, m_TileSize);
+                        break; 
                     default:
                         break;
                     }

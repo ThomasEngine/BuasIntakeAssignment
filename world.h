@@ -6,6 +6,7 @@
 #include <SDL.h>
 
 #include <SDL_image.h>
+#include "template.h"
 
 namespace Tmpl8
 {
@@ -27,6 +28,7 @@ namespace Tmpl8
 		std::vector<Entity>& GetCoins() { return m_coins; } 
         int GetRows() const { return m_Rows; }
         SDL_Rect GetFlagRect() const { return m_Flag.GetDest(); }
+        vec2 GetPlayerStartingPos() const { return m_PlayerStart; }
     private:
         std::vector<Object> m_Map;
         SDL_Renderer* m_Renderer;
@@ -35,6 +37,7 @@ namespace Tmpl8
         SDL_Texture* m_FinishFlagTexture;
 
         Object m_Flag;
+        vec2 m_PlayerStart;
 
         std::vector<std::vector<int>> m_tilemap;
         std::vector<Entity> m_coins;

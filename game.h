@@ -31,7 +31,7 @@ namespace Tmpl8 {
 		void Draw(Object* o);
 		void DrawStatic(Object o);
 
-		void ResetPlayer() { m_Player->resetPlayer(); }
+		void ResetPlayer() { m_Player->resetPlayer(m_PlayerStartPos); }
 		bool IsPlayerFinished();
 
 		// Menu getters and setters
@@ -53,6 +53,7 @@ namespace Tmpl8 {
 		Player* m_Player;
 		GameMenu* m_Menu;
 		GameState m_State = GameState::Paused;
+		vec2 m_PlayerStartPos;
 		float m_CameraX, m_CameraY;
 		float m_PlayerTimer = 0.0f;
 		bool m_TimerActive = false;
