@@ -4,7 +4,7 @@
 namespace Tmpl8
 {
     GameMenu::GameMenu(SDL_Renderer* renderer)
-		: m_Renderer{ renderer }, m_CurrentMenu{ MenuType::Main }, m_ButtonWidth{ 514 }, m_ButtonHeight{ 128 }
+		: m_Renderer{ renderer }, m_CurrentMenu{ MenuType::Main }, c_ButtonWidth{ 514 }, c_ButtonHeight{ 128 }
     {
 		// Load sprite sheet
         SDL_Surface* surface = IMG_Load("assets/menu(1024x1024).png");
@@ -36,51 +36,51 @@ namespace Tmpl8
         {
         case MenuType::Main:
             m_Buttons.emplace_back("Levels");
-            m_Buttons.back().SetDest(ButtonLayStd::ButtonX, ButtonLayStd::ButtonOneY, m_ButtonWidth, m_ButtonHeight);
+            m_Buttons.back().SetDest(ButtonLayStd::ButtonX, ButtonLayStd::ButtonOneY, c_ButtonWidth, c_ButtonHeight);
             m_Buttons.back().SetTexture(m_SpriteSheet); 
-            m_Buttons.back().SetSource(0, 0, m_ButtonWidth, m_ButtonHeight); 
+            m_Buttons.back().SetSource(0, 0, c_ButtonWidth, c_ButtonHeight); 
 
             m_Buttons.emplace_back("Settings");
-            m_Buttons.back().SetDest(ButtonLayStd::ButtonX, ButtonLayStd::ButtonTwoY, m_ButtonWidth, m_ButtonHeight);
+            m_Buttons.back().SetDest(ButtonLayStd::ButtonX, ButtonLayStd::ButtonTwoY, c_ButtonWidth, c_ButtonHeight);
             m_Buttons.back().SetTexture(m_SpriteSheet);
-            m_Buttons.back().SetSource(0, m_ButtonHeight, m_ButtonWidth, m_ButtonHeight);
+            m_Buttons.back().SetSource(0, c_ButtonHeight, c_ButtonWidth, c_ButtonHeight);
 
             m_Buttons.emplace_back("Exit");
-            m_Buttons.back().SetDest(ButtonLayStd::ButtonX, ButtonLayStd::ButtonThreeY, m_ButtonWidth, m_ButtonHeight);
+            m_Buttons.back().SetDest(ButtonLayStd::ButtonX, ButtonLayStd::ButtonThreeY, c_ButtonWidth, c_ButtonHeight);
             m_Buttons.back().SetTexture(m_SpriteSheet);
-            m_Buttons.back().SetSource(0, m_ButtonHeight * 2, m_ButtonWidth, m_ButtonHeight); 
+            m_Buttons.back().SetSource(0, c_ButtonHeight * 2, c_ButtonWidth, c_ButtonHeight); 
             break;
 		case MenuType::GamePaused:
 			m_Buttons.emplace_back("Resume");
-            m_Buttons.back().SetDest(ButtonLayStd::ButtonX, 84 + 52, 514, 128);
+            m_Buttons.back().SetDest(ButtonLayStd::ButtonX, ButtonLayStd::ButtonOneY, c_ButtonWidth, c_ButtonHeight);
             m_Buttons.back().SetTexture(m_SpriteSheet);
-            m_Buttons.back().SetSource(0, m_ButtonHeight * 3, m_ButtonWidth, m_ButtonHeight);
+            m_Buttons.back().SetSource(0, c_ButtonHeight * 3, c_ButtonWidth, c_ButtonHeight);
 
 			m_Buttons.emplace_back("Restart");
-            m_Buttons.back().SetDest(ButtonLayStd::ButtonX, 296, 514, 128);
+            m_Buttons.back().SetDest(ButtonLayStd::ButtonX, ButtonLayStd::ButtonTwoY, c_ButtonWidth, c_ButtonHeight);
             m_Buttons.back().SetTexture(m_SpriteSheet);
-            m_Buttons.back().SetSource(0, 512, 514, 128);
+            m_Buttons.back().SetSource(0, c_ButtonHeight * 4, c_ButtonWidth, c_ButtonHeight);
 
             m_Buttons.emplace_back("Exit");
-            m_Buttons.back().SetDest(ButtonLayStd::ButtonX, 508 - 52, 514, 128);
+            m_Buttons.back().SetDest(ButtonLayStd::ButtonX, ButtonLayStd::ButtonThreeY, c_ButtonWidth, c_ButtonHeight);
             m_Buttons.back().SetTexture(m_SpriteSheet);
-            m_Buttons.back().SetSource(0, 256, 514, 128);
+            m_Buttons.back().SetSource(0, c_ButtonHeight * 2, c_ButtonWidth, c_ButtonHeight);
 			break;
         case MenuType::Victory:
             m_Buttons.emplace_back("Victory");
-            m_Buttons.back().SetDest(ButtonLayStd::ButtonX, 84 + 52, 514, 128);
+            m_Buttons.back().SetDest(ButtonX, ButtonOneY, c_ButtonWidth, c_ButtonHeight);
             m_Buttons.back().SetTexture(m_SpriteSheet);
-            m_Buttons.back().SetSource(0, 768, 514, 128);
+            m_Buttons.back().SetSource(0, c_ButtonHeight * 6, c_ButtonWidth, c_ButtonHeight);
 
             m_Buttons.emplace_back("Restart");
-            m_Buttons.back().SetDest(ButtonLayStd::ButtonX, 296, 514, 128);
+            m_Buttons.back().SetDest(ButtonX, ButtonTwoY, c_ButtonWidth, c_ButtonHeight);
             m_Buttons.back().SetTexture(m_SpriteSheet);
-            m_Buttons.back().SetSource(0, 512, 514, 128);
+            m_Buttons.back().SetSource(0, c_ButtonHeight * 4, c_ButtonWidth, c_ButtonHeight);
 
             m_Buttons.emplace_back("Exit");
-            m_Buttons.back().SetDest(ButtonLayStd::ButtonX, 508 - 52, 514, 128);
+            m_Buttons.back().SetDest(ButtonX, ButtonThreeY, c_ButtonWidth, c_ButtonHeight);
             m_Buttons.back().SetTexture(m_SpriteSheet);
-            m_Buttons.back().SetSource(0, 256, 514, 128);
+            m_Buttons.back().SetSource(0, c_ButtonHeight * 2, c_ButtonWidth, c_ButtonHeight);
         }
     }
 

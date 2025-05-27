@@ -61,7 +61,7 @@ namespace Tmpl8
 		GameState m_CurrentState = GameState::Paused;
         std::vector<MenuButton> m_Buttons;
 
-        int m_ButtonWidth;
-        int m_ButtonHeight;
+        int c_ButtonWidth;
+        int c_ButtonHeight;
     };
 }
