@@ -10,40 +10,40 @@ namespace Tmpl8
 {
 	void Game::Init()
 	{
-		m_TileMap = new World(m_Renderer, TILESIZE);
+		m_TileMap = std::make_unique<World>(m_Renderer, TILESIZE);
 		m_TileMap->LoadTilemapFromFile("assets/tilemap/level1.txt");
 		m_TileMap->BuildTileMap();
 
 		m_PlayerStartPos = m_TileMap->GetPlayerStartingPos();
-		m_Player = new Player(m_PlayerStartPos.x, m_PlayerStartPos.y + TILESIZE, m_Renderer, m_Audio);
+		m_Player = std::make_unique<Player>(m_PlayerStartPos.x, m_PlayerStartPos.y + TILESIZE, m_Renderer, m_Audio); 
 		m_Player->resetPlayer(m_PlayerStartPos);
 
 		m_Background.SetImage("assets/background/Background_2.png", m_Renderer, 0);
 		m_Background.SetSource(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		m_Background.SetDest(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-		m_Menu = new GameMenu(m_Renderer);
+		m_Menu = std::make_unique<GameMenu>(m_Renderer);
 		m_State = GameState::Paused;
 
 		m_CameraX = 0.f;
 	}
 	void Game::Shutdown()
 	{
-		delete m_Player;
-		delete m_TileMap;
-		delete m_Menu;
-		SDL_DestroyTexture(m_Background.GetTex());
-		SDL_DestroyRenderer(m_Renderer);
-		SDL_DestroyWindow(m_Window);
+		m_TileMap.reset();
+		m_Player.reset();
+		m_Menu.reset();
+		if (m_Background.GetTex()) SDL_DestroyTexture(m_Background.GetTex());
+		if (m_Renderer) SDL_DestroyRenderer(m_Renderer);
+		if (m_Window) SDL_DestroyWindow(m_Window);
 	}
 
 	void Game::Restart()
 	{
 		// Remove old tilemap
-		delete m_TileMap;
+		m_TileMap.reset();
 
 		// Build new Tilemap
-		m_TileMap = new World(m_Renderer, TILESIZE);
+		m_TileMap = std::make_unique<World>(m_Renderer, TILESIZE);
 		m_TileMap->LoadTilemapFromFile("assets/tilemap/level1.txt");
 		m_TileMap->BuildTileMap();
 
@@ -71,7 +71,7 @@ namespace Tmpl8
 	}
 	void Game::Update(float deltaTime)
 	{
-		m_Player->Update(deltaTime, m_TileMap);
+		m_Player->Update(deltaTime, m_TileMap.get());
 		m_TileMap->UpdateCoinAnimation();
 		CheckPlayerOutOfScreen();
 		UpdateCameraY();
@@ -97,7 +97,7 @@ namespace Tmpl8
 		SDL_RenderPresent(m_Renderer);
 	}
 
-	void Game::DrawStatic(Object o) // Draw function for static non moving objects.
+	void Game::DrawStatic(const Object& o) // Draw function for static non moving objects.
 	{
 		if (!o.GetTex())
 		{
@@ -162,6 +162,6 @@ namespace Tmpl8
 		// Draw all objects here
 		DrawStatic(m_Background);
 		m_TileMap->DrawTileMap(m_Renderer, m_CameraX, m_CameraY, SCREEN_WIDTH, SCREEN_HEIGHT);
-		Draw(m_Player);
+		Draw(m_Player.get());
 	}
 }
