@@ -93,6 +93,41 @@ namespace Tmpl8
 			break;
 		}
 	}
+	void Player::DevKeyDown(int key, const World* world)
+	{
+		SDL_Rect CoinsLocation = { 0, 0, 0, 0 };
+		switch (key)
+		{
+		case SDLK_0: // 0 is the flag
+		{
+			SDL_Rect FlagLocation = world->GetFlagRect();
+			m_Px = FlagLocation.x;
+			m_Py = FlagLocation.y;
+			pos = { m_Px, m_Py };
+		}
+		break;
+		case SDLK_1: // 
+			CoinsLocation = world->GetCoinRect();
+			if (CoinsLocation.x != 0 && CoinsLocation.y != 0)
+			{
+				m_Px = CoinsLocation.x;
+				m_Py = CoinsLocation.y;
+				pos = { m_Px, m_Py };
+			}
+			else
+			{
+				SDL_Log("No more coins left.");
+				SDL_Rect FlagLocation = world->GetFlagRect();
+				m_Px = FlagLocation.x;
+				m_Py = FlagLocation.y;
+				pos = { m_Px, m_Py };
+			}
+		break;
+		default:
+			break;
+		}
+	}
+
 
 	void Player::KeyUp(int key) // When a key is released
 	{
@@ -122,6 +157,7 @@ namespace Tmpl8
 			break;
 		}
 	}
+
 
 	void Player::Update(float deltaTime, World* world)
 	{
@@ -355,6 +391,8 @@ namespace Tmpl8
 		m_Up = false;
 		m_Down = false;
 		m_Fall = false;
+		// Reset player coins
+		m_CollectedCoins = 0;
 	}
 
 	void Player::Jump()

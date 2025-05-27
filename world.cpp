@@ -214,4 +214,16 @@ namespace Tmpl8
             coin.updateAnimation();
         }
     }
+    SDL_Rect World::GetCoinRect() const
+    {
+		if (m_coins.size() != 0)
+		{
+			return m_coins[m_coins.size() - 1].GetDest();
+		}
+		else
+		{
+			SDL_Log("Index out of bounds for coins vector.");
+		}
+		return SDL_Rect{ 0, 0, 0, 0 }; // Return an empty rect if index is invalid
+    }
 }

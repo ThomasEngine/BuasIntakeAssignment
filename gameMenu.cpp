@@ -1,5 +1,4 @@
 #include "gameMenu.h"
-#include "template.h"
 
 namespace Tmpl8
 {

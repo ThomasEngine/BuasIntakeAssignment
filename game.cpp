@@ -1,10 +1,4 @@
 #include "game.h"
-#include "surface.h"
-#include <cstdio> //printf
-#include <iostream> //std::cout
-#include <sstream>
-#include <fstream>
-#include "template.h"
 
 namespace Tmpl8
 {
@@ -117,7 +111,7 @@ namespace Tmpl8
 			m_TimerActive = true;
 		}
 		if (m_State == GameState::Playing && m_TimerActive && !m_PlayerFinished)
-			m_PlayerTimer += deltaTime / 1000.f; // in secconds
+			m_PlayerTimer += deltaTime / 1000.f; // in seconds
 
 		if (IsPlayerFinished())
 		{

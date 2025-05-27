@@ -1,11 +1,12 @@
 #pragma once
-#include "object.h"
 #include "entity.h"
-#include <vector>
-#include "world.h"
-#include "player.h"
 #include "gameMenu.h"
 #include <memory>
+#include "object.h"
+#include "player.h"
+#include "template.h"
+#include "world.h"
+
 
 
 
@@ -45,7 +46,7 @@ namespace Tmpl8 {
 
 		// Send keys to the player class
 		void KeyUp(int key) { m_Player->KeyUp(key); }
-		void KeyDown(int key) { m_Player->KeyDown(key); }
+		void KeyDown(int key) { m_Player->KeyDown(key); if (DEVELOPER_MODE) m_Player->DevKeyDown(key, m_TileMap.get()); } // Overloaded function for when in developer mode
 	private:
 		Surface* m_Screen;
 		SDL_Renderer* m_Renderer;
