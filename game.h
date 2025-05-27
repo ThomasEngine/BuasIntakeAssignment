@@ -31,8 +31,10 @@ namespace Tmpl8 {
 		void Draw(Object* o);
 		void DrawStatic(Object o);
 
+		// Player functions
 		void ResetPlayer() { m_Player->resetPlayer(m_PlayerStartPos); }
 		bool IsPlayerFinished();
+		void CheckPlayerOutOfScreen();
 
 		// Menu getters and setters
 		GameMenu* GetMenu() { return m_Menu; }

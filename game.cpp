@@ -73,6 +73,7 @@ namespace Tmpl8
 	{
 		m_Player->Update(deltaTime, m_TileMap);
 		m_TileMap->UpdateCoinAnimation();
+		CheckPlayerOutOfScreen();
 		UpdateCameraY();
 		UpdateTimer(deltaTime);
 	}
@@ -133,6 +134,14 @@ namespace Tmpl8
 		SDL_Rect playerRect = m_Player->GetDest();
 		SDL_Rect flagRect = m_TileMap->GetFlagRect();
 		return (SDL_HasIntersection(&playerRect, &flagRect) && m_TileMap->GetCoins().empty());
+	}
+
+	void Game::CheckPlayerOutOfScreen()
+	{
+		if (m_Player->GetDY() > m_TileMap->GetRows() * TILESIZE )
+		{
+			Restart();
+		}
 	}
 
 	void Game::Draw(Object* o)
