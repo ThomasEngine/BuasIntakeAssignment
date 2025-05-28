@@ -1,10 +1,12 @@
 #pragma once
-#include <vector>
-#include <string>
+#include "object.h"
 #include <SDL.h>
 #include <SDL_image.h>
 #include "sound.h"
-#include "object.h"
+#include <string>
+#include "template.h"
+#include <vector>
+
 
 
 namespace Tmpl8

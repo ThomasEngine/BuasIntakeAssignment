@@ -1,5 +1,4 @@
 #include "object.h"
-#include <SDL_image.h>
 
 namespace Tmpl8 {
 	Object::Object() : m_Tex(nullptr),  m_IsSolid(true) {}
@@ -32,7 +31,7 @@ namespace Tmpl8 {
 
 		if (!surf)
 		{
-			std::cerr << "Failed to load image: " << filename << std::endl;
+			SDL_Log("Failed to load image: %s, %s", filename.c_str(), IMG_GetError());
 			return;
 		}
 

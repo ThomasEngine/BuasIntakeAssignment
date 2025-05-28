@@ -51,7 +51,7 @@ namespace Tmpl8
 		m_FallingL = createCycle(9, 32, 32, 1, 0);
 		m_FallingR = createCycle(8, 32, 32, 1, 0);
 
-		// Extry animations if for when I continue developing
+		// Extra animations if for when I continue developing
 		m_DoubleJumpL = createCycle(12, 32, 32, 6, 4);
 		m_DoubleJumpR = createCycle(4, 32, 32, 6, 4);
 
@@ -93,6 +93,41 @@ namespace Tmpl8
 			break;
 		}
 	}
+	void Player::DevKeyDown(int key, const World* world)
+	{
+		SDL_Rect CoinsLocation = { 0, 0, 0, 0 };
+		switch (key)
+		{
+		case SDLK_0: // 0 is the flag
+		{
+			SDL_Rect FlagLocation = world->GetFlagRect();
+			m_Px = FlagLocation.x;
+			m_Py = FlagLocation.y;
+			pos = { m_Px, m_Py };
+		}
+		break;
+		case SDLK_1: // 
+			CoinsLocation = world->GetCoinRect();
+			if (CoinsLocation.x != 0 && CoinsLocation.y != 0)
+			{
+				m_Px = CoinsLocation.x;
+				m_Py = CoinsLocation.y;
+				pos = { m_Px, m_Py };
+			}
+			else
+			{
+				SDL_Log("No more coins left.");
+				SDL_Rect FlagLocation = world->GetFlagRect();
+				m_Px = FlagLocation.x;
+				m_Py = FlagLocation.y;
+				pos = { m_Px, m_Py };
+			}
+		break;
+		default:
+			break;
+		}
+	}
+
 
 	void Player::KeyUp(int key) // When a key is released
 	{
@@ -123,12 +158,13 @@ namespace Tmpl8
 		}
 	}
 
+
 	void Player::Update(float deltaTime, World* world)
 	{
 		calculateKinematic(deltaTime);
 
 		// Move along X and Y separately for pixel perfect collision detection
-		// I got a similair implementation from: https://maddythorson.medium.com/celeste-and-towerfall-physics-d24bd2ae0fc5
+		// I got a similar implementation from: https://maddythorson.medium.com/celeste-and-towerfall-physics-d24bd2ae0fc5
 		MoveX(velocity.x * deltaTime + acceleration.x * 0.5f, world);
 		MoveY(velocity.y * deltaTime + acceleration.y * 0.5f, world);
 
@@ -241,7 +277,7 @@ namespace Tmpl8
 		// reset the acceleration
 		acceleration = { 0, VERTICAL_ACCALERATION };
 
-		// left movment && animation
+		// left movement && animation
 		if (m_Left)
 		{
 			if (getCurAnimation() != m_WalkingL)
@@ -355,6 +391,8 @@ namespace Tmpl8
 		m_Up = false;
 		m_Down = false;
 		m_Fall = false;
+		// Reset player coins
+		m_CollectedCoins = 0;
 	}
 
 	void Player::Jump()

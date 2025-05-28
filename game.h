@@ -1,10 +1,12 @@
 #pragma once
-#include "object.h"
 #include "entity.h"
-#include <vector>
-#include "world.h"
-#include "player.h"
 #include "gameMenu.h"
+#include <memory>
+#include "object.h"
+#include "player.h"
+#include "template.h"
+#include "world.h"
+
 
 
 
@@ -29,7 +31,7 @@ namespace Tmpl8 {
 		void Render(float deltaTime);
 		void DrawAll();
 		void Draw(Object* o);
-		void DrawStatic(Object o);
+		void DrawStatic(const Object& o);
 
 		// Player functions
 		void ResetPlayer() { m_Player->resetPlayer(m_PlayerStartPos); }
@@ -37,23 +39,26 @@ namespace Tmpl8 {
 		void CheckPlayerOutOfScreen();
 
 		// Menu getters and setters
-		GameMenu* GetMenu() { return m_Menu; }
+		GameMenu* GetMenu() { return m_Menu.get(); } // .get() returns a pointer to the GameMenu object because its a smart pointer.
 		GameState GetState() const { return m_State; }
 		void SetState(GameState state) { m_State = state; }
 
 
 		// Send keys to the player class
 		void KeyUp(int key) { m_Player->KeyUp(key); }
-		void KeyDown(int key) { m_Player->KeyDown(key); }
+		void KeyDown(int key) { m_Player->KeyDown(key); if (DEVELOPER_MODE) m_Player->DevKeyDown(key, m_TileMap.get()); } // Overloaded function for when in developer mode
 	private:
 		Surface* m_Screen;
 		SDL_Renderer* m_Renderer;
 		SDL_Window* m_Window;
 		Audio* m_Audio;
 		Object m_Background;
-		World* m_TileMap;
-		Player* m_Player;
-		GameMenu* m_Menu;
+		std::unique_ptr<World> m_TileMap;
+		std::unique_ptr<Player> m_Player;
+		std::unique_ptr<GameMenu> m_Menu;
+		//World* m_TileMap;
+		//Player* m_Player;
+		//GameMenu* m_Menu;
 		GameState m_State = GameState::Paused;
 		vec2 m_PlayerStartPos;
 		float m_CameraX, m_CameraY;

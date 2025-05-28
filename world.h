@@ -25,7 +25,8 @@ namespace Tmpl8
 
         // Getters
         const std::vector<Object>& GetMap() const { return m_Map; }
-		std::vector<Entity>& GetCoins() { return m_coins; } 
+		std::vector<Entity>& GetCoins() { return m_coins; }
+        SDL_Rect GetCoinRect() const;
         int GetRows() const { return m_Rows; }
         SDL_Rect GetFlagRect() const { return m_Flag.GetDest(); }
         vec2 GetPlayerStartingPos() const { return m_PlayerStart; }

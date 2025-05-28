@@ -26,7 +26,7 @@ namespace Tmpl8
 
 		// Setings volume
 		Mix_Volume(-1, 30);
-		Mix_VolumeMusic(30);
+		Mix_VolumeMusic(25);
 		
 		// Player background music
 		Mix_PlayMusic(m_BackgroundMusic, -1);

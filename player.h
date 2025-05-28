@@ -15,6 +15,7 @@ namespace Tmpl8
 
 		void KeyDown(int key);
 		void KeyUp(int key);
+		void DevKeyDown(int key, const World* world); // Overloaded function for when in developer mode
 
 		void Update(float deltaTime, World* world);
 		void MoveX(float amount, const World* world);
