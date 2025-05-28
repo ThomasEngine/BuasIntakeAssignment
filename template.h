@@ -13,7 +13,7 @@
 
 // Developer mode
 constexpr bool DEVELOPER_MODE = true; // Set to false for release builds
-// Enables developer to go to flag and coins with 1,2,3,4,5,6,0 0 = flag other numbers are coins.
+// Enables developer to go to flag and coins with 1 = coins, 0 = flag.
 
 // Screen Constants
 constexpr int SCREEN_WIDTH = 1280;
