@@ -19,6 +19,9 @@ namespace Tmpl8
 		m_Menu = std::make_unique<GameMenu>(m_Renderer);
 		m_State = GameState::Paused;
 
+		m_Font = TTF_OpenFont("assets/fonts/PressStart2P-Regular.ttf", 24);
+
+
 		m_CameraX = 0.f;
 	}
 	void Game::Shutdown()
@@ -29,6 +32,7 @@ namespace Tmpl8
 		if (m_Background.GetTex()) SDL_DestroyTexture(m_Background.GetTex());
 		if (m_Renderer) SDL_DestroyRenderer(m_Renderer);
 		if (m_Window) SDL_DestroyWindow(m_Window);
+		if (m_Font) TTF_CloseFont(m_Font);
 	}
 
 	void Game::Restart()
@@ -71,20 +75,6 @@ namespace Tmpl8
 		UpdateCameraY();
 		UpdateTimer(deltaTime);
 	}
-	void Game::UpdateCameraY()
-	{
-		// Center camera on player
-		float targetCameraY = m_Player->GetDY() - SCREEN_HEIGHT / 2;
-
-		// Dont let camera go further then the map
-		float maxCameraY = m_TileMap->GetRows() * TILESIZE - SCREEN_HEIGHT;
-		if (targetCameraY < 0) targetCameraY = 0;
-		if (targetCameraY > maxCameraY) targetCameraY = maxCameraY;
-
-		// Smooth scrolling
-		float cameraSpeed = 0.1f; // Smoothness
-		m_CameraY += (targetCameraY - m_CameraY) * cameraSpeed;
-	}
 	void Game::Render(float deltaTime)
 	{
 		DrawAll();
@@ -101,6 +91,35 @@ namespace Tmpl8
 		SDL_Rect dest = o.GetDest();
 		SDL_Rect src = o.GetSource();
 		SDL_RenderCopyEx(m_Renderer, o.GetTex(), &src, &dest, 0, NULL, SDL_FLIP_NONE);
+	}
+	void Game::Draw(Object* o)
+	{
+		if (!o->GetTex())
+		{
+			SDL_Log("Texture not loaded\n");
+			return;
+		}
+		SDL_Rect dest = o->GetDest();
+		dest.y -= m_CameraY; // Offset by camera
+		SDL_Rect src = o->GetSource();
+		SDL_RenderCopyEx(m_Renderer, o->GetTex(), &src, &dest, 0, NULL, SDL_FLIP_NONE);
+	}
+
+	void Game::DrawAll()
+	{
+		// Draw all objects here
+		DrawStatic(m_Background);
+		m_TileMap->DrawTileMap(m_Renderer, m_CameraX, m_CameraY, SCREEN_WIDTH, SCREEN_HEIGHT);
+		Draw(m_Player.get());
+	}
+
+	void Game::RenderText(const char* text, int x, int y, SDL_Color color) {
+		SDL_Surface* surf = TTF_RenderText_Blended(m_Font, text, color);
+		SDL_Texture* tex = SDL_CreateTextureFromSurface(m_Renderer, surf);
+		SDL_Rect dst = { x, y, surf->w, surf->h };
+		SDL_FreeSurface(surf);
+		SDL_RenderCopy(m_Renderer, tex, nullptr, &dst);
+		SDL_DestroyTexture(tex);
 	}
 
 	void Game::UpdateTimer(float deltaTime)
@@ -122,6 +141,20 @@ namespace Tmpl8
 			m_Menu->SetMenu(MenuType::Victory);
 		}
 	}
+	void Game::UpdateCameraY()
+	{
+		// Center camera on player
+		float targetCameraY = m_Player->GetDY() - SCREEN_HEIGHT / 2;
+
+		// Dont let camera go further then the map
+		float maxCameraY = m_TileMap->GetRows() * TILESIZE - SCREEN_HEIGHT;
+		if (targetCameraY < 0) targetCameraY = 0;
+		if (targetCameraY > maxCameraY) targetCameraY = maxCameraY;
+
+		// Smooth scrolling
+		float cameraSpeed = 0.1f; // Smoothness
+		m_CameraY += (targetCameraY - m_CameraY) * cameraSpeed;
+	}
 
 	bool Game::IsPlayerFinished() // The player is at the finish line and collected all the coins.
 	{
@@ -138,24 +171,4 @@ namespace Tmpl8
 		}
 	}
 
-	void Game::Draw(Object* o)
-	{
-		if (!o->GetTex())
-		{
-			SDL_Log("Texture not loaded\n");
-			return;
-		}
-		SDL_Rect dest = o->GetDest();
-		dest.y -= m_CameraY; // Offset by camera
-		SDL_Rect src = o->GetSource();
-		SDL_RenderCopyEx(m_Renderer, o->GetTex(), &src, &dest, 0, NULL, SDL_FLIP_NONE);
-	}
-
-	void Game::DrawAll()
-	{
-		// Draw all objects here
-		DrawStatic(m_Background);
-		m_TileMap->DrawTileMap(m_Renderer, m_CameraX, m_CameraY, SCREEN_WIDTH, SCREEN_HEIGHT);
-		Draw(m_Player.get());
-	}
 }

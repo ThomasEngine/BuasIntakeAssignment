@@ -21,6 +21,7 @@
 #include <corecrt_math.h>
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 #include "surface.h"
 #include <cstdio>
 #include <iostream>
@@ -315,6 +316,8 @@ int main( int argc, char **argv )
 		SDL_Log("Failed to initialize SDL_mixer: %s\n", Mix_GetError());
 	if (IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG) == 0)
 		SDL_Log("Failed to initialize SDL_image: %s\n", IMG_GetError());
+	if (TTF_Init() == -1)
+		SDL_Log("Failed to initialize SDL_ttf: %s\n", TTF_GetError());
 	
 #ifdef ADVANCEDGL
 #ifdef FULLSCREEN
@@ -481,5 +484,6 @@ int main( int argc, char **argv )
 	IMG_Quit();
 	SDL_Quit();
 	Mix_Quit();
+	TTF_Quit();
 	return 0;
 }

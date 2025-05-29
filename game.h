@@ -6,8 +6,7 @@
 #include "player.h"
 #include "template.h"
 #include "world.h"
-
-
+#include <SDL_ttf.h>
 
 
 namespace Tmpl8 {
@@ -23,6 +22,7 @@ namespace Tmpl8 {
 		void Restart();
 
 		void Tick(float deltaTime); // Main game function
+
 		// Updates
 		void Update(float deltaTime);
 		void UpdateCameraY();
@@ -32,6 +32,7 @@ namespace Tmpl8 {
 		void DrawAll();
 		void Draw(Object* o);
 		void DrawStatic(const Object& o);
+		void RenderText(const char* text, int x, int y, SDL_Color color);
 
 		// Player functions
 		void ResetPlayer() { m_Player->resetPlayer(m_PlayerStartPos); }
@@ -52,13 +53,11 @@ namespace Tmpl8 {
 		SDL_Renderer* m_Renderer;
 		SDL_Window* m_Window;
 		Audio* m_Audio;
-		Object m_Background;
+		TTF_Font* m_Font = nullptr; // Font for rendering text;
 		std::unique_ptr<World> m_TileMap;
 		std::unique_ptr<Player> m_Player;
 		std::unique_ptr<GameMenu> m_Menu;
-		//World* m_TileMap;
-		//Player* m_Player;
-		//GameMenu* m_Menu;
+		Object m_Background;
 		GameState m_State = GameState::Paused;
 		vec2 m_PlayerStartPos;
 		float m_CameraX, m_CameraY;

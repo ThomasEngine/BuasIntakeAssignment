@@ -17,6 +17,8 @@
 	<file name="libogg-0.dll"/>
 	<file name="libvorbis-0.dll"/>
 	<file name="libvorbisfile-3.dll"/>
+	<file name="libfreetype-6.dll"/>
+	<file name="SDL2_ttf.dll"/>
 	<file name="SDL2.dll"/>
 	<file name="SDL2_image.dll"/>
 	<file name="SDL2_mixer.dll"/>
