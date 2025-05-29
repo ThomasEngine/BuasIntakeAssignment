@@ -31,6 +31,7 @@ namespace Tmpl8 {
 		void Render(float deltaTime);
 		void DrawAll();
 		void Draw(Object* o);
+		void DrawStats();
 		void DrawStatic(const Object& o);
 		void RenderText(const char* text, int x, int y, SDL_Color color);
 

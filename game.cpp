@@ -19,7 +19,7 @@ namespace Tmpl8
 		m_Menu = std::make_unique<GameMenu>(m_Renderer);
 		m_State = GameState::Paused;
 
-		m_Font = TTF_OpenFont("assets/fonts/PressStart2P-Regular.ttf", 24);
+		m_Font = TTF_OpenFont("assets/fonts/basicFont.ttf", 24);
 
 
 		m_CameraX = 0.f;
@@ -80,7 +80,7 @@ namespace Tmpl8
 		DrawAll();
 		SDL_RenderPresent(m_Renderer);
 	}
-
+	
 	void Game::DrawStatic(const Object& o) // Draw function for static non moving objects.
 	{
 		if (!o.GetTex())
@@ -105,12 +105,29 @@ namespace Tmpl8
 		SDL_RenderCopyEx(m_Renderer, o->GetTex(), &src, &dest, 0, NULL, SDL_FLIP_NONE);
 	}
 
+	void Game::DrawStats()
+	{
+		// Create color white
+		SDL_Color white = { 255,255,255,255 };
+
+		// Showing the timer
+		// Convert Time to string
+		std::string TimeText = "TIME: " + std::to_string(static_cast<int>(m_PlayerTimer)); // Don't have wifi in the plane and I dont know out of my head how to make a string a const char*. So this is it for now
+
+		// Render to screen
+		RenderText("Time: ", 10, 10, white);
+
+		// Showing amount of coins
+		RenderText("Coins: X X X X X ", SCREEN_WIDTH - 220, 10, white);
+	}
+
 	void Game::DrawAll()
 	{
 		// Draw all objects here
 		DrawStatic(m_Background);
 		m_TileMap->DrawTileMap(m_Renderer, m_CameraX, m_CameraY, SCREEN_WIDTH, SCREEN_HEIGHT);
 		Draw(m_Player.get());
+		DrawStats();
 	}
 
 	void Game::RenderText(const char* text, int x, int y, SDL_Color color) {
