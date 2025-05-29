@@ -93,12 +93,12 @@ namespace Tmpl8
 			break;
 		}
 	}
-	void Player::DevKeyDown(int key, const World* world)
+	void Player::DevKeyDown(int key, const World* world) // For more efficient testing
 	{
 		SDL_Rect CoinsLocation = { 0, 0, 0, 0 };
 		switch (key)
 		{
-		case SDLK_0: // 0 is the flag
+		case SDLK_0: // 0 go to flag
 		{
 			SDL_Rect FlagLocation = world->GetFlagRect();
 			m_Px = FlagLocation.x;
@@ -106,18 +106,19 @@ namespace Tmpl8
 			pos = { m_Px, m_Py };
 		}
 		break;
-		case SDLK_1: // 
-			CoinsLocation = world->GetCoinRect();
-			if (CoinsLocation.x != 0 && CoinsLocation.y != 0)
+		case SDLK_1: // Go to next coin
+			CoinsLocation = world->GetCoinRect(); // Get coin Rect returns a rect of the first coin in the game.
+			if (CoinsLocation.x != 0 && CoinsLocation.y != 0) // returns a rect of 0,0,0,0 if there are no more coins
 			{
+				// move player to coin
 				m_Px = CoinsLocation.x;
 				m_Py = CoinsLocation.y;
 				pos = { m_Px, m_Py };
 			}
 			else
 			{
-				SDL_Log("No more coins left.");
-				SDL_Rect FlagLocation = world->GetFlagRect();
+				SDL_Rect FlagLocation = world->GetFlagRect(); // Get rect of flag
+				// move player to flag
 				m_Px = FlagLocation.x;
 				m_Py = FlagLocation.y;
 				pos = { m_Px, m_Py };

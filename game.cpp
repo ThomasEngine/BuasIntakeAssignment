@@ -113,12 +113,11 @@ namespace Tmpl8
 		// Showing the timer
 		// Convert Time to string
 		std::string TimeText = "TIME: " + std::to_string(static_cast<int>(m_PlayerTimer)); // Don't have wifi in the plane and I dont know out of my head how to make a string a const char*. So this is it for now
-
 		// Render to screen
-		RenderText("Time: ", 10, 10, white);
+		RenderText("TimeText", 10, 10, white);
 
 		// Showing amount of coins
-		RenderText("Coins: X X X X X ", SCREEN_WIDTH - 220, 10, white);
+		RenderText("Coins: X X X X X X ", SCREEN_WIDTH - 220, 10, white);
 	}
 
 	void Game::DrawAll()
