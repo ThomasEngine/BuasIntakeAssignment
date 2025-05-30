@@ -105,20 +105,20 @@ namespace Tmpl8
 		SDL_RenderCopyEx(m_Renderer, o->GetTex(), &src, &dest, 0, NULL, SDL_FLIP_NONE);
 	}
 
-	void Game::DrawStats()
-	{
-		// Create color white
-		SDL_Color white = { 255,255,255,255 };
+    void Game::DrawStats()  
+    {  
+       // Create color white  
+       SDL_Color white = { 255, 255, 255, 255 };  
 
-		// Showing the timer
-		// Convert Time to string
-		std::string TimeText = "TIME: " + std::to_string(static_cast<int>(m_PlayerTimer)); // Don't have wifi in the plane and I dont know out of my head how to make a string a const char*. So this is it for now
-		// Render to screen
-		RenderText("TimeText", 10, 10, white);
+       // Showing the timer  
+       // Convert Time to string  
+       std::string TimeText = "TIME: " + std::to_string(static_cast<int>(m_PlayerTimer));  
+       // Render to screen  
+       RenderText(TimeText.c_str(), 10, 10, white); // Use c_str() to convert std::string to const char*  
 
-		// Showing amount of coins
-		RenderText("Coins: X X X X X X ", SCREEN_WIDTH - 220, 10, white);
-	}
+       // Showing amount of coins  
+       RenderText("Coins: X X X X X X ", SCREEN_WIDTH - 220, 10, white);  
+    }
 
 	void Game::DrawAll()
 	{
