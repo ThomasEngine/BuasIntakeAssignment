@@ -24,6 +24,7 @@ namespace Tmpl8
 
 		m_CameraX = 0.f;
 	}
+
 	void Game::Shutdown()
 	{
 		m_TileMap.reset();
@@ -67,6 +68,7 @@ namespace Tmpl8
 			break;
 		}
 	}
+
 	void Game::Update(float deltaTime)
 	{
 		m_Player->Update(deltaTime, m_TileMap.get());
@@ -75,6 +77,7 @@ namespace Tmpl8
 		UpdateCameraY();
 		UpdateTimer(deltaTime);
 	}
+
 	void Game::Render(float deltaTime)
 	{
 		DrawAll();
@@ -112,9 +115,10 @@ namespace Tmpl8
 
        // Showing the timer  
        // Convert Time to string  
-       std::string TimeText = "TIME: " + std::to_string(static_cast<int>(m_PlayerTimer));  
+	   
+       std::string TimeText = "TIME: " + std::to_string(static_cast<int>(m_PlayerTimer));
        // Render to screen  
-       RenderText(TimeText.c_str(), 10, 10, white); // Use c_str() to convert std::string to const char*  
+	   RenderText(TimeText.c_str(), 10, 10, white); // Use c_str() to convert std::string to const char* called c_str() because in C this was used for strings. But now in C++ we have std::string.
 
        // Showing amount of coins  
        RenderText("Coins: X X X X X X ", SCREEN_WIDTH - 220, 10, white);  
@@ -186,5 +190,4 @@ namespace Tmpl8
 			Restart();
 		}
 	}
-
 }

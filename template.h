@@ -12,7 +12,11 @@
 #include <cstdio>
 
 // Developer mode
-constexpr bool DEVELOPER_MODE = true; // Set to false for release builds
+#ifdef NDEBUG
+constexpr bool DEVELOPER_MODE = false; // Release build
+#else
+constexpr bool DEVELOPER_MODE = true;  // Debug build
+#endif
 // Enables developer to go to flag and coins with 1 = coins, 0 = flag.
 
 // Screen Constants
