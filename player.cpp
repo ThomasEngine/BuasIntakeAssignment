@@ -4,6 +4,7 @@ namespace Tmpl8
 {
 
 	Player::Player(float xpos, float ypos, SDL_Renderer* ren, Audio* audio)
+		: m_DoubleJumpAllowed{true}
 	{
 		// Player position
 		m_Px = xpos;
@@ -407,6 +408,7 @@ namespace Tmpl8
 		{
 			velocity.y = -VERTICAL_JUMP_SPEED;
 			m_JumpCount++;
+
 		}
 	}
 
@@ -437,4 +439,4 @@ namespace Tmpl8
 
 		return CheckCollision(&groundCheck, world);
 	}
-};
+}

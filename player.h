@@ -43,7 +43,7 @@ namespace Tmpl8
 		float m_Px, m_Py;
 		float m_XRemainder;
 		float m_YRemainder;
-		int m_IdolR, m_IdolL, m_WalkingR, m_WalkingL, m_JumpL, m_JumpR, m_FallingL, m_FallingR, m_Hit, m_DoubleJumpL, m_DoubleJumpR, m_HangingL, m_HangingR; // all the different animations
+		int m_IdolR, m_IdolL, m_WalkingR, m_WalkingL, m_JumpL, m_JumpR, m_FallingL, m_FallingR, m_DoubleJumpL, m_DoubleJumpR, m_HangingL, m_HangingR; // all the different animations
 		int m_XDirection; // direction of the player 0 = left 1 = right
 		bool m_Left, m_Right, m_Up, m_Down, m_Fall; // Player move directions
 		bool m_DoubleJumpAllowed;
