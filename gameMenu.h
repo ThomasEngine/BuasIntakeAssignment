@@ -13,9 +13,22 @@ namespace Tmpl8
 {
     struct MenuButton : public Object
     {
+        MenuButton(const std::string& label) : label{ label }, isHovered{ false } {}
         std::string label;
         bool isHovered;
-        MenuButton(const std::string& label) : label{ label }, isHovered{ false } {}
+    };
+
+    struct WorldLevel 
+    {
+        vec2 position;
+        bool unlocked;
+        std::string label;
+    };
+
+    struct MenuSelector 
+    {
+        int currentLevelIndex = 0;
+        vec2 position;
     };
 
     enum class MenuType
@@ -23,6 +36,7 @@ namespace Tmpl8
         Main,
         GamePaused,
         Victory,
+        WorldMap
 
     };
     enum class GameState
@@ -30,11 +44,14 @@ namespace Tmpl8
         Playing,
         Paused
     };
+
+	const int c_ButtonHeight = 128; // height of the buttons
+	const int c_ButtonWidth = 514; // width of the buttons
     enum ButtonLayStd // standard button layout for 3 buttons in screen
     {
-        ButtonX = 1280 / 2 - 514 / 2, // x location for all of the buttons
+        ButtonX = SCREEN_WIDTH / 2 - c_ButtonWidth / 2, // x location for all of the buttons
         ButtonOneY = 84 + 52, // top
-        ButtonTwoY = 720 / 2 - 128 / 2, // middle
+        ButtonTwoY = SCREEN_HEIGHT / 2 - c_ButtonHeight / 2, // middle
         ButtonThreeY = 508 - 52 // under
     };
     // 264
@@ -54,7 +71,9 @@ namespace Tmpl8
 
     private:
         void BuildMenu(MenuType type);
+        void BuildWorldMap();
         void DrawButton(MenuButton& button);
+        void DrawWorldMap();
 
         SDL_Texture* m_SpriteSheet;
         Object m_Background;
@@ -62,8 +81,7 @@ namespace Tmpl8
         MenuType m_CurrentMenu;
 		GameState m_CurrentState = GameState::Paused;
         std::vector<MenuButton> m_Buttons;
-
-        int c_ButtonWidth;
-        int c_ButtonHeight;
+        std::vector<WorldLevel> m_WorldLevels;
+        MenuSelector m_Selector;
     };
 }

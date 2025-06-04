@@ -4,6 +4,7 @@
 #include <memory>
 #include "object.h"
 #include "player.h"
+#include <sstream>
 #include "template.h"
 #include "world.h"
 #include <SDL_ttf.h>
@@ -39,6 +40,7 @@ namespace Tmpl8 {
 		void ResetPlayer() { m_Player->resetPlayer(m_PlayerStartPos); }
 		bool IsPlayerFinished();
 		void CheckPlayerOutOfScreen();
+		void CheckPlayerNewHighScore();
 
 		// Menu getters and setters
 		GameMenu* GetMenu() { return m_Menu.get(); } // .get() returns a pointer to the GameMenu object because its a smart pointer.

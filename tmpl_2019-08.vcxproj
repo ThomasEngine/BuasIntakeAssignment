@@ -228,6 +228,7 @@
     <ClCompile Include="gameMenu.cpp" />
     <ClCompile Include="object.cpp" />
     <ClCompile Include="player.cpp" />
+    <ClCompile Include="ScoreFileEditor.cpp" />
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="surface.cpp" />
     <ClCompile Include="template.cpp" />
@@ -238,6 +239,7 @@
     <ClInclude Include="gameMenu.h" />
     <ClInclude Include="object.h" />
     <ClInclude Include="player.h" />
+    <ClInclude Include="ScoreFileEditor.hpp" />
     <ClInclude Include="sound.h" />
     <ClInclude Include="surface.h" />
     <ClInclude Include="template.h" />

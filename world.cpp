@@ -18,7 +18,7 @@ namespace Tmpl8
 		SDL_FreeSurface(surf);
 
 		// Load the coin texture
-		surf = IMG_Load("assets/coin.png");
+		surf = IMG_Load("assets/tilemap/coin.png");
         if (!surf)
         {
             SDL_Log("Failed to load coin texture: %s\n", IMG_GetError());
@@ -27,7 +27,7 @@ namespace Tmpl8
 		SDL_FreeSurface(surf);
 
         // Load finish flag
-        surf = IMG_Load("assets/finish.png");
+        surf = IMG_Load("assets/tilemap/finish.png");
         if (!surf)
         {
             SDL_Log("Failed to load coin texture: %s\n", IMG_GetError());

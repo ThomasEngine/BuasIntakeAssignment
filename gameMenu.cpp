@@ -3,10 +3,10 @@
 namespace Tmpl8
 {
     GameMenu::GameMenu(SDL_Renderer* renderer)
-		: m_Renderer{ renderer }, m_CurrentMenu{ MenuType::Main }, c_ButtonWidth{ 514 }, c_ButtonHeight{ 128 }
+		: m_Renderer{ renderer }, m_CurrentMenu{ MenuType::Main }
     {
 		// Load sprite sheet
-        SDL_Surface* surface = IMG_Load("assets/menu(1024x1024).png");
+        SDL_Surface* surface = IMG_Load("assets/Menu/menu(1024x1024).png");
 		m_SpriteSheet = SDL_CreateTextureFromSurface(m_Renderer, surface);
 		SDL_FreeSurface(surface);
 
@@ -83,6 +83,17 @@ namespace Tmpl8
         }
     }
 
+    void GameMenu::BuildWorldMap()  
+    {  
+       m_WorldLevels.clear();  
+       // Add levels to world levels  
+       m_WorldLevels.emplace_back(WorldLevel{ {200, 400}, true, "Level 1" });
+       m_WorldLevels.emplace_back(WorldLevel{ {200, 400}, false, "Level 2" });
+       m_WorldLevels.emplace_back(WorldLevel{ {200, 400}, false, "Level 2" });
+       m_Selector.currentLevelIndex = 0;
+       m_Selector.position = m_WorldLevels[0].position;
+    }
+
     void GameMenu::Render()
     {
         SDL_RenderClear(m_Renderer);
@@ -110,6 +121,21 @@ namespace Tmpl8
         }
         SDL_RenderCopy(m_Renderer, button.GetTex(), &button.GetSource(), &dest);
     }
+    void GameMenu::DrawWorldMap()
+    {
+        // Draw levels
+        for (const WorldLevel& level : m_WorldLevels)
+        {
+            SDL_Rect levelRect = { level.position.x - 16, level.position.y - 16, 32 ,32 };
+            SDL_SetRenderDrawColor(m_Renderer, level.unlocked ? 0 : 128, 200, 0, 255);  // different color if unlocked
+            SDL_RenderFillRect(m_Renderer, &levelRect);
+        }
+		// Draw selector
+		SDL_Rect selRect = { m_Selector.position.x - 20, m_Selector.position.y - 32, 40, 10 };
+		SDL_SetRenderDrawColor(m_Renderer, 255, 0, 0, 255);  // red rectangle for selector
+		SDL_RenderFillRect(m_Renderer, &selRect);
+    }
+
     void GameMenu::HandleEvent(int MouseX, int MouseY, bool MousePressed, GameState& outGameStateType, bool& backToMenu, bool& outShouldStartGame, bool& outShouldExit, bool& outShouldRestart, Audio* audio, MenuType& outMenuType)
     {  
         for (MenuButton& button : m_Buttons)
@@ -144,6 +170,27 @@ namespace Tmpl8
                         else if (button.label == "Exit")
                             outShouldExit = true;
                     }
+                    //else if (m_CurrentMenu == MenuType::WorldMap)
+                    //{
+                    //    // Example for keyboard input (add to your event handling)
+                    //    if (event.type == SDL_KEYDOWN) {
+                    //        if (event.key.keysym.sym == SDLK_RIGHT && m_Selector.currentLevelIndex < m_WorldLevels.size() - 1) {
+                    //            m_Selector.currentLevelIndex++;
+                    //            m_Selector.position = m_WorldLevels[m_Selector.currentLevelIndex].position;
+                    //        }
+                    //        else if (event.key.keysym.sym == SDLK_LEFT && m_Selector.currentLevelIndex > 0) {
+                    //            m_Selector.currentLevelIndex--;
+                    //            m_Selector.position = m_WorldLevels[m_Selector.currentLevelIndex].position;
+                    //        }
+                    //        else if (event.key.keysym.sym == SDLK_RETURN || event.key.keysym.sym == SDLK_SPACE) {
+                    //            if (m_WorldLevels[m_Selector.currentLevelIndex].unlocked) {
+                    //                // Start the selected level
+                    //                outShouldStartGame = true;
+                    //                // Set game state, etc.
+                    //            }
+                    //        }
+                    //    }
+                    //}
 					// Pause menu
 					else if (m_CurrentMenu == MenuType::GamePaused)
 					{

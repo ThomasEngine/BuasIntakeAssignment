@@ -1,5 +1,8 @@
 #include "game.h"
 
+#include "ScoreFileEditor.hpp"
+#include <iostream>
+
 namespace Tmpl8
 {
 	void Game::Init()
@@ -156,9 +159,12 @@ namespace Tmpl8
 		{
 			m_PlayerFinished = true;
 			m_TimerActive = false;
+			writeHighScores("Level 1", m_PlayerTimer);
+			std::cout << m_PlayerTimer << std::endl;
 			m_Menu->SetGameState(GameState::Paused);
 			m_State = GameState::Paused;
 			m_Menu->SetMenu(MenuType::Victory);
+
 		}
 	}
 	void Game::UpdateCameraY()
