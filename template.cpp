@@ -434,7 +434,7 @@ int main( int argc, char **argv )
 			case SDL_MOUSEBUTTONDOWN:
 			{
 				// Get the current game state
-				auto state = game->GetState(); 
+				GameState state = game->GetState(); 
 
 				if (state == GameState::Paused)
 				{
@@ -468,7 +468,6 @@ int main( int argc, char **argv )
 					else
 					{
 						game->SetState(newState);
-						game->GetMenu()->SetMenu(newMenuType);
 					}
 					break;
 

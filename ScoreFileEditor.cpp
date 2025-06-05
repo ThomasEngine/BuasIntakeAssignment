@@ -44,8 +44,7 @@ namespace Tmpl8 {
         highscores.close();
 
         readHighScores(0);
-
-}
+    }
 
     float getHighScore(const std::string& levelName)
     {
@@ -162,8 +161,4 @@ namespace Tmpl8 {
         delete[] scores;
         highscores.close();
     }
-
-
 }
-
-
